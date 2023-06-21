@@ -10,8 +10,9 @@ public static class DirectoryFileExtensions
         }
     }
 
-    public static void TryCheckFileDirectory(this string fullFileName)
+    public static void TryCheckFileDirectory(this string? fullFileName)
     {
+        if (fullFileName == null) return;
         var file = new FileInfo(fullFileName);
         file.DirectoryName?.TryCheckCreateDirectory();
     }

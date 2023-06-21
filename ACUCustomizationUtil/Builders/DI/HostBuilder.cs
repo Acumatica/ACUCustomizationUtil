@@ -1,4 +1,5 @@
 ﻿using ACUCustomizationUtils.Builders.Commands;
+using ACUCustomizationUtils.Helpers.DIServices;
 using ACUCustomizationUtils.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +31,7 @@ public static class HostBuilder
                 services.AddSingleton<SiteCommandBuilder>();
                 services.AddSingleton<PackageCommandBuilder>();
                 services.AddSingleton<CodeCommandBuilder>();
+                services.AddSingleton<IPackageHelperService, PackageHelperService>();
             })
             .UseSerilog()
             .Build();

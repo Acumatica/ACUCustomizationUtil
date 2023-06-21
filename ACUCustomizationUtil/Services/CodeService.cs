@@ -1,6 +1,7 @@
 ﻿using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
+using ACUCustomizationUtils.Helpers.DIServices;
 using ACUCustomizationUtils.Validators.Code;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -18,12 +19,14 @@ namespace ACUCustomizationUtils.Services;
 public class CodeService : ICodeService
 {
     private readonly ILogger<CodeService> _logger;
+    private readonly PackageHelperService _packageHelperService;
 
     #region Public methods
 
-    public CodeService(ILogger<CodeService> logger)
+    public CodeService(ILogger<CodeService> logger, PackageHelperService packageHelperService)
     {
         _logger = logger;
+        _packageHelperService = packageHelperService;
     }
 
     public async Task GetProjectSource(IAcuConfiguration config)
@@ -151,20 +154,11 @@ public class CodeService : ICodeService
         itemHandler.SaveProjectMetadata(projectInfo);
     }
 
-    private static async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
+    private  async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
     {
-        var packageSourceDir = config.Code.PkgSourceDirectory!;
-        var packageDestinationDir = config.Package.PackageDirectory!;
-        var packageName = PackageHelper.GetPackageName(config);
-        var packageFileName = Path.Combine(packageDestinationDir, packageName);
-        var erpVersion = config.Erp.Version!;
-        var description = config.Code.PkgDescription ?? PackageHelper.GetPackageDescription(config);
-        var level = int.TryParse(config.Code.PkgLevel, out var l) ? l : 0;
-
-
         await Task.Run(() =>
         {
-            PackageHelper.MakePackage(packageSourceDir, packageFileName, erpVersion, description, level);
+            _packageHelperService.MakePackage();
         });
     }
 

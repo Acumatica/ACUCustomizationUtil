@@ -13,8 +13,8 @@ public static class PackageHelper
 {
     #region Public members
 
-    public static void MakePackage(string customizationPath, string packageFilename, string erpVersion,
-        string description, int? level)
+    public static void MakePackage(string customizationPath, string? packageFilename, string erpVersion,
+        string? description, int? level)
     {
         ValidateCustomizationPath(customizationPath);
         ValidateProjectVersion(erpVersion);
@@ -42,6 +42,7 @@ public static class PackageHelper
                 customizationNode.AppendChild(projectXml.ImportNode(currentFileXml.DocumentElement, true));
             }
 
+        if (packageFilename == null) throw new ArgumentNullException(nameof(packageFilename));
         using FileStream zipFileStream = new(packageFilename, FileMode.Create);
         using ZipArchive archive = new(zipFileStream, ZipArchiveMode.Create, true);
         AddFilesToZipArchive(customizationPath, archive, customizationNode);
@@ -71,7 +72,7 @@ public static class PackageHelper
         if (!match) throw new ArgumentException("ERP Version should be in the form: 00.000.0000");
     }
 
-    private static void ValidatePackagePath(string packageFilename)
+    private static void ValidatePackagePath(string? packageFilename)
     {
         packageFilename.TryCheckFileDirectory();
     }
@@ -117,7 +118,7 @@ public static class PackageHelper
         return $"{config.Package.PackageName}.zip";
     }
 
-    internal static string GetPackageDescription(IAcuConfiguration config)
+    internal static string? GetPackageDescription(IAcuConfiguration config)
     {
         return $"Release {config.Erp.Version} (build date: {DateTime.UtcNow.ToUniversalTime()})";
     }
