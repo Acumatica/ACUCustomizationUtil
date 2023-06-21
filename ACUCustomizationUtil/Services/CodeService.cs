@@ -1,7 +1,7 @@
 ﻿using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
-using ACUCustomizationUtils.Helpers.DIServices;
+using ACUCustomizationUtils.Helpers.ProxyServices;
 using ACUCustomizationUtils.Validators.Code;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -19,14 +19,14 @@ namespace ACUCustomizationUtils.Services;
 public class CodeService : ICodeService
 {
     private readonly ILogger<CodeService> _logger;
-    private readonly PackageHelperService _packageHelperService;
+    private readonly IPackageHelperProxy _packageHelperProxy;
 
     #region Public methods
 
-    public CodeService(ILogger<CodeService> logger, PackageHelperService packageHelperService)
+    public CodeService(ILogger<CodeService> logger, IPackageHelperProxy packageHelperProxy)
     {
         _logger = logger;
-        _packageHelperService = packageHelperService;
+        _packageHelperProxy = packageHelperProxy;
     }
 
     public async Task GetProjectSource(IAcuConfiguration config)
@@ -38,7 +38,7 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationService.PrintConfiguration(config, _logger,  nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -158,7 +158,7 @@ public class CodeService : ICodeService
     {
         await Task.Run(() =>
         {
-            _packageHelperService.MakePackage();
+            _packageHelperProxy.MakePackage(config);
         });
     }
 

@@ -43,16 +43,16 @@ public class ConfigurationService
         return config;
     }
 
-    public static void PrintConfiguration<T>(IAcuConfiguration config, ILogger<T> logger)
+    public static void PrintConfiguration<T>(IAcuConfiguration config, ILogger<T> logger, params string[]? types)
     {
         var res = new List<(string?, string, object)>();
         ReadConfigurationValues(config, nameof(IAcuConfiguration), res);
         if (!res.Any()) return;
 
         logger.LogInformation("Current configuration parameters:");
-        foreach (var (type, name, value) in res)
+        foreach (var (type, name, value) in res.Where(r => types?.Contains(r.Item1) ?? true))
         {
-            logger.LogInformation("{Type:} {Key} : {Value}", type, name, value);
+                logger.LogInformation("[{Type}] {Key} : {Value}", type, name, value);
         }
     }
 

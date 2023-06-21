@@ -2,6 +2,7 @@
 
 using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.Erp;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Validators.Erp;
 using Microsoft.Extensions.Logging;
@@ -51,7 +52,7 @@ public class ErpService : IErpService
             await AnsiConsole.Status().StartAsync("Download ERP installation", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationService.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
 
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForDownload(config.Erp);

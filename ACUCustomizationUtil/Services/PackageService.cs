@@ -31,7 +31,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationService.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");

@@ -32,7 +32,7 @@ public class SiteService : ISiteService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationService.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
                 SiteValidator.ValidateForInstall(config.Site);

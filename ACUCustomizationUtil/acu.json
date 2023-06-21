@@ -1,7 +1,7 @@
 {
   "erp": {
-    "url": "http://acumatica-builds.s3.amazonaws.com/builds/23.1/23.102.0042/AcumaticaERP/AcumaticaERPInstall.msi",
-    "version": "23.102.0042",
+    "url": "http://acumatica-builds.s3.amazonaws.com/builds/23.1/23.105.0016/AcumaticaERP/AcumaticaERPInstall.msi",
+    "version": "23.105.0016",
     "installationFileName": "AcumaticaERPInstall.msi",
     "destinationDirectory": "C:\\ACU\\ERPs"
   },

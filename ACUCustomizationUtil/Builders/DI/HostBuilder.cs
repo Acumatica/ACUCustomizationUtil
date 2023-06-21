@@ -1,5 +1,5 @@
 ﻿using ACUCustomizationUtils.Builders.Commands;
-using ACUCustomizationUtils.Helpers.DIServices;
+using ACUCustomizationUtils.Helpers.ProxyServices;
 using ACUCustomizationUtils.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,6 +22,7 @@ public static class HostBuilder
         return Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
+                services.AddSingleton<IPackageHelperProxy, PackageHelperProxy>();
                 services.AddTransient<IErpService, ErpService>();
                 services.AddTransient<ISiteService, SiteService>();
                 services.AddTransient<IPackageService, PackageService>();
@@ -31,7 +32,6 @@ public static class HostBuilder
                 services.AddSingleton<SiteCommandBuilder>();
                 services.AddSingleton<PackageCommandBuilder>();
                 services.AddSingleton<CodeCommandBuilder>();
-                services.AddSingleton<IPackageHelperService, PackageHelperService>();
             })
             .UseSerilog()
             .Build();
