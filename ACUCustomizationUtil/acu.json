@@ -1,0 +1,38 @@
+{
+  "erp": {
+    "url": "http://acumatica-builds.s3.amazonaws.com/builds/23.1/23.102.0042/AcumaticaERP/AcumaticaERPInstall.msi",
+    "version": "23.102.0042",
+    "installationFileName": "AcumaticaERPInstall.msi",
+    "destinationDirectory": "C:\\ACU\\ERPs"
+  },
+  "site": {
+    "acumaticaToolPath": null,
+    "instanceName": "AcuTestUtil",
+    "instancePath": "C:\\ACU\\instances\\AcuTestUtil",
+    "sqlServerName": "SPRINT039",
+    "dbName": "AcuTestUtilDB",
+    "dbConnectionString": "Data Source=SPRINT039;Initial Catalog=AcuTestUtilDB;Integrated Security=True;Encrypt=False;",
+    "acumaticaAdminName": "admin",
+    "acumaticaAdminPassword": "123",
+    "sitePhysicalPath": "C:\\ACU\\instances\\AcuTestUtil\\Site",
+    "iisAppPool": null,
+    "iisWebSite": null
+  },
+  "package": {
+    "url": "http://localhost/AcuTestUtil/api/ServiceGate.asmx",
+    "login": "admin",
+    "password": "123",
+    "tenant": null,
+    "packageName": "AcuTest",
+    "packageDirectory": "C:\\ACU\\ERPs\\pkg"
+  },
+  "code": {
+    "pkgSourceDirectory": "C:\\ACU\\ERPs\\src",
+    "pkgDescription": null,
+    "pkgLevel": "0",
+    "msBuildSolutionFile": "C:\\VS\\SPFileProcessing\\SPFileProcessing\\SPFileProcessing.sln",
+    "msBuildTargetDirectory": "C:\\VS\\SPFileProcessing\\SPFileProcessing\\bin\\Release\\",
+    "makeQA": "False",
+    "makeISV": "False"
+  }
+}
