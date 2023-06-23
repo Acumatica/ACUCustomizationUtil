@@ -1,5 +1,5 @@
 ﻿using ACUCustomizationUtils.Builders.Commands;
-using ACUCustomizationUtils.Helpers.ProxyServices;
+using ACUCustomizationUtils.Helpers.Proxy;
 using ACUCustomizationUtils.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +27,6 @@ public static class HostBuilder
                 services.AddTransient<ISiteService, SiteService>();
                 services.AddTransient<IPackageService, PackageService>();
                 services.AddTransient<ICodeService, CodeService>();
-                services.AddTransient<ConfigurationService>();
                 services.AddSingleton<ErpCommandBuilder>();
                 services.AddSingleton<SiteCommandBuilder>();
                 services.AddSingleton<PackageCommandBuilder>();

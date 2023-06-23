@@ -1,24 +1,13 @@
 ﻿using System.Text.Json;
 using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Extensions;
+using ACUCustomizationUtils.Helpers.Proxy;
 using Microsoft.Extensions.Logging;
 
-namespace ACUCustomizationUtils.Services;
+namespace ACUCustomizationUtils.Helpers;
 
-public class ConfigurationService
+public static class ConfigurationHelper 
 {
-    private static IAcuConfiguration ReadConfig(string? filename)
-    {
-        if (filename == null || !File.Exists(filename)) return AcuNullConfiguration.Instance;
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-        var data = File.ReadAllText(filename);
-        var config = JsonSerializer.Deserialize<IAcuConfiguration>(data, options);
-        return config!;
-    }
-
     public static void WriteConfig(IAcuConfiguration config)
     {
         var options = new JsonSerializerOptions
@@ -51,9 +40,19 @@ public class ConfigurationService
 
         logger.LogInformation("Current configuration parameters:");
         foreach (var (type, name, value) in res.Where(r => types?.Contains(r.Item1) ?? true))
+            logger.LogInformation("[{Type}] {Key} : {Value}", type, name, value);
+    }
+
+    private static IAcuConfiguration ReadConfig(string? filename)
+    {
+        if (filename == null || !File.Exists(filename)) return AcuNullConfiguration.Instance;
+        var options = new JsonSerializerOptions
         {
-                logger.LogInformation("[{Type}] {Key} : {Value}", type, name, value);
-        }
+            PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var data = File.ReadAllText(filename);
+        var config = JsonSerializer.Deserialize<IAcuConfiguration>(data, options);
+        return config!;
     }
 
     private static void ReadConfigurationValues(object config, string? currentConfigType,
@@ -71,10 +70,7 @@ public class ConfigurationService
             else
             {
                 var value = prop.GetValue(config, null);
-                if (value != null)
-                {
-                    res.Add((currentConfigType, prop.Name, value));
-                }
+                if (value != null) res.Add((currentConfigType, prop.Name, value));
             }
     }
 }

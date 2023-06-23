@@ -52,7 +52,7 @@ public class ErpService : IErpService
             await AnsiConsole.Status().StartAsync("Download ERP installation", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
 
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForDownload(config.Erp);
@@ -90,7 +90,7 @@ public class ErpService : IErpService
             await AnsiConsole.Status().StartAsync("Install ERP", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger);
 
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForInstall(config.Erp);
@@ -124,7 +124,7 @@ public class ErpService : IErpService
             await AnsiConsole.Status().StartAsync("Uninstalling ERP", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger);
 
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForDelete(config.Erp);

@@ -1,6 +1,6 @@
 ﻿using ACUCustomizationUtils.Configuration;
 
-namespace ACUCustomizationUtils.Helpers.ProxyServices;
+namespace ACUCustomizationUtils.Helpers.Proxy;
 
 public interface IPackageHelperProxy
 {

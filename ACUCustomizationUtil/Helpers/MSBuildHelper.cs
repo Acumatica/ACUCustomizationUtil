@@ -2,7 +2,6 @@
 using ACUCustomizationUtils.Configuration;
 using Spectre.Console;
 
-//using Microsoft.Extensions.Logging;
 namespace ACUCustomizationUtils.Helpers;
 
 public class MsBuildHelper
@@ -50,7 +49,7 @@ public class MsBuildHelper
         return $"{buildConfiguration} {buildTarget} {solutionFilePath}";
     }
 
-    private static string GetMsbuildPath()
+    private string GetMsbuildPath()
     {
         var proc = new Process
         {
@@ -68,10 +67,9 @@ public class MsBuildHelper
         while (!proc.StandardOutput.EndOfStream)
         {
             var line = proc.StandardOutput.ReadLine();
-            if (line is not null && File.Exists(line))
-            {
-                return line;
-            }
+            if (line is null || !File.Exists(line)) continue;
+            _ctx.Status($"Found MSBuild: {line}");
+            return line;
         }
 
         throw new FileNotFoundException("MSBuild not found");
