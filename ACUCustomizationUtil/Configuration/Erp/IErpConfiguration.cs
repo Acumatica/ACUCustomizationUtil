@@ -7,7 +7,7 @@ namespace ACUCustomizationUtils.Configuration.Erp;
 public interface IErpConfiguration
 {
     Uri? Url { get; }
-    string? Version { get; }
+    string? ErpVersion { get; }
     string? InstallationFileName { get; }
     string? DestinationDirectory { get; }
     [JsonIgnore] string? InstallationDirectory { get; }

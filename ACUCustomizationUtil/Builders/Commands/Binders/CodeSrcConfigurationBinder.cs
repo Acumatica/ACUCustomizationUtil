@@ -20,7 +20,7 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
     {
         var packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var dbConnection = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var sitePhysicalPath = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        var instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
         var sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
 
         return new AcuConfiguration
@@ -28,7 +28,7 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
             Site = new SiteConfiguration
             {
                 DbConnectionString = dbConnection,
-                SitePhysicalPath = sitePhysicalPath
+                InstancePath = instancePath
             },
 
             Package = new PackageConfiguration

@@ -101,7 +101,7 @@ public class ErpCommandBuilder : CommandBuilderBase
     private static Option<string> GetFileNameOption()
     {
         return new Option<string>(
-            name: "--installer-name",
+            name: "--installerName",
             description: "Name of ERP installer file",
             getDefaultValue: () => Messages.AcumaticaErpInstallMsi);
     }
@@ -116,14 +116,14 @@ public class ErpCommandBuilder : CommandBuilderBase
     private static Option<string> GetDestinationDirectoryOption()
     {
         return new Option<string>(
-            name: "--destination-directory",
+            name: "--destinationDirectory",
             description: "Base directory for install ERP");
     }
 
     private static Option<string> GetVersionOption()
     {
         return new Option<string>(
-            name: "--version",
+            name: "--erpVersion",
             description: "ERP version");
     }
 }
@@ -139,7 +139,7 @@ public class ErpInstallConfigurationBinder : CommandParametersBinder
     protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
         Option<string>?[] commandOptions)
     {
-        var version = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
         var installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
 
@@ -147,7 +147,7 @@ public class ErpInstallConfigurationBinder : CommandParametersBinder
         {
             Erp = new ErpConfiguration
             {
-                Version = version,
+                ErpVersion = erpVersion,
                 DestinationDirectory = destinationDirectory,
                 InstallationFileName = installationFileName
             }
@@ -166,7 +166,7 @@ public class ErpDownloadConfigurationBinder : CommandParametersBinder
     protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
         Option<string>?[] commandOptions)
     {
-        var version = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
         var installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
         var url = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
@@ -175,7 +175,7 @@ public class ErpDownloadConfigurationBinder : CommandParametersBinder
         {
             Erp = new ErpConfiguration
             {
-                Version = version,
+                ErpVersion = erpVersion,
                 Url = !string.IsNullOrWhiteSpace(url) ? new Uri(url) : null,
                 DestinationDirectory = destinationDirectory,
                 InstallationFileName = installationFileName
@@ -195,7 +195,7 @@ public class ErpDeleteConfigurationBinder : CommandParametersBinder
     protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
         Option<string>?[] commandOptions)
     {
-        var version = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
         var installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
 
@@ -203,7 +203,7 @@ public class ErpDeleteConfigurationBinder : CommandParametersBinder
         {
             Erp = new ErpConfiguration
             {
-                Version = version,
+                ErpVersion = erpVersion,
                 DestinationDirectory = destinationDirectory,
                 InstallationFileName = installationFileName
             }

@@ -113,14 +113,14 @@ public static class PackageHelper
         var qa = config.Code.MakeQA;
         var isv = config.Code.MakeISV;
 
-        if (isv == true) return $"{config.Package.PackageName}[{config.Erp.Version}][{dateVersion}].zip";
-        if (qa == true) return $"{config.Package.PackageName}[{config.Erp.Version}][{fileVersion}].zip";
+        if (isv == true) return $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{dateVersion}].zip";
+        if (qa == true) return $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{fileVersion}].zip";
         return $"{config.Package.PackageName}.zip";
     }
 
     internal static string? GetPackageDescription(IAcuConfiguration config)
     {
-        return $"Release {config.Erp.Version} (build date: {DateTime.UtcNow.ToUniversalTime()})";
+        return $"Release {config.Erp.ErpVersion} (build date: {DateTime.UtcNow.ToUniversalTime()})";
     }
 
     #endregion Private members

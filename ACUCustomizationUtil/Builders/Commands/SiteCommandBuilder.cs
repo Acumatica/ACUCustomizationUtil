@@ -118,7 +118,7 @@ public class SiteCommandBuilder : CommandBuilderBase
     {
         var instanceNameOption = GetInstanceOption();
 
-        var command = new Command("instanceName", "Update Acumatica instance.")
+        var command = new Command("instance", "Update Acumatica instance.")
         {
             instanceNameOption
         };

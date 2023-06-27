@@ -26,7 +26,7 @@ public class CstEntityHelper
         _packageSourceDir = config.Code.PkgSourceDirectory!;
         _packageSourceBinDir = Path.Combine(_packageSourceDir, "Bin");
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
-        _siteRootDir = config.Site.SitePhysicalPath!;
+        _siteRootDir = config.Site.InstancePath!;
         _packageName = config.Package.PackageName!;
     }
 
@@ -68,7 +68,7 @@ public class CstEntityHelper
             new XElement("project",
                 new XAttribute("name", projectEntity.Name!),
                 new XAttribute("level", projectEntity.Level.GetValueOrDefault()),
-                new XAttribute("description", projectEntity.Description!)));
+                new XAttribute("description", projectEntity.Description ?? string.Empty)));
         fileName.TryCheckFileDirectory();
         xDoc.Save(fileName);
     }

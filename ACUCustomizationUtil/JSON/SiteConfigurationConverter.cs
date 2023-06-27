@@ -58,10 +58,6 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
                     site.IisWebSite = reader.GetString();
                     break;
 
-                case nameof(site.SiteEnvironmentName):
-                    site.SiteEnvironmentName = reader.GetString();
-                    break;
-
                 case nameof(site.AcumaticaAdminName):
                     site.AcumaticaAdminName = reader.GetString();
                     break;
@@ -69,10 +65,7 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
                 case nameof(site.AcumaticaAdminPassword):
                     site.AcumaticaAdminPassword = reader.GetString();
                     break;
-
-                case nameof(site.SitePhysicalPath):
-                    site.SitePhysicalPath = reader.GetString();
-                    break;
+                
             }
         }
 

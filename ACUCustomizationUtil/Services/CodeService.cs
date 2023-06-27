@@ -1,7 +1,7 @@
 ﻿using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
-using ACUCustomizationUtils.Helpers.ProxyServices;
+using ACUCustomizationUtils.Helpers.Proxy;
 using ACUCustomizationUtils.Validators.Code;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -38,7 +38,7 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger,  nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger,  nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -66,7 +66,7 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -94,7 +94,7 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");

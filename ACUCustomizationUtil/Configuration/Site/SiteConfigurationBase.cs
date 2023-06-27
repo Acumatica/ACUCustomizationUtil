@@ -17,11 +17,9 @@ public abstract class SiteConfigurationBase : ISiteConfiguration
     public string? DbConnectionString { get; set; }
     public string? AcumaticaAdminName { get; set; }
     public string? AcumaticaAdminPassword { get; set; }
-    public string? SitePhysicalPath { get; set; }
     public string? IisAppPool { get; set; }
     public string? IisDbUsername { get; set; }
     public string? IisWebSite { get; set; }
-    public string? SiteEnvironmentName { get; set; }
     public abstract bool IsNotNull { get; }
 
     public ISiteConfiguration SetDefaultValues(IAcuConfiguration configuration)
@@ -37,10 +35,6 @@ public abstract class SiteConfigurationBase : ISiteConfiguration
         IisAppPool ??= "DefaultAppPool";
         IisWebSite ??= "Default Web Site";
         IisDbUsername ??= null;
-        SiteEnvironmentName ??= null;
-
-        if (InstancePath != null && !InstancePath.EndsWith("Site"))
-            InstancePath = Path.Combine(InstancePath, "Site\\");
 
         return this;
     }

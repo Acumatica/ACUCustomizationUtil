@@ -73,12 +73,12 @@ public class CodeCommandBuilder : CommandBuilderBase
     {
         var packageName = GetPackageNameOption();
         var dbConnection = GetDBConnectionStringOption();
-        var sitePhysicalPath = GetSitePhysicalPathOption();
+        var instancePath = GetInstancePathOption();
         var sourceDirectory = GetSourceDirectoryOption();
 
         var command = new Command("src", "Get customization project source")
         {
-            packageName, dbConnection, sitePhysicalPath, sourceDirectory
+            packageName, dbConnection, instancePath, sourceDirectory
         };
 
         command.SetHandler(_projectService.GetProjectSource,
@@ -88,7 +88,7 @@ public class CodeCommandBuilder : CommandBuilderBase
                 UserConfigOption!,
                 packageName,
                 dbConnection,
-                sitePhysicalPath,
+                instancePath,
                 sourceDirectory
             ));
         return command;
@@ -114,9 +114,9 @@ public class CodeCommandBuilder : CommandBuilderBase
         return command;
     }
 
-    private static Option<string> GetSitePhysicalPathOption()
+    private static Option<string> GetInstancePathOption()
     {
-        return new Option<string>("--sitePath", "Acumatica instance physical path");
+        return new Option<string>("--instancePath", "Acumatica instance physical path");
     }
 
     private static Option<string> GetDBConnectionStringOption()

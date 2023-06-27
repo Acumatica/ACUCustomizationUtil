@@ -11,7 +11,7 @@ internal class SiteGetSrcValidator : AbstractValidator<ISiteConfiguration>
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
         RuleFor(c => c.DbConnectionString).NotNull();
-        RuleFor(c => c.SitePhysicalPath).NotNull().Must(Directory.Exists);
+        RuleFor(c => c.InstancePath).NotNull().Must(Directory.Exists);
     }
 }
 

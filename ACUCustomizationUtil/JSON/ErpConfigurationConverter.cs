@@ -22,8 +22,8 @@ public class ErpConfigurationConverter : JsonConverter<IErpConfiguration>
             reader.Read();
             switch (propName?.FirstCharToUpper())
             {
-                case nameof(erp.Version):
-                    erp.Version = reader.GetString();
+                case nameof(erp.ErpVersion):
+                    erp.ErpVersion = reader.GetString();
                     break;
                 case nameof(erp.Url):
                     erp.Url = reader.GetString() != null ? new Uri(reader.GetString()!, UriKind.Absolute) : null;

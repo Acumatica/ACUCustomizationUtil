@@ -31,7 +31,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -60,7 +60,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger);
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -90,7 +90,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger);
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -119,7 +119,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger);
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");

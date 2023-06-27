@@ -1,4 +1,5 @@
-﻿using ACUCustomizationUtils.Configuration.Site;
+﻿using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Extensions;
 using FluentValidation;
 
@@ -13,6 +14,11 @@ namespace ACUCustomizationUtils.Validators.Site;
 /// </remarks>
 public abstract class SiteValidator : OptionsValidatorBase
 {
+    public static void ValidateForInstallV(IAcuConfiguration configuration)
+    {
+        Validate(configuration, new SiteInstallValidatorV());
+    }
+    
     public static void ValidateForInstall(ISiteConfiguration configuration)
     {
         Validate(configuration, new SiteInstallValidator());

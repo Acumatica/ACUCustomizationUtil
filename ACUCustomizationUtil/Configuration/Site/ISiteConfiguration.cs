@@ -14,7 +14,6 @@ public interface ISiteConfiguration
     string? DbConnectionString { get; }
     string? AcumaticaAdminName { get; }
     string? AcumaticaAdminPassword { get; }
-    string? SitePhysicalPath { get; }
     string? IisAppPool { get; }
     string? IisWebSite { get; }
     [JsonIgnore] bool IsNotNull { get; }

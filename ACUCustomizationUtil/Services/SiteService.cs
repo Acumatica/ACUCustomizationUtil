@@ -32,10 +32,11 @@ public class SiteService : ISiteService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
                 SiteValidator.ValidateForInstall(config.Site);
+                SiteValidator.ValidateForInstallV(config);
                 ctx.Status("Installation in progress, please wait ...");
                 _logger.LogInformation("Installing new Acumatica instance");
                 var processArgs = GetSiteInstallCmdArgs(config.Site);
@@ -62,7 +63,7 @@ public class SiteService : ISiteService
             await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
 
                 _logger.LogInformation("Validate configuration");
                 SiteValidator.ValidateForUpdate(config.Site);
@@ -91,7 +92,7 @@ public class SiteService : ISiteService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
                 SiteValidator.ValidateForUpdate(config.Site);
@@ -119,7 +120,7 @@ public class SiteService : ISiteService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationService.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger);
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
                 SiteValidator.ValidateForDelete(config.Site);
@@ -141,7 +142,7 @@ public class SiteService : ISiteService
     private static string GetSiteInstallCmdArgs(ISiteConfiguration siteConfig)
     {
         var args =
-            $"-cm:\"NewInstance\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -c:\"ci=1;ct=;cn=;\" -c:\"ci=2;ct=SalesDemo;cp=1;cv=Yes;cn=Company;\" -i:\"{siteConfig.InstanceName}\" -h:\"{siteConfig.InstancePath}\\\" -w:\"{siteConfig.IisWebSite}\" -v:\"{siteConfig.InstanceName}\" -po:\"{siteConfig.IisAppPool}\" -op:\"Forced\"";
+            $"-cm:\"NewInstance\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -c:\"ci=1;ct=;cn=;\" -c:\"ci=2;ct=SalesDemo;cp=1;cv=Yes;cn=Company;\" -i:\"{siteConfig.InstanceName}\" -h:\"{siteConfig.InstancePath}\" -w:\"{siteConfig.IisWebSite}\" -v:\"{siteConfig.InstanceName}\" -po:\"{siteConfig.IisAppPool}\" -op:\"Forced\"";
         return args;
     }
 

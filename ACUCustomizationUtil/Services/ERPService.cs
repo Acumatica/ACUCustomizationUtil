@@ -90,7 +90,7 @@ public class ErpService : IErpService
             await AnsiConsole.Status().StartAsync("Install ERP", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
 
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForInstall(config.Erp);
@@ -101,6 +101,7 @@ public class ErpService : IErpService
                     config.Erp.InstallationDirectory!);
                 var processHelper = new ProcessHelper(Messages.Msiexec, processArgs, ctx);
                 await processHelper.Execute();
+                await Task.Run(() => { File.Delete(config.Erp.InstallationFilePath!); });
             });
         }
         catch (Exception e)
@@ -124,7 +125,7 @@ public class ErpService : IErpService
             await AnsiConsole.Status().StartAsync("Uninstalling ERP", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
 
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForDelete(config.Erp);

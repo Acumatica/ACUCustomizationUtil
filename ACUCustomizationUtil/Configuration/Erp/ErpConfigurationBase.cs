@@ -12,7 +12,7 @@ namespace ACUCustomizationUtils.Configuration.Erp;
 public abstract class ErpConfigurationBase : IErpConfiguration
 {
     public Uri? Url { get; set; }
-    public string? Version { get; set; }
+    public string? ErpVersion { get; set; }
     public string? InstallationFileName { get; set; }
     public string? DestinationDirectory { get; set; }
     public string? InstallationDirectory { get; private set; }
@@ -21,10 +21,10 @@ public abstract class ErpConfigurationBase : IErpConfiguration
 
     public IErpConfiguration SetDefaultValues(IAcuConfiguration configuration)
     {
-        Url ??= GetDownloadUri(Version);
+        Url ??= GetDownloadUri(ErpVersion);
         InstallationFileName ??= Messages.AcumaticaErpInstallMsi;
         InstallationFilePath ??= GetErpInstallationFile(DestinationDirectory, InstallationFileName);
-        InstallationDirectory ??= GetErpInstallationDirectory(DestinationDirectory, Version);
+        InstallationDirectory ??= GetErpInstallationDirectory(DestinationDirectory, ErpVersion);
         return this;
     }
 

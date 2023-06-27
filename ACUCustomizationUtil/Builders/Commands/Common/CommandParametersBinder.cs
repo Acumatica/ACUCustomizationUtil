@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Binding;
 using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Services;
 
 namespace ACUCustomizationUtils.Builders.Commands.Common;
@@ -25,7 +26,7 @@ public abstract class CommandParametersBinder : BinderBase<IAcuConfiguration>
         var userConfigFile = bindingContext.ParseResult.GetValueForOption(_userConfigFile);
         var userInput = GetUserConfiguration(bindingContext, _commandOptions);
         userInput.OnDeserialized();
-        var acuConfiguration = ConfigurationService.GetConfiguration(configFile, userConfigFile, userInput);
+        var acuConfiguration = ConfigurationHelper.GetConfiguration(configFile, userConfigFile, userInput);
 
         return acuConfiguration;
     }

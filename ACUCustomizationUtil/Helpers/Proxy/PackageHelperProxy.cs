@@ -17,7 +17,7 @@ public class PackageHelperProxy : IPackageHelperProxy
     public void MakePackage(IAcuConfiguration configuration)
     {
         var packageSourceDir = configuration.Code.PkgSourceDirectory!;
-        var erpVersion = configuration.Erp.Version!;
+        var erpVersion = configuration.Erp.ErpVersion!;
         var level = int.TryParse(configuration.Code.PkgLevel, out var l) ? l : 0;
         var packageDestinationDir = configuration.Package.PackageDirectory!;
         var packageName = GetPackageName(configuration);

@@ -1,37 +1,36 @@
 {
   "erp": {
-    "url": "http://acumatica-builds.s3.amazonaws.com/builds/23.1/23.105.0016/AcumaticaERP/AcumaticaERPInstall.msi",
-    "version": "23.105.0016",
+    "url": null,
+    "erpVersion": "23.105.0016",
     "installationFileName": "AcumaticaERPInstall.msi",
-    "destinationDirectory": "C:\\ACU\\ERPs"
+    "destinationDirectory": "C:\\ERPs"
   },
   "site": {
-    "acumaticaToolPath": null,
-    "instanceName": "AcuTestUtil",
-    "instancePath": "C:\\ACU\\instances\\AcuTestUtil",
+    "acumaticaToolPath": "C:\\ERPs\\23.105.0016\\Acumatica ERP\\Data\\ac.exe",
+    "instanceName": "23.105.0016",
+    "instancePath": "C:\\ERPs\\instances\\231040030\\Site",
     "sqlServerName": "SPRINT039",
-    "dbName": "AcuTestUtilDB",
-    "dbConnectionString": "Data Source=SPRINT039;Initial Catalog=AcuTestUtilDB;Integrated Security=True;Encrypt=False;",
+    "dbName": "231050016DB",
+    "dbConnectionString": "Data Source=SPRINT039;Initial Catalog=231050016DB;Integrated Security=True;Encrypt=False;",
     "acumaticaAdminName": "admin",
     "acumaticaAdminPassword": "123",
-    "sitePhysicalPath": "C:\\ACU\\instances\\AcuTestUtil\\Site",
     "iisAppPool": null,
     "iisWebSite": null
   },
   "package": {
-    "url": "http://localhost/AcuTestUtil/api/ServiceGate.asmx",
+    "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",
     "login": "admin",
     "password": "123",
     "tenant": null,
-    "packageName": "AcuTest",
-    "packageDirectory": "C:\\ACU\\ERPs\\pkg"
+    "packageName": "TestOne",
+    "packageDirectory": "C:\\ERPs\\projects\\TestOne\\pkg"
   },
   "code": {
-    "pkgSourceDirectory": "C:\\ACU\\ERPs\\src",
+    "pkgSourceDirectory": "C:\\ERPs\\projects\\TestOne\\src",
     "pkgDescription": null,
     "pkgLevel": "0",
-    "msBuildSolutionFile": "C:\\VS\\SPFileProcessing\\SPFileProcessing\\SPFileProcessing.sln",
-    "msBuildTargetDirectory": "C:\\VS\\SPFileProcessing\\SPFileProcessing\\bin\\Release\\",
+    "msBuildSolutionFile": "C:\\ERPs\\projects\\TestOne\\TestOne.sln",
+    "msBuildTargetDirectory": "C:\\ERPs\\projects\\TestOne\\code\\TestOne\\bin\\Release",
     "makeQA": "False",
     "makeISV": "False"
   }
