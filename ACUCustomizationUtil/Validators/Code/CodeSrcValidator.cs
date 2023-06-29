@@ -20,7 +20,7 @@ internal class CodeSrcValidator : AbstractValidator<ICodeConfiguration>
     public CodeSrcValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
-        RuleFor(c => c.PkgSourceDirectory).NotNull().Must(Directory.Exists);
+        RuleFor(c => c.PkgSourceDirectory).NotNull();
     }
 }
 

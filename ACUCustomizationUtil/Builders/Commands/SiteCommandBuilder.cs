@@ -153,8 +153,7 @@ public class SiteCommandBuilder : CommandBuilderBase
     private static Option<string> GetServerNameOption()
     {
         return new Option<string>("--sqlServerName",
-            description: "SQL Server instance for Acumatica database",
-            getDefaultValue: () => "localhost");
+            description: "SQL Server instance for Acumatica database");
     }
 
     private static Option<string> GetInstanceOption()
