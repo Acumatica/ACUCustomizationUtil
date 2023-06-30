@@ -4,6 +4,7 @@
     <s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=ID/@EntryIndexedValue">ID</s:String>
     <s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=ISV/@EntryIndexedValue">ISV</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=MYOB/@EntryIndexedValue">MYOB</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=NAW/@EntryIndexedValue">NAW</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Cust/@EntryIndexedValue">True</s:Boolean>
 	
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Maint/@EntryIndexedValue">True</s:Boolean>

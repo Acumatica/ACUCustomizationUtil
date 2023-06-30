@@ -1,4 +1,5 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Common;
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.Configuration.Code;
@@ -17,8 +18,7 @@ public abstract class CodeConfigurationBase : ICodeConfiguration
     public string? PkgLevel { get; set; }
     public string? MsBuildSolutionFile { get; set; }
     public string? MsBuildTargetDirectory { get; set; }
-    public bool? MakeQA { get; set; }
-    public bool? MakeISV { get; set; }
+    public string? MakeMode { get; set; }
     public abstract bool IsNotNull { get; }
 
     public string? PkgSourceBinDirectory { get; private set; }
@@ -29,6 +29,7 @@ public abstract class CodeConfigurationBase : ICodeConfiguration
         MsBuildTargetDirectory = MsBuildTargetDirectory.TryGetFullDirectoryPath();
         MsBuildSolutionFile = MsBuildSolutionFile.TryGetFullDirectoryPath();
         if (PkgSourceDirectory != null) PkgSourceBinDirectory = Path.Combine(PkgSourceDirectory, "Bin");
+        MakeMode ??= Messages.MakeModeBase;
         return this;
     }
 }

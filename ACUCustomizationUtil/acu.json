@@ -31,7 +31,6 @@
     "pkgLevel": "0",
     "msBuildSolutionFile": "C:\\ERPs\\projects\\TestOne\\TestOne.sln",
     "msBuildTargetDirectory": "C:\\ERPs\\projects\\TestOne\\code\\TestOne\\bin\\Release",
-    "makeQA": "False",
-    "makeISV": "False"
+    "makeMode": null
   }
 }

@@ -23,8 +23,7 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
         var packageDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
         var projectDescription = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
         var projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
-        var makeQA = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
-        var makeISV = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        var makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
 
         return new AcuConfiguration
         {
@@ -39,8 +38,7 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
                 PkgSourceDirectory = sourceDirectory,
                 PkgDescription = projectDescription,
                 PkgLevel = projectLevel,
-                MakeQA = makeQA != null ? bool.Parse(makeQA) : null,
-                MakeISV = makeISV != null ? bool.Parse(makeISV) : null
+                MakeMode = makeMode
             }
         };
     }

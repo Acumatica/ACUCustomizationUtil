@@ -19,6 +19,7 @@ public class CstEntityHelper
     private readonly string _packageSourceBinDir;
     private readonly string _siteRootDir;
     private readonly string _packageName;
+    private string? _erpVersion;
 
     public CstEntityHelper(IAcuConfiguration config)
     {
@@ -29,6 +30,7 @@ public class CstEntityHelper
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
         _siteRootDir = config.Site.InstancePath!;
         _packageName = config.Package.PackageName!;
+        _erpVersion = config.Erp.ErpVersion;
     }
 
     #region Public methods
@@ -86,8 +88,19 @@ public class CstEntityHelper
         return versionInfo?.FileVersion;
     }
 
-    public string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.mm.dd");
+    public static string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.MM.dd");
 
+    #region NAW
+
+    public string GetPackageNawErpVersion()
+    {
+        var erpVersionArray = _erpVersion!.Split('.');
+        return $"{erpVersionArray[0]}R{erpVersionArray[1]}";
+    }
+    public static string GetPackageNawDateVersion() => DateTime.Now.ToString("yyMMdd");
+
+    #endregion
+    
     #endregion Public methods
 
     #region Private methods
@@ -147,4 +160,8 @@ public class CstEntityHelper
     }
 
     #endregion Private methods
+
+    
+
+    
 }

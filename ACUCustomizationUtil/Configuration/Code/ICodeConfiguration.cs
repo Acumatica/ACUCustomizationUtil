@@ -12,8 +12,8 @@ public interface ICodeConfiguration
     string? PkgLevel { get; }
     string? MsBuildSolutionFile { get; }
     string? MsBuildTargetDirectory { get; }
-    bool? MakeQA { get; }
-    bool? MakeISV { get; }
+    string? MakeMode { get; }
+    
     bool IsNotNull { get; }
     string? PkgSourceBinDirectory { get; }
 

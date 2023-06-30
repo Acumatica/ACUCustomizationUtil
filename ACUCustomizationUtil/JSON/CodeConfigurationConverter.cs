@@ -37,15 +37,8 @@ public class CodeConfigurationConverter : JsonConverter<ICodeConfiguration>
                 case nameof(code.MsBuildTargetDirectory):
                     code.MsBuildTargetDirectory = reader.GetString();
                     break;
-                case nameof(code.MakeQA):
-                    var qaStr = reader.GetString();
-                    _ = bool.TryParse(qaStr, out var qa);
-                    code.MakeQA = qa;
-                    break;
-                case nameof(code.MakeISV):
-                    var isvStr = reader.GetString();
-                    _ = bool.TryParse(isvStr, out var isv);
-                    code.MakeISV = isv;
+                case nameof(code.MakeMode):
+                    code.MakeMode = reader.GetString();
                     break;
             }
         }

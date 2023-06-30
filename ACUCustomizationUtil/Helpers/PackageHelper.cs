@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
+using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 
@@ -117,21 +118,27 @@ public class PackageHelper
         }
     }
 
-    internal static string GetPackageName(IAcuConfiguration config)
+    private static string GetPackageName(IAcuConfiguration config)
     {
         var cstHelper = new CstEntityHelper(config);
         var fileVersion = cstHelper.GetPackageFileVersion();
-        var dateVersion = cstHelper.GetPackageDateVersion();
+        var dateVersion = CstEntityHelper.GetPackageDateVersion();
+        var nawErpVersion = cstHelper.GetPackageNawErpVersion();
+        var nawDateVersion = CstEntityHelper.GetPackageNawDateVersion();
+        
+        var packageName = config.Code.MakeMode switch
+        {
+            Messages.MakeModeBase => $"{config.Package.PackageName}.zip",
+            Messages.MakeModeQA => $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{fileVersion}].zip",
+            Messages.MakeModeISV => $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{dateVersion}].zip",
+            Messages.MakeModeNAW => $"{config.Package.PackageName}{nawErpVersion}v{nawDateVersion}.zip",
+            _ => $"{config.Package.PackageName}.zip"
+        };
 
-        var qa = config.Code.MakeQA;
-        var isv = config.Code.MakeISV;
-
-        if (isv == true) return $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{dateVersion}].zip";
-        if (qa == true) return $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{fileVersion}].zip";
-        return $"{config.Package.PackageName}.zip";
+        return packageName;
     }
 
-    internal static string GetPackageDescription(IAcuConfiguration config)
+    private static string GetPackageDescription(IAcuConfiguration config)
     {
         return $"Release {config.Erp.ErpVersion} (build date: {DateTime.UtcNow.ToUniversalTime()})";
     }

@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using ACUCustomizationUtils.Builders.Commands.Binders;
 using ACUCustomizationUtils.Builders.Commands.Common;
+using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.Code;
 using ACUCustomizationUtils.Validators;
@@ -46,12 +47,11 @@ public class CodeCommandBuilder : CommandBuilderBase
         var sourceDirectory = GetSourceDirectoryOption();
         var packageName = GetPackageNameOption();
         var packageDirectory = GetPackageDirectoryOption();
-        var makeQA = BuildQAOption();
-        var makeISV = BuildISVOption();
+        var makeMode = BuildMakeModeOption();
 
         var command = new Command("make", "Create customization package from source code")
         {
-            sourceDirectory, packageName, packageDirectory, makeQA, makeISV
+            sourceDirectory, packageName, packageDirectory, makeMode
         };
 
         command.SetHandler(_projectService.MakeProjectFromSource,
@@ -64,8 +64,7 @@ public class CodeCommandBuilder : CommandBuilderBase
                 packageDirectory,
                 projectDescription,
                 projectLevel,
-                makeQA,
-                makeISV
+                makeMode
             ));
 
         return command;
@@ -162,17 +161,22 @@ public class CodeCommandBuilder : CommandBuilderBase
     }
 
 
-    private static Option<string> BuildQAOption()
+    private static Option<string> BuildMakeModeOption()
     {
         return new Option<string>(
-            name: "--qa",
-            description: "Make package for QA");
-    }
-
-    private static Option<string> BuildISVOption()
-    {
-        return new Option<string>(
-            name: "--isv",
-            description: "Make package for ISV");
+            name: "--mode",
+            description: "Mode for make package: QA|ISV", 
+            parseArgument: result =>
+            {
+                if (result.Tokens.Count == 0) return Messages.MakeModeBase;
+                var optionValue = result.Tokens.Single().Value;
+                if (optionValue != Messages.MakeModeBase
+                    && optionValue != Messages.MakeModeQA
+                    && optionValue != Messages.MakeModeISV
+                    && optionValue != Messages.MakeModeNAW) 
+                    return Messages.MakeModeBase;
+                
+                return optionValue;
+            });
     }
 }
