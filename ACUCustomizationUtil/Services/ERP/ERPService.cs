@@ -2,13 +2,14 @@
 
 using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.Erp;
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Validators.Erp;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
-namespace ACUCustomizationUtils.Services;
+namespace ACUCustomizationUtils.Services.ERP;
+
 /// <summary>
 /// This class contains methods for handle ERP subcommands
 /// </summary>
@@ -40,10 +41,7 @@ public class ErpService : IErpService
     {
         WebClient.ProgressChangedHandler OnDownloadProgressChanged(StatusContext ctx)
         {
-            return (size, downloaded, percentage) =>
-            {
-                ctx.Status($"Progress: {downloaded}/{size} {percentage}%");
-            };
+            return (size, downloaded, percentage) => { ctx.Status($"Progress: {downloaded}/{size} {percentage}%"); };
         }
 
         _logger.LogInformation("Execute DownloadErp action");

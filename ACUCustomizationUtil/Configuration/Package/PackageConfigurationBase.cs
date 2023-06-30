@@ -1,4 +1,7 @@
-﻿namespace ACUCustomizationUtils.Configuration.Package;
+﻿using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Extensions;
+
+namespace ACUCustomizationUtils.Configuration.Package;
 /// <summary>
 /// POCO configuration class for acu util (Package section)
 /// </summary>
@@ -25,9 +28,13 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
             Login = $"{Login}@{Tenant}";
         }
 
-        if (PackageName == null) return this;
-        var file = PackageName!.EndsWith(".zip") ? PackageName : $"{PackageName}.zip";
-        PackageFilePath = PackageDirectory != null ? Path.Combine(PackageDirectory, file) : null;
+        PackageDirectory = PackageDirectory.TryGetFullDirectoryPath();
+        if (PackageName != null && PackageDirectory != null)
+        {
+            var file = PackageName!.EndsWith(".zip") ? PackageName : $"{PackageName}.zip";
+            PackageFilePath = Path.Combine(PackageDirectory, file);
+        }
+        
 
         return this;
     }

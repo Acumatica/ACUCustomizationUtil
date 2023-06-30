@@ -5,7 +5,7 @@ using ACUCustomizationUtils.Configuration.Erp;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
 
-namespace ACUCustomizationUtils.Configuration;
+namespace ACUCustomizationUtils.Configuration.ACU;
 /// <summary>
 /// POCO configuration class for acu util 
 /// </summary>

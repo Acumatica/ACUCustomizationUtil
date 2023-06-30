@@ -39,9 +39,14 @@ public class ProcessHelper
         };
         process.EnableRaisingEvents = true;
         process.OutputDataReceived += (_, args) => { PrintProgressStatus(_ctx, args); };
-        process.ErrorDataReceived += (_, args) => { _logger.Error("{Error}", args.Data); };
+        process.ErrorDataReceived += (_, args) =>
+        {
+            _logger.Error("{Error}", args.Data);
+            PrintProgressStatus(_ctx, args);
+        };
         process.Start();
         process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
         await process.WaitForExitAsync();
     }
 

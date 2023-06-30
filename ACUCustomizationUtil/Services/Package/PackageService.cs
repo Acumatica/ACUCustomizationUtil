@@ -1,10 +1,12 @@
 ﻿using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Validators.Package;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
-namespace ACUCustomizationUtils.Services;
+namespace ACUCustomizationUtils.Services.Package;
+
 /// <summary>
 /// This class contains methods for handle Package subcommands
 /// </summary>
@@ -60,7 +62,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -90,7 +92,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -119,7 +121,7 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");

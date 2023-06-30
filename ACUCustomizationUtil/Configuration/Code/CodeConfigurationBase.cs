@@ -1,4 +1,7 @@
-﻿namespace ACUCustomizationUtils.Configuration.Code;
+﻿using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Extensions;
+
+namespace ACUCustomizationUtils.Configuration.Code;
 /// <summary>
 /// POCO configuration class for acu util (Code section)
 /// </summary>
@@ -22,6 +25,9 @@ public abstract class CodeConfigurationBase : ICodeConfiguration
 
     public ICodeConfiguration SetDefaultValues(IAcuConfiguration configuration)
     {
+        PkgSourceDirectory = PkgSourceDirectory.TryGetFullDirectoryPath();
+        MsBuildTargetDirectory = MsBuildTargetDirectory.TryGetFullDirectoryPath();
+        MsBuildSolutionFile = MsBuildSolutionFile.TryGetFullDirectoryPath();
         if (PkgSourceDirectory != null) PkgSourceBinDirectory = Path.Combine(PkgSourceDirectory, "Bin");
         return this;
     }

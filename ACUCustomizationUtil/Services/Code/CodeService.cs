@@ -1,4 +1,5 @@
 ﻿using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Helpers.Proxy;
@@ -7,7 +8,8 @@ using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using CstEntityHelper = ACUCustomizationUtils.Helpers.CstEntityHelper;
 
-namespace ACUCustomizationUtils.Services;
+namespace ACUCustomizationUtils.Services.Code;
+
 /// <summary>
 /// This class contains methods for handle Code subcommands
 /// </summary>
@@ -38,7 +40,8 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger,  nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
+                    nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -66,7 +69,8 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
+                    nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
@@ -94,11 +98,12 @@ public class CodeService : ICodeService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package), nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
+                    nameof(IAcuConfiguration.Code));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
-                CodeValidator.ValidateForCompile(config.Code);
+                CodeValidator.ValidateForCompile(config);
 
                 ctx.Status("Compile in progress, please wait ...");
                 _logger.LogInformation("Compile external library code for project {Package}",
@@ -154,12 +159,9 @@ public class CodeService : ICodeService
         itemHandler.SaveProjectMetadata(projectInfo);
     }
 
-    private  async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
+    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
     {
-        await Task.Run(() =>
-        {
-            _packageHelperProxy.MakePackage(config);
-        });
+        await Task.Run(() => { _packageHelperProxy.MakePackage(config); });
     }
 
     #endregion

@@ -1,6 +1,7 @@
 using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.ACU;
 
-namespace ACUCustomizationUtils.Services;
+namespace ACUCustomizationUtils.Services.Site;
 
 public interface ISiteService
 {

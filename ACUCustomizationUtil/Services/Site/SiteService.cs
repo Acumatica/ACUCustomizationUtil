@@ -1,11 +1,13 @@
 ﻿using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Validators.Site;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
-namespace ACUCustomizationUtils.Services;
+namespace ACUCustomizationUtils.Services.Site;
+
 /// <summary>
 /// This class contains methods for handle Site subcommands
 /// </summary>
@@ -42,7 +44,7 @@ public class SiteService : ISiteService
                 var processArgs = GetSiteInstallCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
-                _logger.LogInformation("Reset passwords to default for new Acumatica instance");
+                _logger.LogInformation("Reset admin passwords to default for new Acumatica instance");
                 var dbHelper = new DatabaseHelper(config);
                 await dbHelper.UpdateAdminPasswordDefault();
             });

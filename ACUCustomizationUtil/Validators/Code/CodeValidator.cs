@@ -1,4 +1,5 @@
 ﻿using ACUCustomizationUtils.Configuration;
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Code;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
@@ -16,44 +17,21 @@ public abstract class CodeValidator : OptionsValidatorBase
 {
     public static void ValidateForSrc(IAcuConfiguration config)
     {
-        ValidateForSrc(config.Site);
-        ValidateForSrc(config.Package);
-        ValidateForSrc(config.Code);
+        Validate(config.Site, new SiteGetSrcValidator());
+        Validate(config.Package, new PackageGetSrcValidator());
+        Validate(config.Code, new CodeSrcValidator());
     }
 
     public static void ValidateForMake(IAcuConfiguration config)
     {
-        ValidateForMake(config.Package);
-        ValidateForMake(config.Code);
+        Validate(config.Package, new PackageMakeValidator());
+        Validate(config.Code, new CodeMakeValidator());
     }
 
-    public static void ValidateForCompile(ICodeConfiguration configuration)
+    public static void ValidateForCompile(IAcuConfiguration configuration)
     {
-        Validate(configuration, new CodeCompileValidator());
+        Validate(configuration.Package, new PackageCompileValidator());
+        Validate(configuration.Code, new CodeCompileValidator());
     }
-
-    private static void ValidateForSrc(ISiteConfiguration configuration)
-    {
-        Validate(configuration, new SiteGetSrcValidator());
-    }
-
-    private static void ValidateForSrc(IPackageConfiguration configuration)
-    {
-        Validate(configuration, new PackageGetSrcValidator());
-    }
-
-    private static void ValidateForSrc(ICodeConfiguration configuration)
-    {
-        Validate(configuration, new CodeSrcValidator());
-    }
-
-    private static void ValidateForMake(IPackageConfiguration configuration)
-    {
-        Validate(configuration, new PackageMakeValidator());
-    }
-
-    private static void ValidateForMake(ICodeConfiguration configuration)
-    {
-        Validate(configuration, new CodeMakeValidator());
-    }
+    
 }

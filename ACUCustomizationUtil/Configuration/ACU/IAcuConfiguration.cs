@@ -5,7 +5,7 @@ using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.JSON;
 
-namespace ACUCustomizationUtils.Configuration;
+namespace ACUCustomizationUtils.Configuration.ACU;
 
 [JsonConverter(typeof(AcuConfigurationConverter))]
 public interface IAcuConfiguration

@@ -1,4 +1,4 @@
-﻿namespace ACUCustomizationUtils.Configuration;
+﻿namespace ACUCustomizationUtils.Configuration.ACU;
 
 public class AcuNullConfiguration : AcuConfigurationBase
 {

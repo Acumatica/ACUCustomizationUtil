@@ -1,3 +1,6 @@
+using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Extensions;
+
 namespace ACUCustomizationUtils.Configuration.Site;
 /// <summary>
 /// POCO configuration class for acu util (Site section)
@@ -28,6 +31,7 @@ public abstract class SiteConfigurationBase : ISiteConfiguration
             ? Path.Combine(configuration.Erp.InstallationDirectory!, "Acumatica ERP\\Data\\ac.exe")
             : null;
         SqlServerName ??= "localhost";
+        InstancePath = InstancePath.TryGetFullDirectoryPath();  
         DbName ??= InstanceName != null ? $"{InstanceName}DB" : null;
         DbConnectionString ??= SqlServerName != null && DbName != null
             ? $"Data Source={SqlServerName};Initial Catalog={DbName};Integrated Security=True;Encrypt=False;"
