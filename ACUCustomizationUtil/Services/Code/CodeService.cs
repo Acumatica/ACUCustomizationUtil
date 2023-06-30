@@ -1,8 +1,6 @@
-﻿using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
-using ACUCustomizationUtils.Helpers.Proxy;
 using ACUCustomizationUtils.Validators.Code;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
@@ -21,14 +19,12 @@ namespace ACUCustomizationUtils.Services.Code;
 public class CodeService : ICodeService
 {
     private readonly ILogger<CodeService> _logger;
-    private readonly IPackageHelperProxy _packageHelperProxy;
 
     #region Public methods
 
-    public CodeService(ILogger<CodeService> logger, IPackageHelperProxy packageHelperProxy)
+    public CodeService(ILogger<CodeService> logger)
     {
         _logger = logger;
-        _packageHelperProxy = packageHelperProxy;
     }
 
     public async Task GetProjectSource(IAcuConfiguration config)
@@ -159,9 +155,13 @@ public class CodeService : ICodeService
         itemHandler.SaveProjectMetadata(projectInfo);
     }
 
-    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
+    private static async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
     {
-        await Task.Run(() => { _packageHelperProxy.MakePackage(config); });
+        await Task.Run(() =>
+        {
+            var packageHelper = new PackageHelper(config);
+            packageHelper.MakePackage();
+        });
     }
 
     #endregion

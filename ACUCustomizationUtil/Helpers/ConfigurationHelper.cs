@@ -1,8 +1,6 @@
 ﻿using System.Text.Json;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
-using ACUCustomizationUtils.Helpers.Proxy;
 using Microsoft.Extensions.Logging;
 
 namespace ACUCustomizationUtils.Helpers;

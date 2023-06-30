@@ -1,37 +1,49 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.Helpers;
 
-[SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
-[SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-public static class PackageHelper
+public class PackageHelper
 {
+    private readonly string _packageSourceDir;
+    private readonly string _erpVersion;
+    private readonly int _level;
+    private string _packageFileName;
+    private readonly string? _description;
+
     #region Public members
 
-    public static void MakePackage(string customizationPath, string? packageFilename, string erpVersion,
-        string? description, int? level)
+    public PackageHelper(IAcuConfiguration configuration)
     {
-        ValidateCustomizationPath(customizationPath);
-        ValidateProjectVersion(erpVersion);
-        ValidatePackagePath(packageFilename);
+        _packageSourceDir = configuration.Code.PkgSourceDirectory!;
+        _erpVersion = configuration.Erp.ErpVersion!;
+        _level = int.TryParse(configuration.Code.PkgLevel, out var l) ? l : 0;
+        var packageDestinationDir = configuration.Package.PackageDirectory!;
+        var packageName = GetPackageName(configuration);
+        _packageFileName = Path.Combine(packageDestinationDir, packageName);
+        _description = configuration.Code.PkgDescription ?? GetPackageDescription(configuration);
+    }
+    
+    public void MakePackage()
+    {
+        ValidateCustomizationPath(_packageSourceDir);
+        ValidateProjectVersion(_erpVersion);
+        ValidatePackagePath(_packageFileName);
 
         var projectXml = new XmlDocument();
         var customizationNode = projectXml.CreateElement("Customization");
 
-        customizationNode.SetAttribute("level", level.ToString());
-        customizationNode.SetAttribute("description", description);
-        customizationNode.SetAttribute("product-version", erpVersion);
+        customizationNode.SetAttribute("level", _level.ToString());
+        customizationNode.SetAttribute("description", _description);
+        customizationNode.SetAttribute("product-version", _erpVersion);
 
         // Append all .xml files to project.xml
-        var projectDir = Path.Combine(customizationPath, "_project");
+        var projectDir = Path.Combine(_packageSourceDir, "_project");
         if (new DirectoryInfo(projectDir).Exists)
-            foreach (var file in Directory.GetFiles(Path.Combine(customizationPath, "_project"), "*.xml"))
+            foreach (var file in Directory.GetFiles(Path.Combine(_packageSourceDir, "_project"), "*.xml"))
             {
                 if (file.EndsWith("ProjectMetadata.xml")) continue;
 
@@ -43,10 +55,10 @@ public static class PackageHelper
                 customizationNode.AppendChild(projectXml.ImportNode(currentFileXml.DocumentElement, true));
             }
 
-        if (packageFilename == null) throw new ArgumentNullException(nameof(packageFilename));
-        using FileStream zipFileStream = new(packageFilename, FileMode.Create);
+        if (_packageFileName == null) throw new ArgumentNullException(nameof(_packageFileName));
+        using FileStream zipFileStream = new(_packageFileName, FileMode.Create);
         using ZipArchive archive = new(zipFileStream, ZipArchiveMode.Create, true);
-        AddFilesToZipArchive(customizationPath, archive, customizationNode);
+        AddFilesToZipArchive(_packageSourceDir, archive, customizationNode);
 
         projectXml.AppendChild(customizationNode);
         var projectFile = archive.CreateEntry("project.xml", CompressionLevel.Optimal);
@@ -60,20 +72,20 @@ public static class PackageHelper
 
     #region Validators
 
-    private static void ValidateCustomizationPath(string customizationPath)
+    private void ValidateCustomizationPath(string customizationPath)
     {
         var res = new DirectoryInfo(customizationPath).Exists;
         if (!res) throw new ArgumentException($"{customizationPath} do not found");
     }
 
-    private static void ValidateProjectVersion(string erpVersion)
+    private void ValidateProjectVersion(string erpVersion)
     {
         var regex = new Regex("^\\d{2}\\.\\d{3}.\\d{4}$");
         var match = regex.IsMatch(erpVersion);
         if (!match) throw new ArgumentException("ERP Version should be in the form: 00.000.0000");
     }
 
-    private static void ValidatePackagePath(string? packageFilename)
+    private void ValidatePackagePath(string? packageFilename)
     {
         packageFilename.TryCheckFileDirectory();
     }
@@ -119,7 +131,7 @@ public static class PackageHelper
         return $"{config.Package.PackageName}.zip";
     }
 
-    internal static string? GetPackageDescription(IAcuConfiguration config)
+    internal static string GetPackageDescription(IAcuConfiguration config)
     {
         return $"Release {config.Erp.ErpVersion} (build date: {DateTime.UtcNow.ToUniversalTime()})";
     }

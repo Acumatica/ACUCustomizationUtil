@@ -1,6 +1,4 @@
 ﻿using ACUCustomizationUtils.Builders.Commands;
-using ACUCustomizationUtils.Helpers.Proxy;
-using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.Code;
 using ACUCustomizationUtils.Services.ERP;
 using ACUCustomizationUtils.Services.Package;
@@ -26,7 +24,6 @@ public static class HostBuilder
         return Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                services.AddSingleton<IPackageHelperProxy, PackageHelperProxy>();
                 services.AddTransient<IErpService, ErpService>();
                 services.AddTransient<ISiteService, SiteService>();
                 services.AddTransient<IPackageService, PackageService>();
