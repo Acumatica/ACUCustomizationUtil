@@ -66,11 +66,16 @@ public class MsBuildHelper
 
     private static string GetMsBuildArgs(IAcuConfiguration config)
     {
+
+        var version = $"{config.Erp.ErpVersion?[..6]}.{DateTime.Now:yMd.HHmm}";
+        var solutionFilePath = config.Code.MsBuildSolutionFile;
+        var versionProperty = $"/property:Version={version}";
+        
         const string buildConfiguration = "/property:Configuration=Release";
         const string buildTarget = "/target:Rebuild";
-        var solutionFilePath = config.Code.MsBuildSolutionFile;
+        
 
-        return $"{buildConfiguration} {buildTarget} {solutionFilePath}";
+        return $"{buildConfiguration} {versionProperty} {buildTarget} {solutionFilePath}";
     }
 
     private string GetMsbuildPath()

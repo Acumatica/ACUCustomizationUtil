@@ -55,8 +55,7 @@ public class ErpService : IErpService
                 _logger.LogInformation("Validate configuration");
                 ErpValidator.ValidateForDownload(config.Erp);
 
-                _logger.LogInformation("Downloading installation file");
-                ctx.Status("Downloading in progress, please wait ...");
+                _logger.LogInformation("Downloading installation file {ErpInstallationFilePath}", config.Erp.InstallationFilePath!);
                 using var client = new WebClient(config.Erp.Url!, config.Erp.InstallationFilePath!);
                 client.ProgressChanged += OnDownloadProgressChanged(ctx);
                 await client.DownloadFileAsync();
@@ -68,7 +67,7 @@ public class ErpService : IErpService
             _logger.LogError(e, "Download installation file: action error!");
         }
 
-        _logger.LogInformation("Download ERP installation complete");
+        _logger.LogInformation("Execute DownloadErp action complete");
     }
 
     /// <summary>
