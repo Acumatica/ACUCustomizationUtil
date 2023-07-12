@@ -34,17 +34,17 @@ public class CodeService : ICodeService
         {
             await AnsiConsole.Status().StartAsync("Download project source items", async ctx =>
             {
-                ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
                     nameof(IAcuConfiguration.Code));
 
-                ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 CodeValidator.ValidateForSrc(config);
 
-                ctx.Status("Download in progress, please wait ...");
                 _logger.LogInformation("Download source items for project {Package}", config.Package.PackageName);
+                ctx.Status("Download in progress, please wait ...");
                 await GetProjectSourceExAsync(config);
             });
         }
@@ -63,17 +63,17 @@ public class CodeService : ICodeService
         {
             await AnsiConsole.Status().StartAsync("Making project from source", async ctx =>
             {
-                ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
                     nameof(IAcuConfiguration.Code));
 
-                ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 CodeValidator.ValidateForMake(config);
 
-                ctx.Status("Making in progress, please wait ...");
                 _logger.LogInformation("Making package for project {Package}", config.Package.PackageName);
+                ctx.Status("Making in progress, please wait ...");
                 await MakeProjectFromSourceExAsync(config);
             });
         }
@@ -92,18 +92,17 @@ public class CodeService : ICodeService
         {
             await AnsiConsole.Status().StartAsync("Compile external library code", async ctx =>
             {
-                ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
                     nameof(IAcuConfiguration.Code));
 
-                ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 CodeValidator.ValidateForCompile(config);
 
+                _logger.LogInformation("Compile external library code for project {Package}", config.Package.PackageName);
                 ctx.Status("Compile in progress, please wait ...");
-                _logger.LogInformation("Compile external library code for project {Package}",
-                    config.Package.PackageName);
                 var msBuildHelper = new MsBuildHelper(config, ctx);
                 await msBuildHelper.Execute();
             });

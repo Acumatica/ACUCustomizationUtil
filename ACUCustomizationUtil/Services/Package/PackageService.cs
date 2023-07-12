@@ -39,10 +39,11 @@ public class PackageService : IPackageService
                 _logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForGet(config.Package);
 
-                ctx.Status("Download in progress, please wait ...");
                 _logger.LogInformation("Download package {Package}", config.Package.PackageName);
+                ctx.Status("Download in progress, please wait ...");
                 using var client = new SoapClient(config);
                 await client.GetPackage();
+                
             });
         }
         catch (Exception e)
@@ -68,10 +69,11 @@ public class PackageService : IPackageService
                 _logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForPublish(config.Package);
 
-                ctx.Status("Publish in progress, please wait ...");
                 _logger.LogInformation("Publish package {Package}", config.Package.PackageName);
+                ctx.Status("Publish in progress, please wait ...");
                 using var client = new SoapClient(config);
                 await client.PublishPackages();
+                
             });
         }
         catch (Exception e)
@@ -98,10 +100,11 @@ public class PackageService : IPackageService
                 _logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForUnpublish(config.Package);
 
+                _logger.LogInformation("Unpublish package(s) {Package}", config.Package.PackageName);
                 ctx.Status("Unpublish in progress, please wait ...");
-                _logger.LogInformation("Unpublish package(s) {Package} complete", config.Package.PackageName);
                 using var client = new SoapClient(config);
                 await client.UnpublishAllPackages();
+                
             });
         }
         catch (Exception e)
@@ -127,10 +130,11 @@ public class PackageService : IPackageService
                 _logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForUpload(config.Package);
 
+                _logger.LogInformation("Uploading package {Package}", config.Package.PackageName);
                 ctx.Status("UploadPackage in progress, please wait ...");
-                _logger.LogInformation("Uploading package {Package} ...", config.Package.PackageName);
                 using var client = new SoapClient(config);
                 await client.UploadPackage();
+                
             });
         }
         catch (Exception e)

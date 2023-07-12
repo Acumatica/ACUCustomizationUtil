@@ -1,5 +1,4 @@
-﻿using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Validators.Site;
@@ -32,19 +31,23 @@ public class SiteService : ISiteService
         {
             await AnsiConsole.Status().StartAsync("Install Acumatica instance", async ctx =>
             {
-                ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
-                ctx.Status("Validate configuration ...");
+
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 SiteValidator.ValidateForInstall(config.Site);
                 SiteValidator.ValidateForInstallV(config);
+
+                _logger.LogInformation("Installing new Acumatica instance {Instance}", config.Site.InstanceName);
                 ctx.Status("Installation in progress, please wait ...");
-                _logger.LogInformation("Installing new Acumatica instance");
                 var processArgs = GetSiteInstallCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
+                
                 _logger.LogInformation("Reset admin passwords to default for new Acumatica instance");
+                ctx.Status("Reset admin passwords to default, please wait ...");
                 var dbHelper = new DatabaseHelper(config);
                 await dbHelper.UpdateAdminPasswordDefault();
             });
@@ -65,12 +68,14 @@ public class SiteService : ISiteService
             await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
 
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 SiteValidator.ValidateForUpdate(config.Site);
 
-                _logger.LogInformation("Updating Acumatica instance");
+                _logger.LogInformation("Updating Acumatica instance {Instance}", config.Site.InstanceName);
                 ctx.Status("Updating in progress, please wait ...");
                 var processArgs = GetSiteUpdateCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
@@ -92,14 +97,16 @@ public class SiteService : ISiteService
         {
             await AnsiConsole.Status().StartAsync("Update Acumatica database", async ctx =>
             {
-                ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
-                ctx.Status("Validate configuration ...");
+                
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 SiteValidator.ValidateForUpdate(config.Site);
+
+                _logger.LogInformation("Updating Acumatica database {Database}", config.Site.DbName);
                 ctx.Status("Update in progress, please wait ...");
-                _logger.LogInformation("Updating Acumatica database");
                 var processArgs = GetDatabaseUpdateCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
@@ -120,14 +127,16 @@ public class SiteService : ISiteService
         {
             await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
             {
-                ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
+                ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger);
-                ctx.Status("Validate configuration ...");
+                
                 _logger.LogInformation("Validate configuration");
+                ctx.Status("Validate configuration ...");
                 SiteValidator.ValidateForDelete(config.Site);
-                ctx.Status("Deletion in progress, please wait ...");
+
                 _logger.LogInformation("Deleting Acumatica instance");
+                ctx.Status("Deletion in progress, please wait ...");
                 var processArgs = GetSiteDeleteCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();

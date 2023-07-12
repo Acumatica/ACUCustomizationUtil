@@ -93,7 +93,7 @@ public class PackageHelper
 
     #endregion Validators
 
-    private static void AddFilesToZipArchive(string customizationPath, ZipArchive archive, XmlNode customizationNode,
+    private void AddFilesToZipArchive(string customizationPath, ZipArchive archive, XmlNode customizationNode,
         string? parentDir = null)
     {
         foreach (var directory in Directory.GetDirectories(customizationPath))
@@ -113,8 +113,13 @@ public class PackageHelper
                 fileElement.SetAttribute("AppRelativePath", arcFileName);
                 customizationNode.AppendChild(fileElement);
             }
-
-            AddFilesToZipArchive(directory, archive, customizationNode, new DirectoryInfo(directory).Name);
+            
+            //Calculate relative parent directory name for the next level
+            parentDir = parentDir != null ? Path.Combine(parentDir, new DirectoryInfo(directory).Name) : new DirectoryInfo(directory).Name;
+            if (!directory.EndsWith(parentDir))
+                parentDir = new DirectoryInfo(directory).Name;
+            
+            AddFilesToZipArchive(directory, archive, customizationNode, parentDir);
         }
     }
 

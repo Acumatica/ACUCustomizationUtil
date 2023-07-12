@@ -67,7 +67,7 @@ public class ErpService : IErpService
             _logger.LogError(e, "Download installation file: action error!");
         }
 
-        _logger.LogInformation("Execute DownloadErp action complete");
+        _logger.LogInformation("Execute DownloadErp action-- complete");
     }
 
     /// <summary>
