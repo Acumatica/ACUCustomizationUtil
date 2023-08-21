@@ -50,7 +50,6 @@ public class PackageHelper
 
                 var currentFileXml = new XmlDocument();
                 currentFileXml.Load(file);
-
                 if (currentFileXml.DocumentElement == null) throw new Exception("project.xml empty");
 
                 customizationNode.AppendChild(projectXml.ImportNode(currentFileXml.DocumentElement, true));
@@ -93,33 +92,55 @@ public class PackageHelper
 
     #endregion Validators
 
-    private void AddFilesToZipArchive(string customizationPath, ZipArchive archive, XmlNode customizationNode,
-        string? parentDir = null)
+    private void AddFilesToZipArchive(string path, ZipArchive archive, XmlNode customizationNode)
     {
-        foreach (var directory in Directory.GetDirectories(customizationPath))
+        if(File.Exists(path)) 
         {
-            if (directory.EndsWith(@"\_project")) continue;
-            foreach (var file in Directory.GetFiles(directory))
-            {
-                if (file.EndsWith("bin.config")) continue;
+            // This path is a file
+            ProcessFile(path); 
+        }               
+        else if(Directory.Exists(path)) 
+        {
+            // This path is a directory
+            ProcessDirectory(path);
+        }
+        else 
+        { 
+            throw new ArgumentException("{0} is not a valid file or directory.", path);
+        }        
+        
+        // Process all files in the directory passed in, recurse on any directories 
+        // that are found, and process the files they contain.
+        void ProcessDirectory(string targetDirectory) 
+        {
+            if (targetDirectory.EndsWith(@"\_project")) return;
 
-                var fileInfo = new FileInfo(file);
-                var dirInfo = fileInfo.Directory;
-                var arcFileName = Path.Combine(parentDir ?? string.Empty, dirInfo!.Name, fileInfo.Name);
-                archive.CreateEntryFromFile(file, arcFileName, CompressionLevel.Optimal);
-
-                //Add reference to customization project as well
-                var fileElement = customizationNode.OwnerDocument!.CreateElement("File");
-                fileElement.SetAttribute("AppRelativePath", arcFileName);
-                customizationNode.AppendChild(fileElement);
-            }
+            // Process the list of files found in the directory.
+            var fileEntries = Directory.GetFiles(targetDirectory);
+            foreach(var fileName in fileEntries)
+                ProcessFile(fileName);
+        
+            // Recurse into subdirectories of this directory.
+            var subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            foreach(var subdirectory in subdirectoryEntries)
+                ProcessDirectory(subdirectory);
+        }
+        
+        void ProcessFile(string file) 
+        {
+            if (file.EndsWith("bin.config")) return;
             
-            //Calculate relative parent directory name for the next level
-            parentDir = parentDir != null ? Path.Combine(parentDir, new DirectoryInfo(directory).Name) : new DirectoryInfo(directory).Name;
-            if (!directory.EndsWith(parentDir))
-                parentDir = new DirectoryInfo(directory).Name;
+            //Calculate archive file name & add it to customization archive.
+            var fileInfo = new FileInfo(file);
+            var dirInfo = fileInfo.Directory;
+            var arcDir = dirInfo?.FullName.Split(_packageSourceDir)[1].TrimStart('\\');
+            var arcFileName = Path.Combine(arcDir ?? string.Empty, fileInfo.Name);
+            archive.CreateEntryFromFile(file, arcFileName, CompressionLevel.Optimal);
             
-            AddFilesToZipArchive(directory, archive, customizationNode, parentDir);
+            //Add reference to customization project as well
+            var fileElement = customizationNode.OwnerDocument!.CreateElement("File");
+            fileElement.SetAttribute("AppRelativePath", arcFileName);
+            customizationNode.AppendChild(fileElement);      
         }
     }
 

@@ -9,7 +9,7 @@ using ACUCustomizationUtils.Builders.Log;
 using ACUCustomizationUtils.Common;
 using Spectre.Console;
 
-[assembly: AssemblyVersion("23.07.10.*")]
+[assembly: AssemblyVersion("23.08.21.*")]
 
 namespace ACUCustomizationUtils;
 /// <summary>

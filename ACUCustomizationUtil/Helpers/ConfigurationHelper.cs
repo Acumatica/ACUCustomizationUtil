@@ -27,8 +27,24 @@ public static class ConfigurationHelper
         var userConfig = ReadConfig(userConfigFile?.FullName);
 
         //Merge configurations
-        config.CopyValues(userConfig).CopyValues(userInput);
-        return config;
+        if (config.IsNotNull)
+        {
+            config.CopyValues(userConfig).CopyValues(userInput);
+            return config;
+        }
+        else if (userConfig.IsNotNull)
+        {
+            userConfig.CopyValues(userInput);
+            return userConfig;
+        }
+        else if (userInput != null)
+        {
+            return userInput;
+        }
+        else
+        {
+            throw new Exception($"ACU configuration is null or empty");
+        }
     }
 
     public static void PrintConfiguration<T>(IAcuConfiguration config, ILogger<T> logger, params string[]? types)
