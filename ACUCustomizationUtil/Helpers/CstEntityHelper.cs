@@ -19,7 +19,7 @@ public class CstEntityHelper
     private readonly string _packageSourceBinDir;
     private readonly string _siteRootDir;
     private readonly string _packageName;
-    private string? _erpVersion;
+    private readonly string? _erpVersion;
 
     public CstEntityHelper(IAcuConfiguration config)
     {
@@ -78,14 +78,15 @@ public class CstEntityHelper
 
     public string? GetPackageFileVersion()
     {
-        var dllFile = Directory.GetFiles(_packageSourceBinDir, $"{_packageName}.dll");
-        FileVersionInfo? versionInfo = null;
-        if (dllFile.Any())
+        var dllPkgFiles = Directory.GetFiles(_packageSourceBinDir, $"{_packageName}.dll");
+        var dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
+        var dllFile = dllPkgFiles.Any() ? dllPkgFiles.First() : dllAnyFiles.Any() ? dllAnyFiles.First() : null;
+        if (dllFile != null)
         {
-            versionInfo = FileVersionInfo.GetVersionInfo(dllFile.First());
+            return FileVersionInfo.GetVersionInfo(dllFile)?.FileVersion;
         }
 
-        return versionInfo?.FileVersion;
+        throw new Exception($"Assembly (dll) file for customization not found");
     }
 
     public static string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.MM.dd");
