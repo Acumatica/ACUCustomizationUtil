@@ -1,20 +1,20 @@
 {
-  "erp": {
-    "url": null,
+  "erp": {    
     "erpVersion": "23.105.0016",
     "installationFileName": "AcumaticaERPInstall.msi",
-    "destinationDirectory": "C:\\ERPs"
+    "destinationDirectory": "C:\\Acumatica",
+	"url": null,
   },
   "site": {
-    "acumaticaToolPath": "C:\\ERPs\\23.105.0016\\Acumatica ERP\\Data\\ac.exe",
+    "acumaticaToolPath": "C:\\Acumatica\erp\\23.105.0016\\Acumatica ERP\\Data\\ac.exe",
     "instanceName": "23.105.0016",
-    "instancePath": "C:\\ERPs\\instances\\231040030\\Site",
-    "sqlServerName": "SPRINT039",
-    "dbName": "231050016DB", 
-    "dbConnectionString": "Data Source=SPRINT039;Initial Catalog=231050016DB;Integrated Security=True;Encrypt=False;",
+    "instancePath": "C:\\Acumatica\\instances\\23.105.0016\\Site",
+    "sqlServerName": "localhost",
+    "dbName": "23.105.0016DB", 
     "acumaticaAdminName": "admin",
     "acumaticaAdminPassword": "123",
-    "iisAppPool": null,
+    "dbConnectionString": null,
+	"iisAppPool": null,
     "iisWebSite": null
   },
   "package": {

@@ -22,19 +22,35 @@ public class DatabaseHelper
     {
         var username = _config.Site.AcumaticaAdminName;
         var password = _config.Site.AcumaticaAdminPassword;
-        const string companyId = "2";
+        const int companyId = 2;
+        const string nullValue = null!;
+        const int zeroValue = 0;
+        
 
-        var sql = $"update Users " +
-                  $"set LockedOutDate = null, " +
+        var sql = $"UPDATE Users " +
+                  $"SET LockedOutDate = null, " +
                   $"    LastLockedOutDate = null, " +
                   $"    FailedPasswordAttemptCount = 0," +
                   $"    Password = '{password}', " +
                   $"    PasswordChangeOnNextLogin = 0 " +
                   $"WHERE Username = '{username}' " +
                   $"AND CompanyID = {companyId}";
-
+        
+        
+        var sql2 = @"UPDATE Users 
+                        SET LockedOutDate = null, 
+                            LastLockedOutDate = null, 
+                            FailedPasswordAttemptCount = @ZeroValue, 
+                            Password = @Password,     
+                            PasswordChangeOnNextLogin = @ZaroValue 
+                        WHERE Username = @UserName 
+                        AND CompanyID = @CompanyID";
+        object[] parameters =
+        {
+            new { NullValue = nullValue,  ZeroValue = zeroValue, UserName = username, Password = password, CompanyId = companyId }
+        }; 
         await using var connection = _connectionFactory();
-        var rows = await connection.ExecuteAsync(sql);
+        var rows = await connection.ExecuteAsync(sql2, parameters);
     }
 
     public async Task<IEnumerable<CustomizationProjectEntity>> GetCustomizationProjectEntitiesAsync(
