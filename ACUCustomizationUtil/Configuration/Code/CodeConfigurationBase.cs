@@ -18,6 +18,7 @@ public abstract class CodeConfigurationBase : ICodeConfiguration
     public string? PkgLevel { get; set; }
     public string? MsBuildSolutionFile { get; set; }
     public string? MsBuildTargetDirectory { get; set; }
+    public string? MsBuildAssemblyName { get; set; }
     public string? MakeMode { get; set; }
     public abstract bool IsNotNull { get; }
 

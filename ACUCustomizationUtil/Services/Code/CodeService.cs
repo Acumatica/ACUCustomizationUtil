@@ -105,14 +105,19 @@ public class CodeService : ICodeService
                 ctx.Status("Compile in progress, please wait ...");
                 var msBuildHelper = new MsBuildHelper(config, ctx);
                 await msBuildHelper.Execute();
+                
+                ctx.Status("Copy external library assembly to package source");
+                _logger.LogInformation("Copy external library assembly to package source");
+                await msBuildHelper.CopyAssemblyToPackageBinAsync();
+
             });
+            
+            _logger.LogInformation("CompileSolution action success");
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "CompileSolution: action error!");
+            _logger.LogError(e, "CompileSolution action NOT success");
         }
-
-        _logger.LogInformation("CompileSolution action complete");
     }
 
     #endregion

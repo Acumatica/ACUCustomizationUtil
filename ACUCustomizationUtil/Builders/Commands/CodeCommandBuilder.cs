@@ -2,9 +2,7 @@
 using ACUCustomizationUtils.Builders.Commands.Binders;
 using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.Code;
-using ACUCustomizationUtils.Validators;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 /// <summary>
@@ -48,6 +46,7 @@ public class CodeCommandBuilder : CommandBuilderBase
         var packageName = GetPackageNameOption();
         var packageDirectory = GetPackageDirectoryOption();
         var makeMode = BuildMakeModeOption();
+        
 
         var command = new Command("make", "Create customization package from source code")
         {
@@ -99,9 +98,11 @@ public class CodeCommandBuilder : CommandBuilderBase
     {
         var msBuildSolutionFilePath = GetMsBuildSolutionFileNameOption();
         var msBuildTargetDirectory = GetMsBuildTargetDirectoryOption();
+        var msBuildAssemblyFile = GetMsBuildAssemblyFileNameOption();
+        
         var command = new Command("compile", "Compile external library source code")
         {
-            msBuildSolutionFilePath, msBuildTargetDirectory
+            msBuildSolutionFilePath, msBuildTargetDirectory, msBuildAssemblyFile
         };
 
         command.SetHandler(_projectService.CompileSolution,
@@ -109,7 +110,8 @@ public class CodeCommandBuilder : CommandBuilderBase
                 ConfigOption!,
                 UserConfigOption!,
                 msBuildSolutionFilePath,
-                msBuildTargetDirectory
+                msBuildTargetDirectory, 
+                msBuildAssemblyFile
             ));
 
         return command;
@@ -158,6 +160,11 @@ public class CodeCommandBuilder : CommandBuilderBase
     private static Option<string> GetMsBuildTargetDirectoryOption()
     {
         return new Option<string>("--targetDirectory", "External code build target directory");
+    }
+    
+    private static Option<string> GetMsBuildAssemblyFileNameOption()
+    {
+        return new Option<string>("--assemblyName", "External code build ");
     }
 
 

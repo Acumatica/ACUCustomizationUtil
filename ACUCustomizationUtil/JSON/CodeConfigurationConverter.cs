@@ -37,6 +37,9 @@ public class CodeConfigurationConverter : JsonConverter<ICodeConfiguration>
                 case nameof(code.MsBuildTargetDirectory):
                     code.MsBuildTargetDirectory = reader.GetString();
                     break;
+                case nameof(code.MsBuildAssemblyName):
+                    code.MsBuildAssemblyName = reader.GetString();
+                    break;
                 case nameof(code.MakeMode):
                     code.MakeMode = reader.GetString();
                     break;

@@ -1,7 +1,6 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Binding;
 using ACUCustomizationUtils.Builders.Commands.Common;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Code;
 
@@ -19,6 +18,7 @@ public class CodeCompileConfigurationBinder : CommandParametersBinder
     {
         var msBuildSolutionFilePath = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var msBuildTargetDirectoryPath = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        var msBuildAssemblyFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
 
 
         return new AcuConfiguration
@@ -26,7 +26,8 @@ public class CodeCompileConfigurationBinder : CommandParametersBinder
             Code = new CodeConfiguration
             {
                 MsBuildSolutionFile = msBuildSolutionFilePath,
-                MsBuildTargetDirectory = msBuildTargetDirectoryPath
+                MsBuildTargetDirectory = msBuildTargetDirectoryPath,
+                MsBuildAssemblyName = msBuildAssemblyFileName
             }
         };
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Spectre.Console;
 
 namespace ACUCustomizationUtils.Extensions;
 
@@ -52,5 +53,14 @@ public static class StringExtensions
                 || processMessage.Contains("ERR")
                 || processMessage.Contains("Exception")
                 || processMessage.StartsWith("   at"));
+    }
+}
+
+public static class ExceptionExt
+{
+    public static void WriteException(this Exception e)
+    {
+        AnsiConsole.WriteException(e, ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                                            ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
     }
 }

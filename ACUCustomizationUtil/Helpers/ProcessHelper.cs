@@ -41,8 +41,12 @@ public class ProcessHelper
         process.OutputDataReceived += (_, args) => { PrintProgressStatus(_ctx, args); };
         process.ErrorDataReceived += (_, args) =>
         {
-            _logger.Error("{Error}", args.Data);
-            PrintProgressStatus(_ctx, args);
+            if (!string.IsNullOrWhiteSpace(args.Data))
+            {
+                _logger.Error("{Error}", args.Data);
+                PrintProgressStatus(_ctx, args);
+                throw new Exception($"Process error: {args.Data}");
+            }
         };
         process.Start();
         process.BeginOutputReadLine();

@@ -10,7 +10,7 @@
     "instanceName": "23.105.0016",
     "instancePath": "C:\\ERPs\\instances\\231040030\\Site",
     "sqlServerName": "SPRINT039",
-    "dbName": "231050016DB",
+    "dbName": "231050016DB", 
     "dbConnectionString": "Data Source=SPRINT039;Initial Catalog=231050016DB;Integrated Security=True;Encrypt=False;",
     "acumaticaAdminName": "admin",
     "acumaticaAdminPassword": "123",
@@ -31,6 +31,7 @@
     "pkgLevel": "0",
     "msBuildSolutionFile": "C:\\ERPs\\projects\\TestOne\\TestOne.sln",
     "msBuildTargetDirectory": "C:\\ERPs\\projects\\TestOne\\code\\TestOne\\bin\\Release",
+    "msBuildAssemblyName": "TestOne.dll",
     "makeMode": null
   }
 }

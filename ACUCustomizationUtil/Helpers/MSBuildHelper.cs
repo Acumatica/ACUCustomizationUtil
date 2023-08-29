@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
-using ACUCustomizationUtils.Extensions;
 using Spectre.Console;
 
 namespace ACUCustomizationUtils.Helpers;
@@ -12,13 +10,17 @@ public class MsBuildHelper
     private readonly StatusContext _ctx;
     private string? _msbuildPath;
     private string? _msbuildArgs;
-    private string? _packageSourceBin;
-    private string? _packageName;
+    private readonly string? _packageSourceBin;
+    private readonly string? _msBuildTargetDirectory;
+    private readonly string? _msBuildAssemblyFileName;
 
     public MsBuildHelper(IAcuConfiguration config, StatusContext ctx)
     {
         _config = config;
         _ctx = ctx;
+        _packageSourceBin = _config.Code.PkgSourceBinDirectory!;
+        _msBuildTargetDirectory = _config.Code.MsBuildTargetDirectory;
+        _msBuildAssemblyFileName = _config.Code.MsBuildAssemblyName;
     }
 
     public async Task Execute()
@@ -26,41 +28,27 @@ public class MsBuildHelper
         //Build solution
         _msbuildPath = GetMsbuildPath();
         _msbuildArgs = GetMsBuildArgs(_config);
-        _packageSourceBin = _config.Code.PkgSourceBinDirectory!;
-        _packageName = _config.Package.PackageName;
-        
         var process = new ProcessHelper(_msbuildPath, _msbuildArgs, _ctx);
         await process.Execute();
+    }
 
-
-        if (Directory.Exists(_packageSourceBin))
+    public async Task CopyAssemblyToPackageBinAsync()
+    {
+        await Task.Run(() =>
         {
-            //Copy dll`s
-            var files = Directory.GetFiles(_packageSourceBin);
-            foreach (var file in files.Where(f => f.EndsWith(".dll")))
+            var assemblyDllFile = Path.Combine(_msBuildTargetDirectory!, _msBuildAssemblyFileName!);
+            if (File.Exists(assemblyDllFile))
             {
-                var sourceFile = Path.Combine(_config.Code.MsBuildTargetDirectory!, new FileInfo(file).Name);
-                if (!File.Exists(sourceFile))
-                    throw new InvalidOperationException($"Source file {sourceFile} not copied!");
-                File.Copy(sourceFile, file, true);
-                if (!File.Exists(file)) throw new InvalidOperationException($"Target file {file} not copied!");
+                var packageDllFile = Path.Combine(_packageSourceBin!, _msBuildAssemblyFileName!);
+                File.Copy(assemblyDllFile, packageDllFile, true);
+                if (!File.Exists(packageDllFile))
+                    throw new InvalidOperationException($"Source file {assemblyDllFile} not copied to {packageDllFile}!");
             }
-        }
-        else
-        {
-            if (_packageName != null)
+            else
             {
-                var targetFile = Path.Combine(_packageSourceBin, $"{_packageName}.dll");;
-                var sourceFile = Path.Combine(_config.Code.MsBuildTargetDirectory!, $"{_packageName}.dll");
-                if (!File.Exists(sourceFile))
-                    throw new InvalidOperationException($"Source dll file {sourceFile} not copied!");
-                targetFile.TryCheckFileDirectory();
-                File.Copy(sourceFile, targetFile, true);
-                if (!File.Exists(targetFile)) throw new InvalidOperationException($"Package dll file {targetFile} not copied!");
+                throw new FileNotFoundException($"Assembly file {assemblyDllFile} not found");
             }
-        }
-        
-        
+        });
     }
 
 
@@ -97,7 +85,6 @@ public class MsBuildHelper
         {
             var line = proc.StandardOutput.ReadLine();
             if (line is null || !File.Exists(line)) continue;
-            _ctx.Status($"Found MSBuild: {line}");
             return line;
         }
 
