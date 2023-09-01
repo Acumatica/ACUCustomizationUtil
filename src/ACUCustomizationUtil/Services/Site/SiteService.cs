@@ -8,12 +8,12 @@ using Spectre.Console;
 namespace ACUCustomizationUtils.Services.Site;
 
 /// <summary>
-/// This class contains methods for handle Site subcommands
+///     This class contains methods for handle Site subcommands
 /// </summary>
 /// <remarks>
-/// Authored by Aleksej Slusar
-/// email: aleksej.slusar@sprinterra.com
-/// Copyright Sprinterra(c) 2023
+///     Authored by Aleksej Slusar
+///     email: aleksej.slusar@sprinterra.com
+///     Copyright Sprinterra(c) 2023
 /// </remarks>
 public class SiteService : ISiteService
 {
@@ -27,6 +27,8 @@ public class SiteService : ISiteService
     public async Task InstallSite(IAcuConfiguration config)
     {
         _logger.LogInformation("Execute InstallSite action");
+        // var processSuccess = true;
+        // Exception? processException = null;
         try
         {
             await AnsiConsole.Status().StartAsync("Install Acumatica instance", async ctx =>
@@ -40,32 +42,44 @@ public class SiteService : ISiteService
                 SiteValidator.ValidateForInstall(config.Site);
                 SiteValidator.ValidateForInstallV(config);
 
+                //Install
                 _logger.LogInformation("Installing new Acumatica instance {Instance}", config.Site.InstanceName);
                 ctx.Status("Installation in progress, please wait ...");
                 var processArgs = GetSiteInstallCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
                 
-                _logger.LogInformation("Reset admin passwords to default for new Acumatica instance");
-                ctx.Status("Reset admin passwords to default, please wait ...");
+                //Fix DB
+                ctx.Status("Update some database values, please wait ...");
                 var dbHelper = new DatabaseHelper(config);
+                _logger.LogInformation("Reset admin passwords to default for new Acumatica instance");
+                _logger.LogInformation("Check & create server login for IIS DefaultAppPool");
                 await dbHelper.UpdateAdminPasswordDefault();
+                await dbHelper.UpdateServerLoginDefault();
             });
+            _logger.LogInformation("InstallSite action success");
         }
-        catch (Exception e)
+        catch (Exception? e)
         {
-            _logger.LogError(e, "Install Acumatica instance: action error!");
+            // processSuccess = false;
+            // processException = e;
+            
+            _logger.LogError(e, "InstallSite action NOT success!");
         }
 
-        _logger.LogInformation("InstallSite action complete");
+        // if (processSuccess)
+        //     _logger.LogInformation("InstallSite action success");
+        // else
+        //     _logger.LogError(processException, "InstallSite action NOT success!");
     }
 
     public async Task UpdateSite(IAcuConfiguration config)
     {
         _logger.LogInformation("Execute UpdateSite action");
-        try
+
+        await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
         {
-            await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
+            try
             {
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
@@ -80,14 +94,15 @@ public class SiteService : ISiteService
                 var processArgs = GetSiteUpdateCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
-            });
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Update Acumatica instance: action error!");
-        }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Update Acumatica instance: action error!");
+            }
 
-        _logger.LogInformation("UpdateSite action complete");
+            _logger.LogInformation("UpdateSite action complete");
+
+        });
     }
 
     public async Task UpdateDatabase(IAcuConfiguration config)
@@ -100,7 +115,7 @@ public class SiteService : ISiteService
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
-                
+
                 _logger.LogInformation("Validate configuration");
                 ctx.Status("Validate configuration ...");
                 SiteValidator.ValidateForUpdate(config.Site);
@@ -130,7 +145,7 @@ public class SiteService : ISiteService
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
                 ConfigurationHelper.PrintConfiguration(config, _logger);
-                
+
                 _logger.LogInformation("Validate configuration");
                 ctx.Status("Validate configuration ...");
                 SiteValidator.ValidateForDelete(config.Site);
