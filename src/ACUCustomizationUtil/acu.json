@@ -1,0 +1,37 @@
+{
+  "erp": {    
+    "erpVersion": "23.105.0016",
+    "installationFileName": "AcumaticaERPInstall.msi",
+    "destinationDirectory": "C:\\Acumatica\\erp",
+	"url": null
+  },
+  "site": {
+    "acumaticaToolPath": "C:\\Acumatica\\erp\\23.105.0016\\Acumatica ERP\\Data\\ac.exe",
+    "instanceName": "23.105.0016",
+    "instancePath": "C:\\Acumatica\\instance\\23.105.0016\\Site",
+    "sqlServerName": "localhost",
+    "dbName": "23.105.0016DB", 
+    "acumaticaAdminName": "admin",
+    "acumaticaAdminPassword": "123",
+    "dbConnectionString": null,
+	"iisAppPool": null,
+    "iisWebSite": null
+  },
+  "package": {
+    "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",
+    "login": "admin",
+    "password": "123",
+    "tenant": null,
+    "packageName": "TestOne",
+    "packageDirectory": "C:\\ERPs\\projects\\TestOne\\pkg"
+  },
+  "code": {
+    "pkgSourceDirectory": "C:\\ERPs\\projects\\TestOne\\src",
+    "pkgDescription": null,
+    "pkgLevel": "0",
+    "msBuildSolutionFile": "C:\\ERPs\\projects\\TestOne\\TestOne.sln",
+    "msBuildTargetDirectory": "C:\\ERPs\\projects\\TestOne\\code\\TestOne\\bin\\Release",
+    "msBuildAssemblyName": "TestOne.dll",
+    "makeMode": null
+  }
+}
