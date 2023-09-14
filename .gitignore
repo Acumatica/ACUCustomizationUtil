@@ -51,3 +51,5 @@ obj
 bin
 .vs
 *.user
+packages
+/proj/packages
