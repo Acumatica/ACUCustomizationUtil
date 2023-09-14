@@ -1,0 +1,37 @@
+{
+  "erp": {    
+    "erpVersion": "23.105.0016",
+    "installationFileName": "AcumaticaERPInstall.msi",
+    "destinationDirectory": "%ACUBASEDIR%\\erp",
+	"url": null
+  },
+  "site": {
+    "instanceName": "23.105.0016",
+    "instancePath": "%ACUBASEDIR%\\instance\\23.105.0016\\Site",
+    "sqlServerName": "localhost",
+    "dbName": "23.105.0016DB", 
+    "acumaticaAdminName": "admin",
+    "acumaticaAdminPassword": "123",
+    "dbConnectionString": null,
+    "acumaticaToolPath": null,
+	"iisAppPool": null,
+    "iisWebSite": null
+  },
+  "pkg": {
+    "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",
+    "login": "admin",
+    "password": "123",    
+    "pkgName": "ACUCustomization",
+    "pkgDirectory": "pkg",
+	"tenant": null
+  },
+  "src": {
+    "pkgSourceDirectory": "cst",
+    "pkgLevel": "0",
+    "msBuildSolutionFile": "ACUCustomization.sln",
+    "msBuildTargetDirectory": "src\\ACUCustomization\\bin\\Release",
+    "msBuildAssemblyName": "ACUCustomization.dll",
+    "makeMode": null,
+	"pkgDescription": null
+  }
+}
