@@ -15,7 +15,7 @@ ACU allows to perform the following actions (by groups of commands):
 - **Src:**	_get_ the source code of the customization package from the instance, _build_ the extension library code, _make_ the customization package (three modes are supported - normal, build for ISV, build for QA).
 - **Pkg**:	_upload_ and _publish_ custom packages to the site, _get_ the package from the site, _unpublish_ all packages.
 
-### **Installation**
+### Installation
 
 The customization package can be obtained from:
 
@@ -50,7 +50,7 @@ Commands:
   pkg   Work with a customization package.
 ```
 
-### **Configuration**
+### Configuration
 
 The ACU configuration includes the following items:
 
@@ -60,7 +60,7 @@ User configuration file, given by --user-config option, default name is  acu.jso
 
 Configuration options for the corresponding command.
 
-The complete information on the configuration file parameters is presented in the [ACU Configuration Reference](/ACUConfigurationReference.md), the information on command options is presented in the [ACU Configuration Reference](/ACUCommandReference.md).
+The complete information on the configuration file parameters is presented in the [ACU Configuration Reference](ACUConfigurationReference.md), the information on command options is presented in the [ACU Command Reference](ACUCommandReference.md).
 
 When using the utility, it is not necessary to set the acu.json  &  acu.json.user in command prompt files each time using the --config and --user-config options, these options only need to be used when using files with **not default** names .
 
@@ -117,7 +117,7 @@ List of such parameters
 - `msBuildSolutionFile`
 - `msBuildTargetDirectory`
 
-### **Built-in help system**
+### Built-in help system
 
 The utility contains a built-in help system. For each command, you can view a list of its subcommands and parameters. Options for calling help are -?, -h, --help
 
@@ -187,7 +187,7 @@ Options:
   -?, -h, --help
 ```
 
-### **Logging**
+### Logging
 
 When running, the utility creates log files in the directory where the utility is launched from.
 
@@ -210,7 +210,7 @@ Date        UTC Time    Local    Type Message
 2023-09-05 15:41:11.905 +03:00 [INF] Install ERP success
 ```
 
-### **Working with the utility**
+### Working with the utility
 
 The typical scenarion when working with Acumatica ERP customizations are:
 
@@ -221,9 +221,9 @@ If in the first case, the automation of routine tasks is not a critical factor d
 
 Consider the operation of the utility on these examples.
 
-#### **Creating a customization project from scratch**
+#### Creating a customization project from scratch
 
-##### **Customization project folders structure:**
+##### Customization project folders structure:
 
 <u>Classic style</u>:
 
@@ -260,7 +260,7 @@ README.md
 
 As you can see, there is no directory for deploying an instance here. And this is natural, because ACU allows not only to install the Acumatica instance in any directory convenient for the user, but also to configure customization projects for sharing instances of the required versions.
 
-##### **Create new project**
+##### Create new project
 
 For create new project from scratch, developer should do next steps:
 
@@ -286,7 +286,7 @@ For simplicity and clarity of presentation, we agree that we will operate with t
 - Base path for customization project:                **C:\\Acumatica\\project**
 - Environment Variable for Base path:                 **%ACUBASEDIR%**
   
-  ##### **Create repository for project and clone it into project root folder**
+##### Create repository for project and clone it into project root folder
 
 After the repository is created, you need to go to the Base folder of the customization project and clone repository
 
@@ -295,13 +295,13 @@ PS C:\Acumatica> cd C:\Acumatica\project
 PS C:\Acumatica\project> git clone --progress -v https://[!!!YOU USERNAME!!!]@bitbucket.org/sprinterraacumatica/acuproject.git ACUProject
 ```
 
-##### **Create User or System Environment variables if necessary**
+##### Create User or System Environment variables if necessary
 
 Open Environment Variables editor and create **ACUBASEDIR** System variable  
 
 ![Environment Variables](img/EnvVariables.png)
 
-##### **Create folder structure for customization**
+##### Create folder structure for customization
 
  Create folders for customization project items - open PowerShell and run next commands:
 
@@ -316,7 +316,7 @@ ACUProject
 └───src
 ```
 
-##### **Copy acu.json file into project root folder and edit according to you requirements**
+##### Copy acu.json file into project root folder and edit according to you requirements
 
 Copy example asu.json file from ACU installation folder into Base project folder and edit it according to your requirements. Since the file should be placed in the root catalog of the customization project, the paths to some folders can be set as relative paths. The fully configured file for project ACUProject can be seen below:
 
@@ -360,13 +360,13 @@ Copy example asu.json file from ACU installation folder into Base project folder
 }
 ```
 
-##### **Download and install ERP**
+##### Download and install ERP
 
 Check if your ERP system has the required version of Acumatica ERP installed. To do this, look at the contents of the directory specified in the erp.destinationDirectory parameter of the configuration file. For version "23.105.0016" the directory listing should look like this
 
 ```powershell
 Acumatica
-├───erp
+└───erp
     └───23.105.0016
         └───Acumatica ERP
 ```
@@ -379,7 +379,7 @@ PS C:\Acumatica\project\ACUProject> acu erp download
 PS C:\Acumatica\project\ACUProject> acu erp install
 ```
 
-##### **Install Acumatica instance**
+##### Install Acumatica instance
 
 Check that you have an Acumatica instance installed on your system that matches the configuration parameters in the configuration file. To do this, run the configuration utility **AcumaticaConfig.exe** (For our case it will be located in the C:\Acumatica\erp\23.105.0016\Acumatica ERP\Data directory).
 
@@ -392,14 +392,14 @@ To do this, run the following command:
 PS C:\Acumatica\project\ACUProject> acu site install
 ```
 
-##### **Create solution for customization extension library**
+##### Create solution for customization extension library
 
 Create a project for the Extention Library. How to properly create such a project is described in the [ACU Extension Library Reference](ACUProjectReference.md) document.
 After the project for Extension Library is created, check if it can be built using the CLI. Run the command
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu src build
 ```
-##### **Create customization package and configure it**
+##### Create customization package and configure it
 
 Follow the steps below to create a customization project
 
@@ -412,7 +412,7 @@ Follow the steps below to create a customization project
 ![Customization Project Editor](img/CustProjectsEditor.png)
 6. Publish the customization project
    
-##### **Get customization package source**
+##### Get customization package source
 To get the customization source code, run the command
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu src get
@@ -422,13 +422,12 @@ PS C:\Acumatica\project\ACUProject> acu src get
 ```powershell
 C:\Acumatica\project\ACUProject
 ├───Bin
-│       ACUProject.dll
-│
+│       ACUProject.dll│
 └───_project
         ProjectMetadata.xml
 ```
 
-##### **Check ability to create, upload and publish customization package from CLI**
+##### Check ability to create, upload and publish customization package from CLI
 Check if you can build packages using the ACU CLI. Run the commands:
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu src make
@@ -451,7 +450,7 @@ Check the ability to publish customizations using the ACU CLI. Run the commands:
 PS C:\Acumatica\project\ACUProject> acu pkg upload
 PS C:\Acumatica\project\ACUProject> acu pkg publish
 ```
-##### **Checking the result**
+##### Checking the result
 After all manipulations, the ACUProject folder should look as follows:
 (some files and directories removed from the view for better readability)
 
@@ -471,7 +470,7 @@ C:\Acumatica\project\ACUProject>
    ACUProject.sln
    Directory.Build.props
 ```
-##### **Commit changes into repository**
+##### Commit changes into repository
 The repository should include files from the folders shown in the figure above.
 Add the following rules to the **.gitignoire** file:
 ```gitignore
@@ -509,11 +508,11 @@ PS C:\Acumatica\project\ACUProject> git commit -i "Add customization project & c
 PS C:\Acumatica\project\ACUProject> git push origin develop -f
 ```
 
-#### **Deployment of the customization project**
+#### Deployment of the customization project
 Once the customisation project has been created, the configuration saved and the files uploaded to the repository, restoring the working environment becomes a quick and easy task. 
 Let's take a look at the steps to do this.
 
-##### **Clone repository**
+##### Clone repository
 The first step in deploying a project is to clone the repository.
 Navigate to the root folder of your customisation projects, open PowerShell and run the command:
 ```powershell
@@ -521,7 +520,7 @@ PS C:\Acumatica> cd C:\Acumatica\project
 PS C:\Acumatica\project> git clone --progress -v https://[!!!YOU USERNAME!!!]@bitbucket.org/sprinterraacumatica/acuproject.git ACUProject
 ```
 
-##### **Create User or System Environment variable(s) if necessary**
+##### Create User or System Environment variable(s) if necessary
 Check the acu.json configuration file.
 If an environment variable (e.g. %ACUBASEDIR%) is used in the path parameter values, you must create it. The values for the environment variable should be specified in the repository readme file.
 If this value is not specified, it can be determined by looking in the **Directory.Build.props** file: the value of the SiteDir parameter must match the value of **site.instancePath** of the **acu.json** configuration file.
@@ -550,7 +549,7 @@ For example, for the case of:
 the value of the environment variable would be:
 ***%ACUBASEDIR% = C:\Acumatica***
 
-##### **Install ERP**
+##### Install ERP
 Check if you have an ERP system installed in your system, with the appropriate configuration. 
 If it is necessary, install it. 
 
@@ -558,29 +557,29 @@ If it is necessary, install it.
 PS C:\Acumatica\project\ACUProject> acu erp download
 PS C:\Acumatica\project\ACUProject> acu erp install
 ```
-##### **Install Acumatica instance**
+##### Install Acumatica instance
 Check if you have an installed Acumatica instance with the appropriate configuration on your system. 
 If it is necessary, install it. 
 
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu site install
 ```
-##### **Compile Extenson Library project & make package**
+##### Build Extenson Library project & make package
 Build the Extension Library project and create a customisation package
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu src build
 PS C:\Acumatica\project\ACUProject> acu src make
 ```
-##### **Upload & publish package**
+##### Upload & publish package
 Upload and publish the package to the Acumatica instance
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu pkg upload
 PS C:\Acumatica\project\ACUProject> acu pkg publish
 ```
-#### **Actions during work on a customisation project**
+#### Actions during work on a customisation project
 When working on a project, after updating code from the repository and before sending code to the repository, you need to perform additional actions to ensure that the code is synchronised correctly.
 Let's consider these cases.
-##### **Pull code from repository**
+##### Pull code from repository
 After each synchronisation of the local code with the repository code, it is necessary to perform builds and updates to the package published on the Acumatica instance
 To do this, run the following commands:
 ```powershell
@@ -590,7 +589,7 @@ PS C:\Acumatica\project\ACUProject> acu pkg upload
 PS C:\Acumatica\project\ACUProject> acu pkg publish
 ```
 
-##### **Push code to repository**
+##### Push code to repository
 Before each synchronisation of the local code with the repository code, in case the structure of tables, menus, GIs, etc. has changed during the work, the following actions should be performed: 
 1. It is necessary to open a customization in the customization editor, then sequentially switching between the project entities (left panel), which contain customized items (right panel), it is necessary to update these items from the database. To do this, press the “Reload from database” or “Detect modified files” button on each view:
 ![Reload from database](img/CustProjectsEditorUpdateItems.png)
