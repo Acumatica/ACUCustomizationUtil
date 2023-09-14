@@ -407,9 +407,13 @@ Follow the steps below to create a customization project
 2. Open the "Customization Projects" screen
 3. Delete all demo projects and click the save button
 4. Add a new project and name it according to the configuration requirements (ACUProject).
+
 ![Customization Projects](img/CustProjects.png)
+
 5. Open the project in the customization editor, go to the "Files" menu item, click "+" and add the Extensikon Library assembly (ACUProject.dll) to the project
+
 ![Customization Project Editor](img/CustProjectsEditor.png)
+
 6. Publish the customization project
    
 ##### Get customization package source
@@ -592,7 +596,9 @@ PS C:\Acumatica\project\ACUProject> acu pkg publish
 ##### Push code to repository
 Before each synchronisation of the local code with the repository code, in case the structure of tables, menus, GIs, etc. has changed during the work, the following actions should be performed: 
 1. It is necessary to open a customization in the customization editor, then sequentially switching between the project entities (left panel), which contain customized items (right panel), it is necessary to update these items from the database. To do this, press the “Reload from database” or “Detect modified files” button on each view:
+
 ![Reload from database](img/CustProjectsEditorUpdateItems.png)
+
 2. After that, you need to get the updated source code of the customisation project. To do this, execute the command:
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu src get
