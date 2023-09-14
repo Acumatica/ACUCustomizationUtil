@@ -1,8 +1,8 @@
-# **Acumatica Customization Util (ACU)**
+# Acumatica Customization Util (ACU)
 
-## **User Guide (version 23.7.12.23868)**
+## User Guide (version 23.9.14.22375)
 
-### **General information**
+### General information
 
 Acumatica Customization Utility (ACU) is a utility designed to automate everyday routine tasks related to the creation and maintenance of built-in applications (customization packages) of ERP Acumatica.
 

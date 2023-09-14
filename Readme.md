@@ -1,8 +1,8 @@
 # Acumatica Customization Util (ACU)
 
-Current version:
+Current version: 23.9.14.22375
 
-URL to download:
+URL to download: [Google Drive](https://drive.google.com/drive/folders/1QjqkNyfYClzcSfF-rrH-ggONkiCaE4sj?usp=drive_link)
 ### General info
 Acumatica Customization Utility (ACU) is a utility designed to automate everyday routine tasks related to the creation and maintenance of built-in applications (customization packages) of ERP Acumatica.
 
@@ -61,7 +61,7 @@ ACUCustomizationUtil
 
  - [ACU User Guide](doc/ACUUserGuide.md)
  - [ACU Command Reference](doc/ACUCommandReference.md)
- - [ACU Configuratoin Reference](doc/ACUConfigurationReference.md)
+ - [ACU Configuration Reference](doc/ACUConfigurationReference.md)
  - [ACU Project Configuration Guide](doc/ACUProjectReference.md)
 
 ### Settings required to work with the Test Project

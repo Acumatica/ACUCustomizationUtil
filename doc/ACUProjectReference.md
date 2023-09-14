@@ -1,29 +1,30 @@
 # Acumatica Customization Util (ACU)
 
-## Project Configuration Guide (version 23.7.12.23868)
+## Project Configuration Guide (version 23.9.14.22375)
 
-### Введение
+### Introduction
 
-В данном руководстве будут рассмотрены два способа организации проектов. Назовем их условно "классический" и "современный".
-Классический проект - это проект, организованный по принципу именования каталогов в соотвествии с конвенцией, при этом каждое наименование папки жестко привязано к контенту, который храниться в ней. Использовался совместно со средством автоматизации разработки CstCustomizationUtil.
-Современный проект - проект, организованный в виде папок, именованых в соотвествии с представлениями разработчика о здравом смысле. Такие проекты автоматизируются средством ACUCustomizationUtil. Конфигурация ACUCustomizationUtil позволяет настраивать конфигурацию под любую организацию проекта, максимально гибко, без каких-либо правил или конвеннций. 
+This guide will discuss two ways of organizing projects. We will call them "classical" and "modern".
+A classic project is a project organized according to the principle of naming directories in accordance with the convention, with each folder name strictly tied to the content stored in it. It was used together with CstCustomizationUtil development automation tool.
+A modern project is a project organized in the form of folders named in accordance with the developer's common sense notions. Such projects are automated by ACUCustomizationUtil. The ACUCustomizationUtil configuration allows you to customize the configuration for any project organization, as flexibly as possible, without any rules or conventions. 
 
-Основной проблемой в организации любого проекта кастомизации является наличие в нем зависимостей (подключаемые библиотеки, пути установки ERP и инстанса Акуматики и т.д). При командной работе такие ограничения можно решить тремя  способами:
+The main problem in organizing any customization project is the presence of dependencies in it (plug-in libraries, ERP and Acumatica instance installation paths, etc.). With teamwork, such constraints can be solved in three ways:
 
-	- каталоги проекта и пути к подключаемым ресурсам, а так же к ERP & инстансу Acumatica одинаковы и жестко заданы.
-	- каталоги проекта жеско заданы, пути к подключаемым ресурсам, к ERP & инстансу Acumatica сконфигурированы как относительные (относительно основного каталога проекта).
-	- каталоги проекта, а так же пути к подключаемым ресурсам, к ERP & инстансу Acumatica конфигурируются как вычисляемые параметры.
-Первый способ самый простой, но и абсолютно негибкий. Просто отметим это и перейдем к рассмотрению оставшихся двух.
-Второй способ довольно работоспособоен, требует минимальной конфигурации. Однако основаная проблема такого подхода - невозможность создавать и использовать инстансы Acumatica как разделяемые ресурсы между проектами. Таким образом, для каждого проекта кастомизации было необходимо раворачиать отдельный инстанс Acumatica, что является избыточным. Такой способ использует "классический" способ.
-Третий подход видиться наиболее перспективным. Единственная проблемы - кажущаяся на первых порах сложность конфигурации. Преимущества же - гибкость и минимализм конфигурации, возможность использовать ранее установленные инстансы Acumatica как общие ресурсы между проектами.
+	- project catalogs and paths to plug-in resources and to ERP & Acumatica instance are identical and rigidly defined.
+	- project catalogs are rigidly defined, paths to pluggable resources and to the Acumatica ERP & instance are configured as relative (relative to the main project catalog).
+	- project catalogs, as well as paths to pluggable resources, to ERP & Acumatica instance are configured as computable parameters.
 
-> Если проект создается "с нуля", то должен создаваться проект в современном стиле.
+The first method is the easiest, but it is also completely inflexible. Let's just note it and move on to the remaining two.
+The second method is quite workable and requires minimal configuration. However, the main problem with this approach is the inability to create and use Acumatica instances as shared resources between projects. Thus, it was necessary to deploy a separate Acumatica instance for each customization project, which is redundant. This way uses the "classic" method.
+The third approach seems to be the most promising. The only problem is the seeming complexity of the configuration at first. The advantages are the flexibility and minimalism of the configuration, the ability to use previously installed Acumatica instances as shared resources between projects.
 
-> Проекты в классическом стиле должны быть преобразованы в соотвествии с этим руководством.
+> If a project is created from scratch, it must be created in a modern style.
 
-### Структура каталогов и файлов
+> Classic style projects must be converted according to these guidelines.
 
-* Классический проект
+### Structure of directories and files
+
+* Classic project
 ```powershell
 ProjectName                         root folder
     ├───ProjectName                 project C#, extension library
@@ -36,7 +37,7 @@ ProjectName                         root folder
 	README.md                       solution information
 ```
 
-* Современный проект
+* Modern project
 ```powershell
 ProjectName
 ├───cst                             customization project  source code
@@ -51,10 +52,10 @@ ProjectName
 ```
 
 ### Изменения в проекте
-1. Для проекта создается корневая папка (root). Има папки как правило совпадает с именем проекта.
-2. В каталоге ProjectName или src создается проект типа Class Library (.NET Framework)
+1. A root folder (root) is created for the project. The folder name is usually the same as the project name.
+2. A project of Class Library (.NET Framework) type is created in the ProjectName or src directory
 ![CreateNewProject](img/CreateNewProject.png)
-3. В корневую папку копируется файл **Directory.Build.props**, в котором определена переменная **SiteDir**. Значение этой переменной должно указывать на инстанс Acumatica, для которого разрабатывается кастомизация. Значение переменной **SiteDir** используется в файле проекта, как заменитель пути к инстансу Acumatica.
+3. The **Directory.Build.props** file is copied to the root folder, where the **SiteDir** variable is defined. The value of this variable should point to the Acumatica instance for which the customization is being developed. The value of the **SiteDir** variable is used in the project file as a substitute for the path to the Acumatica instance.
 
 _Directory.Build.props_
 ```xml
@@ -65,9 +66,9 @@ _Directory.Build.props_
     </PropertyGroup>
 </Project>
 ```
-3. В файл проекта вносятся такие изменения:
+3. The project file should be modified as follows:
 
- * все пути в библиотекам, которые подключаются из инстанса Acumatica записываются с использованием переменной $(SiteDir):
+ * All paths to libraries that are connected from the Acumatica instance are written using the $(SiteDir) variable:
 	
 _Project File_
 ```xml
@@ -86,7 +87,7 @@ _Project File_
     </Reference>
   </ItemGroup>
 ```
- * Добавляется правило BeforeBuild с инструкциями, которые позволяют задавать версию сборки при использовании MSBuild:
+ * Adds a BeforeBuild rule with instructions that allow you to set the build version when using MSBuild:
  
  _Project File_
 ```xml
@@ -104,7 +105,7 @@ _Project File_
 </Target>
 ```
 
- * Добавляется секция PostBuildEvent с инструкциями, которые копируют сборку проекта в каталог Bin Acumatica instance после каждой удачной сборки проекта:
+ * A PostBuildEvent section is added with instructions that copy the project assembly to the Bin Acumatica instance directory after each successful project build:
  
  _Project File_
 ```xml
@@ -116,15 +117,15 @@ _Project File_
 </PropertyGroup>
 ```
 
-4. Файл Solution (ProjectName.sln) необходимо перенести в корневую папку проекта и отредактировать путь к проекту Extension Library.
+4. The Solution file (ProjectName.sln) should be moved to the root project folder and the path to the Extension Library project should be edited.
 
-### Преобразование классического проекта
-1. Определить используемую версию ERP Acumatica
-2. Удалить каталог CstCustomizationUtil со всем его содержимым.
-3. Удалить ссылку на инстанс Acumatica из файла solution
-4. Выполнить действия, описанные в разделе "Изменения в проекте" этого руководства
-5. Добавить файл конфигурации acu.json и сконфигурировать параметры для текущего проекта кастомизации.
-Если необходимо переключить проект на использование общего инстанса Акуматика
-6. С помощью утилиты Acumatica соотвествующей версии удалить инстанс Акуматика, с которым работает проект
-7. Сделать изменения в файле acu.json: разделы erp & site
-8. Удалить каталог ProjectName.webapp
+### Transforming a classic project to using ACUCustomizationUtil
+1. Identify the version of Acumatica ERP in use
+2. Delete the CstCustomizationUtil directory with all its contents.
+3. Remove the reference to the Acumatica instance from the solution file
+4. Follow the steps described in the "Changes to the project" section of this manual
+5. Add the acu.json configuration file and configure the parameters for the current customization project.
+If it is necessary to switch the project to use a common Acumatica instance
+6. Using the Acumatica utility of the appropriate version, delete the Acumatica instance that the project is running with
+7. Make changes in the acu.json file: sections erp & site
+8. Delete the ProjectName.webapp directory
