@@ -33,13 +33,13 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
-                PackageValidator.ValidateForGet(config.Package);
+                PackageValidator.ValidateForGet(config.Pkg);
 
-                _logger.LogInformation("Download package {Package}", config.Package.PackageName);
+                _logger.LogInformation("Download package {Package}", config.Pkg.PkgName);
                 ctx.Status("Download in progress, please wait ...");
                 using var client = new SoapClient(config);
                 await client.GetPackage();
@@ -63,13 +63,13 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
-                PackageValidator.ValidateForPublish(config.Package);
+                PackageValidator.ValidateForPublish(config.Pkg);
 
-                _logger.LogInformation("Publish package {Package}", config.Package.PackageName);
+                _logger.LogInformation("Publish package {Package}", config.Pkg.PkgName);
                 ctx.Status("Publish in progress, please wait ...");
                 using var client = new SoapClient(config);
                 await client.PublishPackages();
@@ -94,13 +94,13 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
-                PackageValidator.ValidateForUnpublish(config.Package);
+                PackageValidator.ValidateForUnpublish(config.Pkg);
 
-                _logger.LogInformation("Unpublish package(s) {Package}", config.Package.PackageName);
+                _logger.LogInformation("Unpublish package(s) {Package}", config.Pkg.PkgName);
                 ctx.Status("Unpublish in progress, please wait ...");
                 using var client = new SoapClient(config);
                 await client.UnpublishAllPackages();
@@ -124,13 +124,13 @@ public class PackageService : IPackageService
             {
                 ctx.Status("Reading configuration ...");
                 _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
                 _logger.LogInformation("Validate configuration");
-                PackageValidator.ValidateForUpload(config.Package);
+                PackageValidator.ValidateForUpload(config.Pkg);
 
-                _logger.LogInformation("Uploading package {Package}", config.Package.PackageName);
+                _logger.LogInformation("Uploading package {Package}", config.Pkg.PkgName);
                 ctx.Status("UploadPackage in progress, please wait ...");
                 using var client = new SoapClient(config);
                 await client.UploadPackage();

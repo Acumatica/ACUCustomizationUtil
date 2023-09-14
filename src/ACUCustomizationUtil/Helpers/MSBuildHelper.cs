@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Extensions;
 using Spectre.Console;
 
 namespace ACUCustomizationUtils.Helpers;
@@ -18,9 +19,9 @@ public class MsBuildHelper
     {
         _config = config;
         _ctx = ctx;
-        _packageSourceBin = _config.Code.PkgSourceBinDirectory!;
-        _msBuildTargetDirectory = _config.Code.MsBuildTargetDirectory;
-        _msBuildAssemblyFileName = _config.Code.MsBuildAssemblyName;
+        _packageSourceBin = _config.Src.PkgSourceBinDirectory!;
+        _msBuildTargetDirectory = _config.Src.MsBuildTargetDirectory;
+        _msBuildAssemblyFileName = _config.Src.MsBuildAssemblyName;
     }
 
     public async Task Execute()
@@ -40,6 +41,7 @@ public class MsBuildHelper
             if (File.Exists(assemblyDllFile))
             {
                 var packageDllFile = Path.Combine(_packageSourceBin!, _msBuildAssemblyFileName!);
+                packageDllFile.TryCheckFileDirectory();
                 File.Copy(assemblyDllFile, packageDllFile, true);
                 if (!File.Exists(packageDllFile))
                     throw new InvalidOperationException($"Source file {assemblyDllFile} not copied to {packageDllFile}!");
@@ -56,7 +58,7 @@ public class MsBuildHelper
     {
 
         var version = $"{config.Erp.ErpVersion?[..6]}.{DateTime.Now:yMd.HHmm}";
-        var solutionFilePath = config.Code.MsBuildSolutionFile;
+        var solutionFilePath = config.Src.MsBuildSolutionFile;
         var versionProperty = $"/property:Version={version}";
         
         const string buildConfiguration = "/property:Configuration=Release";

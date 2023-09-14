@@ -1,13 +1,13 @@
-using ACUCustomizationUtils.Configuration.Code;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
+using ACUCustomizationUtils.Configuration.Src;
 using FluentValidation;
 
-namespace ACUCustomizationUtils.Validators.Code;
+namespace ACUCustomizationUtils.Validators.Src;
 
-internal class SiteGetSrcValidator : AbstractValidator<ISiteConfiguration>
+internal class SiteCstValidator : AbstractValidator<ISiteConfiguration>
 {
-    public SiteGetSrcValidator()
+    public SiteCstValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
         RuleFor(c => c.DbConnectionString).NotNull();
@@ -15,9 +15,9 @@ internal class SiteGetSrcValidator : AbstractValidator<ISiteConfiguration>
     }
 }
 
-internal class CodeSrcValidator : AbstractValidator<ICodeConfiguration>
+internal class SrcCstValidator : AbstractValidator<ISrcConfiguration>
 {
-    public CodeSrcValidator()
+    public SrcCstValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
         RuleFor(c => c.PkgSourceDirectory).NotNull();
@@ -29,6 +29,6 @@ internal class PackageGetSrcValidator : AbstractValidator<IPackageConfiguration>
     public PackageGetSrcValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
-        RuleFor(c => c.PackageName).NotNull();
+        RuleFor(c => c.PkgName).NotNull();
     }
 }

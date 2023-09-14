@@ -23,7 +23,7 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
             switch (propName?.FirstCharToUpper())
             {
                 case nameof(site.AcumaticaToolPath):
-                    site.AcumaticaToolPath = reader.GetString();
+                    site.AcumaticaToolPath = reader.GetString().NormalizeEnvVariables();
                     break;
 
                 case nameof(site.InstanceName):
@@ -31,7 +31,7 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
                     break;
 
                 case nameof(site.InstancePath):
-                    site.InstancePath = reader.GetString();
+                    site.InstancePath = reader.GetString().NormalizeEnvVariables();
                     break;
 
                 case nameof(site.SqlServerName):

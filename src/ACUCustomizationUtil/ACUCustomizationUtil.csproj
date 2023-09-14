@@ -12,6 +12,8 @@
         <ApplicationIcon>acumatica.ico</ApplicationIcon>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Deterministic>false</Deterministic>
+        <Company>Sprinterra (c) 2023</Company>
+        <Product>ACU: Acumatica Customizatoin Util</Product>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Dapper" Version="2.0.123" />
@@ -47,4 +49,7 @@
       <Folder Include="Helpers\Proxy\" />
       <Folder Include="Properties\" />
     </ItemGroup>
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="xcopy /F /Y $(ProjectDir)acu.json $(ProjectDir)..\..\proj\" />
+    </Target>
 </Project>

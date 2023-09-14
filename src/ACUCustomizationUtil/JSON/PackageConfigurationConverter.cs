@@ -35,11 +35,11 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
                 case nameof(package.Tenant):
                     package.Tenant = reader.GetString();
                     break;
-                case nameof(package.PackageName):
-                    package.PackageName = reader.GetString();
+                case nameof(package.PkgName):
+                    package.PkgName = reader.GetString();
                     break;
-                case nameof(package.PackageDirectory):
-                    package.PackageDirectory = reader.GetString();
+                case nameof(package.PkgDirectory):
+                    package.PkgDirectory = reader.GetString().NormalizeEnvVariables();
                     break;
             }
         }

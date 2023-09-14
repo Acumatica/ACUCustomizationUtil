@@ -3,9 +3,9 @@ using System.CommandLine.Binding;
 using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
-using ACUCustomizationUtils.Configuration.Code;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
+using ACUCustomizationUtils.Configuration.Src;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
@@ -32,12 +32,12 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
                 InstancePath = instancePath
             },
 
-            Package = new PackageConfiguration
+            Pkg = new PackageConfiguration
             {
-                PackageName = packageName
+                PkgName = packageName
             },
 
-            Code = new CodeConfiguration
+            Src = new SrcConfiguration
             {
                 PkgSourceDirectory = sourceDirectory
             }

@@ -1,8 +1,8 @@
 ﻿using ACUCustomizationUtils.Builders.Commands;
-using ACUCustomizationUtils.Services.Code;
 using ACUCustomizationUtils.Services.ERP;
 using ACUCustomizationUtils.Services.Package;
 using ACUCustomizationUtils.Services.Site;
+using ACUCustomizationUtils.Services.Src;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -27,7 +27,7 @@ public static class HostBuilder
                 services.AddTransient<IErpService, ErpService>();
                 services.AddTransient<ISiteService, SiteService>();
                 services.AddTransient<IPackageService, PackageService>();
-                services.AddTransient<ICodeService, CodeService>();
+                services.AddTransient<ISrcService, SrcService>();
                 services.AddSingleton<ErpCommandBuilder>();
                 services.AddSingleton<SiteCommandBuilder>();
                 services.AddSingleton<PackageCommandBuilder>();

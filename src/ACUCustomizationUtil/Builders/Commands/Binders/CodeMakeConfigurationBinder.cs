@@ -3,8 +3,8 @@ using System.CommandLine.Binding;
 using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
-using ACUCustomizationUtils.Configuration.Code;
 using ACUCustomizationUtils.Configuration.Package;
+using ACUCustomizationUtils.Configuration.Src;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
@@ -27,13 +27,13 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
 
         return new AcuConfiguration
         {
-            Package = new PackageConfiguration
+            Pkg = new PackageConfiguration
             {
-                PackageName = packageName,
-                PackageDirectory = packageDirectory
+                PkgName = packageName,
+                PkgDirectory = packageDirectory
             },
 
-            Code = new CodeConfiguration
+            Src = new SrcConfiguration
             {
                 PkgSourceDirectory = sourceDirectory,
                 PkgDescription = projectDescription,

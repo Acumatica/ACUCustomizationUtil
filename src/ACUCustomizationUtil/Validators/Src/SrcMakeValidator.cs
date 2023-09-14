@@ -1,31 +1,31 @@
-using ACUCustomizationUtils.Configuration.Code;
 using ACUCustomizationUtils.Configuration.Package;
+using ACUCustomizationUtils.Configuration.Src;
 using FluentValidation;
 
-namespace ACUCustomizationUtils.Validators.Code;
+namespace ACUCustomizationUtils.Validators.Src;
 
 internal class PackageMakeValidator : AbstractValidator<IPackageConfiguration>
 {
     public PackageMakeValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
-        RuleFor(c => c.PackageName).NotNull();
-        RuleFor(c => c.PackageDirectory).NotNull(); //.Must(Directory.Exists);
+        RuleFor(c => c.PkgName).NotNull();
+        RuleFor(c => c.PkgDirectory).NotNull(); //.Must(Directory.Exists);
     }
 }
 
-internal class PackageCompileValidator : AbstractValidator<IPackageConfiguration>
+internal class PackageBuildValidator : AbstractValidator<IPackageConfiguration>
 {
-    public PackageCompileValidator()
+    public PackageBuildValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
-        RuleFor(c => c.PackageName).NotNull();
+        RuleFor(c => c.PkgName).NotNull();
     }
 }
 
-internal class CodeMakeValidator : AbstractValidator<ICodeConfiguration>
+internal class SrcMakeValidator : AbstractValidator<ISrcConfiguration>
 {
-    public CodeMakeValidator()
+    public SrcMakeValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
         RuleFor(c => c.PkgSourceDirectory).NotNull().Must(Directory.Exists);

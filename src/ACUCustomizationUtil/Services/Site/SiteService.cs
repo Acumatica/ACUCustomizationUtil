@@ -19,16 +19,20 @@ public class SiteService : ISiteService
 {
     private readonly ILogger<SiteService> _logger;
 
+    #region .ctor
+
     public SiteService(ILogger<SiteService> logger)
     {
         _logger = logger;
     }
 
+    #endregion
+
+    #region Public methods
+
     public async Task InstallSite(IAcuConfiguration config)
     {
         _logger.LogInformation("Execute InstallSite action");
-        // var processSuccess = true;
-        // Exception? processException = null;
         try
         {
             await AnsiConsole.Status().StartAsync("Install Acumatica instance", async ctx =>
@@ -61,25 +65,17 @@ public class SiteService : ISiteService
         }
         catch (Exception? e)
         {
-            // processSuccess = false;
-            // processException = e;
-            
             _logger.LogError(e, "InstallSite action NOT success!");
         }
-
-        // if (processSuccess)
-        //     _logger.LogInformation("InstallSite action success");
-        // else
-        //     _logger.LogError(processException, "InstallSite action NOT success!");
     }
 
     public async Task UpdateSite(IAcuConfiguration config)
     {
         _logger.LogInformation("Execute UpdateSite action");
 
-        await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
+        try
         {
-            try
+            await AnsiConsole.Status().StartAsync("Update Acumatica instance", async ctx =>
             {
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
@@ -94,15 +90,14 @@ public class SiteService : ISiteService
                 var processArgs = GetSiteUpdateCmdArgs(config.Site);
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Update Acumatica instance: action error!");
-            }
+            });
 
             _logger.LogInformation("UpdateSite action complete");
-
-        });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Update Acumatica instance: action error!");
+        }
     }
 
     public async Task UpdateDatabase(IAcuConfiguration config)
@@ -126,13 +121,12 @@ public class SiteService : ISiteService
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
             });
+            _logger.LogInformation("UpdateDatabase action complete");
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Update Acumatica database: action error!");
         }
-
-        _logger.LogInformation("DeleteSite action complete");
     }
 
     public async Task DeleteSite(IAcuConfiguration config)
@@ -144,7 +138,7 @@ public class SiteService : ISiteService
             {
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger);
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
 
                 _logger.LogInformation("Validate configuration");
                 ctx.Status("Validate configuration ...");
@@ -156,14 +150,17 @@ public class SiteService : ISiteService
                 var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
                 await processHelper.Execute();
             });
+            _logger.LogInformation("DeleteSite action complete");
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Delete Acumatica instance: action error!");
         }
-
-        _logger.LogInformation("DeleteSite action complete");
     }
+
+    #endregion
+
+    #region Private methods
 
     private static string GetSiteInstallCmdArgs(ISiteConfiguration siteConfig)
     {
@@ -190,4 +187,6 @@ public class SiteService : ISiteService
             $"-cm:\"DBMaint\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -n:\"False\" -b:\"True\" -op:\"Forced\"";
         return args;
     }
+
+    #endregion
 }

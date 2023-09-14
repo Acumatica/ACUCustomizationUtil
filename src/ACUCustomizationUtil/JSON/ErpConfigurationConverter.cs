@@ -29,7 +29,7 @@ public class ErpConfigurationConverter : JsonConverter<IErpConfiguration>
                     erp.Url = reader.GetString() != null ? new Uri(reader.GetString()!, UriKind.Absolute) : null;
                     break;
                 case nameof(erp.DestinationDirectory):
-                    erp.DestinationDirectory = reader.GetString();
+                    erp.DestinationDirectory = reader.GetString().NormalizeEnvVariables();
                     break;
                 case nameof(erp.InstallationFileName):
                     erp.InstallationFileName = reader.GetString();

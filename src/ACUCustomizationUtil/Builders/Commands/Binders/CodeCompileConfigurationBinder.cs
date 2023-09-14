@@ -2,7 +2,7 @@
 using System.CommandLine.Binding;
 using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration.ACU;
-using ACUCustomizationUtils.Configuration.Code;
+using ACUCustomizationUtils.Configuration.Src;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
@@ -23,7 +23,7 @@ public class CodeCompileConfigurationBinder : CommandParametersBinder
 
         return new AcuConfiguration
         {
-            Code = new CodeConfiguration
+            Src = new SrcConfiguration
             {
                 MsBuildSolutionFile = msBuildSolutionFilePath,
                 MsBuildTargetDirectory = msBuildTargetDirectoryPath,

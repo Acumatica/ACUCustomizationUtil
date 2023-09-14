@@ -1,11 +1,11 @@
-using ACUCustomizationUtils.Configuration.Code;
+using ACUCustomizationUtils.Configuration.Src;
 using FluentValidation;
 
-namespace ACUCustomizationUtils.Validators.Code;
+namespace ACUCustomizationUtils.Validators.Src;
 
-internal class CodeCompileValidator : AbstractValidator<ICodeConfiguration>
+internal class SrcBuildValidator : AbstractValidator<ISrcConfiguration>
 {
-    public CodeCompileValidator()
+    public SrcBuildValidator()
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
         RuleFor(c => c.PkgSourceDirectory).NotNull().Must(Directory.Exists);

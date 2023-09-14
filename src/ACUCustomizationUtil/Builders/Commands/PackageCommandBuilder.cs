@@ -40,14 +40,14 @@ public class PackageCommandBuilder : CommandBuilderBase
         var unpublishAllCommand = BuildUnpublishAllCommand();
         var uploadCommand = BuildUploadCommand();
 
-        var packageCommand = new Command("package", "Work with a customization package.")
+        var packageCommand = new Command("pkg", "Work with a customization package.")
         {
             getCommand,
             publishCommand,
             unpublishAllCommand,
             uploadCommand
         };
-
+        
         packageCommand.AddGlobalOption(_urlOption);
         packageCommand.AddGlobalOption(_loginOption);
         packageCommand.AddGlobalOption(_passwordOption);
@@ -164,12 +164,12 @@ public class PackageCommandBuilder : CommandBuilderBase
 
     private static Option<string> GetPackageNameOption()
     {
-        return new Option<string>("--packageName", "Package name");
+        return new Option<string>("--pkgName", "Package name");
     }
 
     private static Option<string> GetPackageDirectoryOption()
     {
-        return new Option<string>("--packageDir", "Package directory");
+        return new Option<string>("--pkgDir", "Package directory");
     }
 }
 
@@ -192,10 +192,10 @@ public class PackageUploadConfigurationBinder : CommandParametersBinder
 
         return new AcuConfiguration
         {
-            Package = new PackageConfiguration
+            Pkg = new PackageConfiguration
             {
                 Url = url != null ? new Uri(url) : null,
-                Login = login, Password = password, Tenant = tenant, PackageName = pkgName, PackageDirectory = pkgDir
+                Login = login, Password = password, Tenant = tenant, PkgName = pkgName, PkgDirectory = pkgDir
             }
         };
     }
@@ -219,10 +219,10 @@ public class PackagePublishConfigurationBinder : CommandParametersBinder
 
         return new AcuConfiguration
         {
-            Package = new PackageConfiguration
+            Pkg = new PackageConfiguration
             {
                 Url = url != null ? new Uri(url) : null,
-                Login = login, Password = password, Tenant = tenant, PackageName = pkgName
+                Login = login, Password = password, Tenant = tenant, PkgName = pkgName
             }
         };
     }
@@ -245,7 +245,7 @@ public class PackageUnpublishAllConfigurationBinder : CommandParametersBinder
 
         return new AcuConfiguration
         {
-            Package = new PackageConfiguration
+            Pkg = new PackageConfiguration
             {
                 Url = url != null ? new Uri(url) : null,
                 Login = login, Password = password, Tenant = tenant

@@ -1,13 +1,12 @@
 ﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
-using ACUCustomizationUtils.Helpers.CommonTypes;
-using ACUCustomizationUtils.Validators.Code;
+using ACUCustomizationUtils.Validators.Src;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using CstEntityHelper = ACUCustomizationUtils.Helpers.CstEntityHelper;
 
-namespace ACUCustomizationUtils.Services.Code;
+namespace ACUCustomizationUtils.Services.Src;
 
 /// <summary>
 /// This class contains methods for handle Code subcommands
@@ -17,13 +16,13 @@ namespace ACUCustomizationUtils.Services.Code;
 /// email: aleksej.slusar@sprinterra.com
 /// Copyright Sprinterra(c) 2023
 /// </remarks>
-public class CodeService : ICodeService
+public class SrcService : ISrcService
 {
-    private readonly ILogger<CodeService> _logger;
+    private readonly ILogger<SrcService> _logger;
 
     #region Public methods
 
-    public CodeService(ILogger<CodeService> logger)
+    public SrcService(ILogger<SrcService> logger)
     {
         _logger = logger;
     }
@@ -37,24 +36,23 @@ public class CodeService : ICodeService
             {
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
-                    nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg),
+                    nameof(IAcuConfiguration.Src));
 
                 _logger.LogInformation("Validate configuration");
                 ctx.Status("Validate configuration ...");
-                CodeValidator.ValidateForSrc(config);
+                SrcValidator.ValidateForSrc(config);
 
-                _logger.LogInformation("Download source items for project {Package}", config.Package.PackageName);
+                _logger.LogInformation("Download source items for project {Package}", config.Pkg.PkgName);
                 ctx.Status("Download in progress, please wait ...");
                 await GetProjectSourceExAsync(config);
             });
+            _logger.LogInformation("GetProjectSource action complete");
         }
         catch (Exception e)
         {
             _logger.LogError(e, "GetProjectSource: action error!");
         }
-
-        _logger.LogInformation("GetProjectSource action complete");
     }
 
     public async Task MakeProjectFromSource(IAcuConfiguration config)
@@ -66,24 +64,23 @@ public class CodeService : ICodeService
             {
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
-                    nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg),
+                    nameof(IAcuConfiguration.Src));
 
                 _logger.LogInformation("Validate configuration");
                 ctx.Status("Validate configuration ...");
-                CodeValidator.ValidateForMake(config);
+                SrcValidator.ValidateForMake(config);
 
-                _logger.LogInformation("Making package for project {Package}", config.Package.PackageName);
+                _logger.LogInformation("Making package for project {Package}", config.Pkg.PkgName);
                 ctx.Status("Making in progress, please wait ...");
                 await MakeProjectFromSourceExAsync(config);
             });
+            _logger.LogInformation("MakeProjectFromSource action complete");
         }
         catch (Exception e)
         {
             _logger.LogError(e, "MakeProjectFromSource: action error!");
         }
-
-        _logger.LogInformation("MakeProjectFromSource action complete");
     }
 
     public async Task CompileSolution(IAcuConfiguration config)
@@ -95,24 +92,24 @@ public class CodeService : ICodeService
             {
                 _logger.LogInformation("Reading configuration");
                 ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Package),
-                    nameof(IAcuConfiguration.Code));
+                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg),
+                    nameof(IAcuConfiguration.Src));
 
                 _logger.LogInformation("Validate configuration");
                 ctx.Status("Validate configuration ...");
-                CodeValidator.ValidateForCompile(config);
+                SrcValidator.ValidateForBuild(config);
 
-                _logger.LogInformation("Compile external library code for project {Package}", config.Package.PackageName);
+                _logger.LogInformation("Compile external library code for project {Package}",
+                    config.Pkg.PkgName);
                 ctx.Status("Compile in progress, please wait ...");
                 var msBuildHelper = new MsBuildHelper(config, ctx);
                 await msBuildHelper.Execute();
-                
+
                 ctx.Status("Copy external library assembly to package source");
                 _logger.LogInformation("Copy external library assembly to package source");
                 await msBuildHelper.CopyAssemblyToPackageBinAsync();
-
             });
-            
+
             _logger.LogInformation("CompileSolution action success");
         }
         catch (Exception e)
@@ -127,15 +124,13 @@ public class CodeService : ICodeService
 
     private static async Task GetProjectSourceExAsync(IAcuConfiguration config)
     {
-        var packageName = config.Package.PackageName!;
-        var sourceDirectory = config.Code.PkgSourceDirectory!;
+        var packageName = config.Pkg.PkgName!;
+        var sourceDirectory = config.Src.PkgSourceDirectory!;
         var connectionString = config.Site.DbConnectionString!;
 
         sourceDirectory.TryCheckCreateDirectory();
         if (!Directory.Exists(sourceDirectory))
-        {
             throw new Exception($"Directory {sourceDirectory} is not exist or access is not allowed to it");
-        }
 
         var dataHelper = new DatabaseHelper(config);
         var itemHandler = new CstEntityHelper(config);
@@ -150,14 +145,8 @@ public class CodeService : ICodeService
         //Write Customization entities
         var result = await dataHelper.GetCustomizationProjectEntitiesAsync(packageName);
         if (result != null)
-        {
             foreach (var item in result)
-            {
                 itemHandler.HandleCustomizationsEntity(item);
-            }    
-        }
-
-        itemHandler.SaveHandledDlls();
 
         //Write project meta-file
         itemHandler.SaveProjectMetadata(projectInfo);

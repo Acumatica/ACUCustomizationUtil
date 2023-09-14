@@ -43,16 +43,16 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
                     configuration.Site.CopyValues(site);
                     break;
 
-                case nameof(configuration.Package):
+                case nameof(configuration.Pkg):
                     var packageConverter = new PackageConfigurationConverter();
                     var package = packageConverter.Read(ref reader, typeof(IErpConfiguration), options);
-                    configuration.Package.CopyValues(package);
+                    configuration.Pkg.CopyValues(package);
                     break;
 
-                case nameof(configuration.Code):
-                    var projectConverter = new CodeConfigurationConverter();
+                case nameof(configuration.Src):
+                    var projectConverter = new SrcConfigurationConverter();
                     var project = projectConverter.Read(ref reader, typeof(IErpConfiguration), options);
-                    configuration.Code.CopyValues(project);
+                    configuration.Src.CopyValues(project);
                     break;
             }
         }

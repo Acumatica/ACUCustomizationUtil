@@ -16,8 +16,8 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
     public string? Login { get; set; }
     public string? Password { get; set; }
     public string? Tenant { get; set; }
-    public string? PackageName { get; set; }
-    public string? PackageDirectory { get; set; }
+    public string? PkgName { get; set; }
+    public string? PkgDirectory { get; set; }
     public string? PackageFilePath { get; private set; }
     public abstract bool IsNotNull { get; }
 
@@ -28,11 +28,11 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
             Login = $"{Login}@{Tenant}";
         }
 
-        PackageDirectory = PackageDirectory.TryGetFullDirectoryPath();
-        if (PackageName != null && PackageDirectory != null)
+        PkgDirectory = PkgDirectory.TryGetFullDirectoryPath();
+        if (PkgName != null && PkgDirectory != null)
         {
-            var file = PackageName!.EndsWith(".zip") ? PackageName : $"{PackageName}.zip";
-            PackageFilePath = Path.Combine(PackageDirectory, file);
+            var file = PkgName!.EndsWith(".zip") ? PkgName : $"{PkgName}.zip";
+            PackageFilePath = Path.Combine(PkgDirectory, file);
         }
         
 

@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using Spectre.Console;
+﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace ACUCustomizationUtils.Extensions;
 
@@ -54,13 +54,27 @@ public static class StringExtensions
                 || processMessage.Contains("Exception")
                 || processMessage.StartsWith("   at"));
     }
-}
 
-public static class ExceptionExt
-{
-    public static void WriteException(this Exception e)
+    public static string? NormalizeEnvVariables(this string? value)
     {
-        AnsiConsole.WriteException(e, ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
-                                            ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
+        
+        const string pattern = @"\%+\w+\%";
+        if (value != null && Regex.IsMatch(value, pattern))
+        {
+            var envName = Regex.Match(value, pattern).Value.Trim('%');
+            var envValue = Environment.GetEnvironmentVariable(envName, EnvironmentVariableTarget.User) 
+                              ?? Environment.GetEnvironmentVariable(envName, EnvironmentVariableTarget.Machine);
+            if (envValue != null)
+            {
+                value = Regex.Replace(value, pattern, envValue);
+            }
+            else
+            {
+                throw new ArgumentNullException($"System or User environment variable {envName} is not found!");
+            }
+                
+        }
+
+        return value;
     }
 }

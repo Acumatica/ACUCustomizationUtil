@@ -14,11 +14,11 @@ internal class SoapClient : IDisposable
 
     public SoapClient(IAcuConfiguration configuration)
     {
-        var serviceUrl = configuration.Package.Url!;
-        var username = configuration.Package.Login!;
-        var password = configuration.Package.Password!;
-        _packageName = configuration.Package.PackageName;
-        _packageDirectory = configuration.Package.PackageDirectory;
+        var serviceUrl = configuration.Pkg.Url!;
+        var username = configuration.Pkg.Login!;
+        var password = configuration.Pkg.Password!;
+        _packageName = configuration.Pkg.PkgName;
+        _packageDirectory = configuration.Pkg.PkgDirectory;
 
         var endpointAddress = new EndpointAddress(serviceUrl);
         var basicHttpBinding = new BasicHttpBinding(endpointAddress.Uri.Scheme.ToLower() == "http"

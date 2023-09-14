@@ -2,7 +2,8 @@
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 
-namespace ACUCustomizationUtils.Configuration.Code;
+namespace ACUCustomizationUtils.Configuration.Src;
+
 /// <summary>
 /// POCO configuration class for acu util (Code section)
 /// </summary>
@@ -11,7 +12,7 @@ namespace ACUCustomizationUtils.Configuration.Code;
 /// email: aleksej.slusar@sprinterra.com
 /// Copyright Sprinterra(c) 2023
 /// </remarks>
-public abstract class CodeConfigurationBase : ICodeConfiguration
+public abstract class SrcConfigurationBase : ISrcConfiguration
 {
     public string? PkgSourceDirectory { get; set; }
     public string? PkgDescription { get; set; }
@@ -24,7 +25,7 @@ public abstract class CodeConfigurationBase : ICodeConfiguration
 
     public string? PkgSourceBinDirectory { get; private set; }
 
-    public ICodeConfiguration SetDefaultValues(IAcuConfiguration configuration)
+    public ISrcConfiguration SetDefaultValues(IAcuConfiguration configuration)
     {
         PkgSourceDirectory = PkgSourceDirectory.TryGetFullDirectoryPath();
         MsBuildTargetDirectory = MsBuildTargetDirectory.TryGetFullDirectoryPath();

@@ -10,9 +10,9 @@ public interface IPackageConfiguration
     Uri? Url { get; }
     string? Login { get; }
     string? Password { get; }
-    string? PackageName { get; }
+    string? PkgName { get; }
     string? Tenant { get; set; }
-    string? PackageDirectory { get; }
+    string? PkgDirectory { get; }
     [JsonIgnore] string? PackageFilePath { get; }
     [JsonIgnore] bool IsNotNull { get; }
 

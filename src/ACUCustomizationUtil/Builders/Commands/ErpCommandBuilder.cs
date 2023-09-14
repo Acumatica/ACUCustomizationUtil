@@ -31,7 +31,7 @@ public class ErpCommandBuilder : CommandBuilderBase
         var downloadCommand = BuildDownloadCommand();
         var installCommand = BuildInstallCommand();
         var deleteCommand = BuildDeleteCommand();
-        var erpCommand = new Command("erp", "Work with a erp.")
+        var erpCommand = new Command("erp", "Work with a Acumatica ERP.")
         {
             downloadCommand,
             installCommand,

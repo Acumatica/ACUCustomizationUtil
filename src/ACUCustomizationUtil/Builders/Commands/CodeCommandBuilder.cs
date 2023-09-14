@@ -2,7 +2,7 @@
 using ACUCustomizationUtils.Builders.Commands.Binders;
 using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Services.Code;
+using ACUCustomizationUtils.Services.Src;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 /// <summary>
@@ -15,9 +15,9 @@ namespace ACUCustomizationUtils.Builders.Commands;
 /// </remarks>
 public class CodeCommandBuilder : CommandBuilderBase
 {
-    private readonly ICodeService _projectService;
+    private readonly ISrcService _projectService;
 
-    public CodeCommandBuilder(ICodeService projectService)
+    public CodeCommandBuilder(ISrcService projectService)
     {
         _projectService = projectService;
     }
@@ -28,7 +28,7 @@ public class CodeCommandBuilder : CommandBuilderBase
         var makeCommand = BuildMakeCommand();
         var compileCommand = BuildCompileCommand();
 
-        var pkgCommand = new Command("code", "Work with a customization code.")
+        var pkgCommand = new Command("src", "Work with a source code of customization.")
         {
             srcCommand,
             makeCommand,
@@ -76,7 +76,7 @@ public class CodeCommandBuilder : CommandBuilderBase
         var instancePath = GetInstancePathOption();
         var sourceDirectory = GetSourceDirectoryOption();
 
-        var command = new Command("src", "Get customization project source")
+        var command = new Command("get", "Get customization project source")
         {
             packageName, dbConnection, instancePath, sourceDirectory
         };
@@ -100,7 +100,7 @@ public class CodeCommandBuilder : CommandBuilderBase
         var msBuildTargetDirectory = GetMsBuildTargetDirectoryOption();
         var msBuildAssemblyFile = GetMsBuildAssemblyFileNameOption();
         
-        var command = new Command("compile", "Compile external library source code")
+        var command = new Command("build", "Build dll from extension library source code")
         {
             msBuildSolutionFilePath, msBuildTargetDirectory, msBuildAssemblyFile
         };
@@ -144,12 +144,12 @@ public class CodeCommandBuilder : CommandBuilderBase
 
     private static Option<string> GetPackageNameOption()
     {
-        return new Option<string>("--packageName", "Package name");
+        return new Option<string>("--pkgName", "Package name");
     }
 
     private static Option<string> GetPackageDirectoryOption()
     {
-        return new Option<string>("--packageDirectory", "Package destination directory");
+        return new Option<string>("--pkgDirectory", "Package destination directory");
     }
 
     private static Option<string> GetMsBuildSolutionFileNameOption()

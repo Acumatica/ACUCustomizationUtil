@@ -1,19 +1,19 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration.Code;
+using ACUCustomizationUtils.Configuration.Src;
 using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.JSON;
 
-public class CodeConfigurationConverter : JsonConverter<ICodeConfiguration>
+public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
 {
-    public override ICodeConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert,
+    public override ISrcConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
 
-        var code = new CodeConfiguration();
+        var code = new SrcConfiguration();
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject) return code;
@@ -23,7 +23,7 @@ public class CodeConfigurationConverter : JsonConverter<ICodeConfiguration>
             switch (propName?.FirstCharToUpper())
             {
                 case nameof(code.PkgSourceDirectory):
-                    code.PkgSourceDirectory = reader.GetString();
+                    code.PkgSourceDirectory = reader.GetString().NormalizeEnvVariables();
                     break;
                 case nameof(code.PkgDescription):
                     code.PkgDescription = reader.GetString();
@@ -32,10 +32,10 @@ public class CodeConfigurationConverter : JsonConverter<ICodeConfiguration>
                     code.PkgLevel = reader.GetString();
                     break;
                 case nameof(code.MsBuildSolutionFile):
-                    code.MsBuildSolutionFile = reader.GetString();
+                    code.MsBuildSolutionFile = reader.GetString().NormalizeEnvVariables();
                     break;
                 case nameof(code.MsBuildTargetDirectory):
-                    code.MsBuildTargetDirectory = reader.GetString();
+                    code.MsBuildTargetDirectory = reader.GetString().NormalizeEnvVariables();
                     break;
                 case nameof(code.MsBuildAssemblyName):
                     code.MsBuildAssemblyName = reader.GetString();
@@ -49,7 +49,7 @@ public class CodeConfigurationConverter : JsonConverter<ICodeConfiguration>
         throw new JsonException("Expected EndObject token");
     }
 
-    public override void Write(Utf8JsonWriter writer, ICodeConfiguration value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ISrcConfiguration value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }

@@ -99,17 +99,17 @@ public class DatabaseHelper
                                        WHERE Name = @ProjectName) 
                                  ORDER by Type";
         
-        object[] parameters = { new {ProjectName = projectName } };
+        object param = new {ProjectName = projectName };
         await using var connection = _connectionFactory();
-        return await connection.QueryAsync<CustomizationProjectEntity>(sql, parameters);
+        return await connection.QueryAsync<CustomizationProjectEntity>(sql, param);
     }
 
     public async Task<CustomizationProject?> GetCustomizationProjectAsync(string projectName)
     {
         const string sql = @"SELECT * FROM CustProject WHERE Name = @ProjectName";
-        object[] parameters = { new {ProjectName = projectName } };
+        object param =  new {ProjectName = projectName } ;
         await using var connection = _connectionFactory();
-        return await connection.QueryFirstAsync<CustomizationProject>(sql, parameters);
+        return await connection.QuerySingleAsync<CustomizationProject>(sql, param);
     }
 
 }

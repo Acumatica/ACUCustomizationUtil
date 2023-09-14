@@ -2,10 +2,10 @@
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.JSON;
 
-namespace ACUCustomizationUtils.Configuration.Code;
+namespace ACUCustomizationUtils.Configuration.Src;
 
 [JsonConverter(typeof(PackageConfigurationConverter))]
-public interface ICodeConfiguration
+public interface ISrcConfiguration
 {
     string? PkgSourceDirectory { get; }
     string? PkgDescription { get; }
@@ -17,5 +17,5 @@ public interface ICodeConfiguration
     bool IsNotNull { get; }
     string? PkgSourceBinDirectory { get; }
 
-    ICodeConfiguration SetDefaultValues(IAcuConfiguration configuration);
+    ISrcConfiguration SetDefaultValues(IAcuConfiguration configuration);
 }

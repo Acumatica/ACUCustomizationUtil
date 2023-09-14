@@ -19,13 +19,13 @@ public class PackageHelper
 
     public PackageHelper(IAcuConfiguration configuration)
     {
-        _packageSourceDir = configuration.Code.PkgSourceDirectory!;
+        _packageSourceDir = configuration.Src.PkgSourceDirectory!;
         _erpVersion = configuration.Erp.ErpVersion!;
-        _level = int.TryParse(configuration.Code.PkgLevel, out var l) ? l : 0;
-        var packageDestinationDir = configuration.Package.PackageDirectory!;
+        _level = int.TryParse(configuration.Src.PkgLevel, out var l) ? l : 0;
+        var packageDestinationDir = configuration.Pkg.PkgDirectory!;
         var packageName = GetPackageName(configuration);
         _packageFileName = Path.Combine(packageDestinationDir, packageName);
-        _description = configuration.Code.PkgDescription ?? GetPackageDescription(configuration);
+        _description = configuration.Src.PkgDescription ?? GetPackageDescription(configuration);
     }
     
     public void MakePackage()
@@ -152,13 +152,13 @@ public class PackageHelper
         var nawErpVersion = cstHelper.GetPackageNawErpVersion();
         var nawDateVersion = CstEntityHelper.GetPackageNawDateVersion();
         
-        var packageName = config.Code.MakeMode switch
+        var packageName = config.Src.MakeMode switch
         {
-            Messages.MakeModeBase => $"{config.Package.PackageName}.zip",
-            Messages.MakeModeQA => $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{fileVersion}].zip",
-            Messages.MakeModeISV => $"{config.Package.PackageName}[{config.Erp.ErpVersion}][{dateVersion}].zip",
-            Messages.MakeModeNAW => $"{config.Package.PackageName}{nawErpVersion}v{nawDateVersion}.zip",
-            _ => $"{config.Package.PackageName}.zip"
+            Messages.MakeModeBase => $"{config.Pkg.PkgName}.zip",
+            Messages.MakeModeQA => $"{config.Pkg.PkgName}[{config.Erp.ErpVersion}][{fileVersion}].zip",
+            Messages.MakeModeISV => $"{config.Pkg.PkgName}[{config.Erp.ErpVersion}][{dateVersion}].zip",
+            Messages.MakeModeNAW => $"{config.Pkg.PkgName}{nawErpVersion}v{nawDateVersion}.zip",
+            _ => $"{config.Pkg.PkgName}.zip"
         };
 
         return packageName;

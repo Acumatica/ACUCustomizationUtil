@@ -12,8 +12,6 @@ namespace ACUCustomizationUtils.Helpers;
 [SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 public class CstEntityHelper
 {
-    private readonly List<string> _handledDlls;
-
     private readonly string _packageSourceDir;
     private readonly string _packageSourceProjectDir;
     private readonly string _packageSourceBinDir;
@@ -23,13 +21,11 @@ public class CstEntityHelper
 
     public CstEntityHelper(IAcuConfiguration config)
     {
-        _handledDlls = new List<string>();
-
-        _packageSourceDir = config.Code.PkgSourceDirectory!;
+        _packageSourceDir = config.Src.PkgSourceDirectory!;
         _packageSourceBinDir = Path.Combine(_packageSourceDir, "Bin");
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
         _siteRootDir = config.Site.InstancePath!;
-        _packageName = config.Package.PackageName!;
+        _packageName = config.Pkg.PkgName!;
         _erpVersion = config.Erp.ErpVersion;
     }
 
@@ -133,10 +129,6 @@ public class CstEntityHelper
             if (fi.Exists)
             {
                 File.Copy(sourcePagePath, destinationPath, true);
-                if (fi.Extension.Contains("dll"))
-                {
-                    _handledDlls.Add(fi.Name);
-                }
             }
             else
             {
@@ -147,17 +139,6 @@ public class CstEntityHelper
         {
             throw new Exception($"Error copy entity {entity.Name} from {sourcePagePath} to {destinationPath}", e);
         }
-    }
-
-    public void SaveHandledDlls()
-    {
-        if (_handledDlls.Count <= 0) return;
-        if (!Directory.Exists(_packageSourceBinDir))
-        {
-            throw new Exception($"Directory {_packageSourceBinDir} does not exists");
-        }
-
-        File.WriteAllLines(_packageSourceBinDir, _handledDlls);
     }
 
     #endregion Private methods

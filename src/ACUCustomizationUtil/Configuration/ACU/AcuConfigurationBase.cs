@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration.Code;
 using ACUCustomizationUtils.Configuration.Erp;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
+using ACUCustomizationUtils.Configuration.Src;
 
 namespace ACUCustomizationUtils.Configuration.ACU;
 /// <summary>
@@ -21,14 +21,14 @@ public abstract class AcuConfigurationBase : IJsonOnDeserialized, IAcuConfigurat
     {
         Erp = new ErpConfiguration();
         Site = new SiteConfiguration();
-        Package = new PackageConfiguration();
-        Code = new CodeConfiguration();
+        Pkg = new PackageConfiguration();
+        Src = new SrcConfiguration();
     }
 
     public IErpConfiguration Erp { get; set; }
     public ISiteConfiguration Site { get; init; }
-    public IPackageConfiguration Package { get; init; }
-    public ICodeConfiguration Code { get; init; }
+    public IPackageConfiguration Pkg { get; init; }
+    public ISrcConfiguration Src { get; init; }
     public abstract bool IsNotNull { get; }
 
 
@@ -37,7 +37,7 @@ public abstract class AcuConfigurationBase : IJsonOnDeserialized, IAcuConfigurat
     {
         Erp.SetDefaultValues(this);
         Site.SetDefaultValues(this);
-        Package.SetDefaultValues(this);
-        Code.SetDefaultValues(this);
+        Pkg.SetDefaultValues(this);
+        Src.SetDefaultValues(this);
     }
 }
