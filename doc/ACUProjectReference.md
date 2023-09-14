@@ -10,9 +10,9 @@ A modern project is a project organized in the form of folders named in accordan
 
 The main problem in organizing any customization project is the presence of dependencies in it (plug-in libraries, ERP and Acumatica instance installation paths, etc.). With teamwork, such constraints can be solved in three ways:
 
-	- project catalogs and paths to plug-in resources and to ERP & Acumatica instance are identical and rigidly defined.
-	- project catalogs are rigidly defined, paths to pluggable resources and to the Acumatica ERP & instance are configured as relative (relative to the main project catalog).
-	- project catalogs, as well as paths to pluggable resources, to ERP & Acumatica instance are configured as computable parameters.
+- Project catalogs and paths to plug-in resources and to ERP & Acumatica instance are identical and rigidly defined.
+- Project catalogs are rigidly defined, paths to pluggable resources and to the Acumatica ERP & instance are configured as relative (relative to the main project catalog).
+- Project catalogs, as well as paths to pluggable resources, to ERP & Acumatica instance are configured as computable parameters.
 
 The first method is the easiest, but it is also completely inflexible. Let's just note it and move on to the remaining two.
 The second method is quite workable and requires minimal configuration. However, the main problem with this approach is the inability to create and use Acumatica instances as shared resources between projects. Thus, it was necessary to deploy a separate Acumatica instance for each customization project, which is redundant. This way uses the "classic" method.
@@ -20,7 +20,7 @@ The third approach seems to be the most promising. The only problem is the seemi
 
 > If a project is created from scratch, it must be created in a modern style.
 
-> Classic style projects must be converted according to these guidelines.
+> Classically styled projects should be converted according to these guidelines in order for them to use ACUCustomizationUtil.
 
 ### Structure of directories and files
 
