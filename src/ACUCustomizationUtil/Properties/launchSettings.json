@@ -3,7 +3,7 @@
     "ACUCustomizationUtil": {
       "commandName": "Project",
       "commandLineArgs": "src build",
-      "workingDirectory": "C:\\VS\\ACUCustomizationUtil\\proj",
+      "workingDirectory": "$(ProjectDir)..\\..\\proj",
       "environmentVariables": {
         "ACUBASEDIR": "C:\\Acumatica"
       }

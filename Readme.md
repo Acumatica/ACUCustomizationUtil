@@ -63,3 +63,17 @@ ACUCustomizationUtil
  - [ACU Command Reference](doc/ACUCommandReference.md)
  - [ACU Configuratoin Reference](doc/ACUConfigurationReference.md)
  - [ACU Project Configuration Guide](doc/ACUProjectReference.md)
+
+### Settings required to work with the Test Project
+The solution includes a test project ACUCustomization, which is located in the folder proj.
+The Test project is a typical customization project and allows developer to add new functionality or debug in the ACUCustomizationUtil code without being distracted by the creation of additional test conditions.
+Below are the profile settings required to work with the test project:
+
+_VisualStudio_
+
+![TestProjectVSSettings](doc/img/TestProjectVSSettings.png)
+
+_JetBrains Rider_
+
+![estProjectRiderSettings.png](doc/img/TestProjectRiderSettings.png)
+
