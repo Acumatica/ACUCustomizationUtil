@@ -51,10 +51,12 @@ ProjectName
 	README.md						solution information
 ```
 
-### Изменения в проекте
+### Project creation
 1. A root folder (root) is created for the project. The folder name is usually the same as the project name.
 2. A project of Class Library (.NET Framework) type is created in the ProjectName or src directory
+
 ![CreateNewProject](img/CreateNewProject.png)
+
 3. The **Directory.Build.props** file is copied to the root folder, where the **SiteDir** variable is defined. The value of this variable should point to the Acumatica instance for which the customization is being developed. The value of the **SiteDir** variable is used in the project file as a substitute for the path to the Acumatica instance.
 
 _Directory.Build.props_
