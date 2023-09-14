@@ -28,8 +28,8 @@
     "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",                                                               URL of service gate
     "login": "admin",                                                                                                         Service gate login
     "password": "123",                                                                                                        Service gate passworg
-    "packageName": "ACUCustomization",                                                                                        Package name
-    "packageDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\pkg"                                                      Package directory
+    "pkgName": "ACUCustomization",                                                                                            Package name
+    "pkgDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\pkg"                                                          Package directory
     "tenant": null,                                                                                                           Tenant to connect
   },
 
