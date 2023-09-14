@@ -118,8 +118,17 @@ _Project File_
 	</PostBuildEvent>
 </PropertyGroup>
 ```
+4. Nuget package Acuminator.Analyzers must be installed for the project:
+ 
+ _Project File_
+ ```xml
+<ItemGroup>
+  <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Analyzers.dll" />
+  <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Utilities.dll" />
+</ItemGroup>
+```
 
-4. The Solution file (ProjectName.sln) should be moved to the root project folder and the path to the Extension Library project should be edited.
+5. The Solution file (ProjectName.sln) should be moved to the root project folder and the path to the Extension Library project should be edited.
 
 ### Transforming a classic project to using ACUCustomizationUtil
 1. Identify the version of Acumatica ERP in use
