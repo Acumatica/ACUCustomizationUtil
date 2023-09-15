@@ -81,3 +81,7 @@ _JetBrains Rider_
 
 ![estProjectRiderSettings.png](doc/img/TestProjectRiderSettings.png)
 
+### How to get the utility executable file
+
+The correct way to get the utility executable is to put the publishing configuration into a folder and run that configuration. 
+These actions are described in more detail in the document [ACUPackageGuide](doc/ACUPackageGuide.md)
