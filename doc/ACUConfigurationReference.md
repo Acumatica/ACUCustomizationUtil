@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Configuration Reference (version 23.9.14.22375)
+## Configuration Reference (version 23.9.14.32856)
 ```
 {
   "erp": {                                                                                                                    Parameters for erp command
@@ -11,7 +11,6 @@
   },
 
   "site": {                                                                                                                   Parameters for site command
-    "acumaticaToolPath": null,                                                                                                Path to acumatica tool "ac.exe"
     "instanceName": "AcuTestUtil",                                                                                            Instance name
     "instancePath": "C:\\Acumatica\\instance\\23.105.0016\\Site",                                                             Full physical path of instance
     "sqlServerName": "localhost",                                                                                             Name of SQL server with ACU instance databace
@@ -19,12 +18,13 @@
     "acumaticaAdminName": "admin",                                                                                            Name of admin user
     "acumaticaAdminPassword": "123",                                                                                          Password which will be set for the  admin user
                                                                                                                               after instance was installed
+    "acumaticaToolPath": null,                                                                                                Path to acumatica tool "ac.exe"
     "dbConnectionString": null,                                                                                               Database connection string
     "iisAppPool": null,                                                                                                       IIS app pool name
     "iisWebSite": null                                                                                                        IIS web site name
   },
 
-  "package": {                                                                                                                Parameters for package command
+  "pkg": {                                                                                                                    Parameters for package command
     "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",                                                               URL of service gate
     "login": "admin",                                                                                                         Service gate login
     "password": "123",                                                                                                        Service gate passworg
@@ -33,7 +33,7 @@
     "tenant": null,                                                                                                           Tenant to connect
   },
 
-  "code": {                                                                                                                   Parameters for code command
+  "src": {                                                                                                                    Parameters for code command
     "pkgSourceDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\cst",                                                   Directory with package source code
     "pkgLevel": "0",                                                                                                          Package level
     "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path
