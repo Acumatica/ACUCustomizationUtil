@@ -1,6 +1,8 @@
 # Acumatica Customization Util (ACU)
 
-Current version: 23.9.14.32856
+**Current version:** 23.9.14.32856
+
+**Designed by:** [Sprinterra](https://www.sprinterra.com/acumatica/)
 
 ### General info
 Acumatica Customization Utility (ACU) is a utility designed to automate everyday routine tasks related to the creation and maintenance of built-in applications (customization packages) of ERP Acumatica.
