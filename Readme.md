@@ -2,7 +2,6 @@
 
 Current version: 23.9.14.22375
 
-URL to download: [Google Drive](https://drive.google.com/drive/folders/1QjqkNyfYClzcSfF-rrH-ggONkiCaE4sj?usp=drive_link)
 ### General info
 Acumatica Customization Utility (ACU) is a utility designed to automate everyday routine tasks related to the creation and maintenance of built-in applications (customization packages) of ERP Acumatica.
 
@@ -69,19 +68,18 @@ ACUCustomizationUtil
  - [ACU Project Configuration Guide](doc/ACUProjectReference.md)
 
 ### Settings required to work with the Test Project
+
 The solution includes a test project ACUCustomization, which is located in the folder proj.
-The test project is a typical customization project and allows developer to add new functionality or debug in the ACUCustomizationUtil code without being distracted by the creation of additional test conditions.
-Below are the profile settings required to work with the test project:
-
-_VisualStudio_
-
-![TestProjectVSSettings](doc/img/TestProjectVSSettings.png)
-
-_JetBrains Rider_
-
-![estProjectRiderSettings.png](doc/img/TestProjectRiderSettings.png)
+For more details on how to use this project and what settings should be made, please refer to the document [ACU Test Project Guide](doc/ACUTestProjectGuide.md).
 
 ### How to get the utility executable file
 
-The correct way to get the utility executable is to put the publishing configuration into a folder and run that configuration. 
-These actions are described in more detail in the document [ACUPackageGuide](doc/ACUPackageGuide.md)
+The correct way to get the utility executable is to put the publishing configuration into a folder and run that configuration. These actions are described in more detail in the document [ACUPackageGuide](doc/ACUPackageGuide.md)
+
+### Support and bug fixes
+
+If you have any issue with the app functionality, feel free to post an issue in this repo - for now, I am intended to maintain this app as long as I don't feel it is stable enough.
+
+If you need to modify the application to your requirements, or you have ideas for improving the functionality or code, feel free to contact the developers by [e-mail](mailto:aleksej.slusar@sprinterra.com).  To make your request faster, please specify "ACUCUstomizatoinUtil" in the subject line.
+
+
