@@ -15,6 +15,7 @@ dist/
 
 # Log files
 *.log
+acu-log*.txt
 
 # Package files
 *.jar
