@@ -47,16 +47,20 @@ public class DatabaseHelper
         const string databaseUser = @"DefaultAppPool";
         
         const string sql = @"IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = @ServerLogin)
-                             BEGIN
-                                CREATE LOGIN [@ServerLogin]
-                                FROM WINDOWS WITH DEFAULT_DATABASE=[master],
-                                DEFAULT_LANGUAGE=[us_english]
-                            END";
+                              BEGIN
+                                EXEC('
+                                    CREATE LOGIN ['+@ServerLogin+']
+                                    FROM WINDOWS WITH DEFAULT_DATABASE=[master],
+                                    DEFAULT_LANGUAGE=[us_english]
+                                ')
+                              END";
         
         const string sql1 = @"IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = @DatabaseUser)
                               BEGIN
-                                CREATE USER [@DatabaseUser]
-                                FOR LOGIN [@ServerLogin]
+                                EXEC('
+                                    CREATE USER '+@DatabaseUser+'
+                                    FOR LOGIN ['+@ServerLogin+']
+                                ')
                               END";
         
         const string sql2 = @"IF EXISTS (SELECT name FROM sys.database_principals WHERE name = @DatabaseUser)
