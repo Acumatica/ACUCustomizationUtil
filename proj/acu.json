@@ -32,6 +32,6 @@
     "msBuildTargetDirectory": "src\\ACUCustomization\\bin\\Release",
     "msBuildAssemblyName": "ACUCustomization.dll",
     "makeMode": null,
-	"pkgDescription": null
+    "pkgDescription": null
   }
 }

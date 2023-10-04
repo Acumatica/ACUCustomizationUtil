@@ -18,6 +18,7 @@ public class CstEntityHelper
     private readonly string _siteRootDir;
     private readonly string _packageName;
     private readonly string? _erpVersion;
+    private readonly string? _dllName;
 
     public CstEntityHelper(IAcuConfiguration config)
     {
@@ -27,6 +28,7 @@ public class CstEntityHelper
         _siteRootDir = config.Site.InstancePath!;
         _packageName = config.Pkg.PkgName!;
         _erpVersion = config.Erp.ErpVersion;
+        _dllName = config.Src.MsBuildAssemblyName;
     }
 
     #region Public methods
@@ -74,7 +76,8 @@ public class CstEntityHelper
 
     public string? GetPackageFileVersion()
     {
-        var dllPkgFiles = Directory.GetFiles(_packageSourceBinDir, $"{_packageName}.dll");
+        var dllPkgFiles = Directory.GetFiles(_packageSourceBinDir, _dllName 
+                                                                   ?? throw new InvalidOperationException("Customization dll name MUST be configured"));
         var dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
         var dllFile = dllPkgFiles.Any() ? dllPkgFiles.First() : dllAnyFiles.Any() ? dllAnyFiles.First() : null;
         if (dllFile != null)
