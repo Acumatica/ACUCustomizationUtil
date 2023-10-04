@@ -75,7 +75,7 @@ public class MsBuildHelper
             StartInfo = new ProcessStartInfo
             {
                 FileName = "where.exe",
-                Arguments = "msbuild",
+                Arguments = "/R C:\\ MSBuild.exe",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
