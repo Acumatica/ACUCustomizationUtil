@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-**Current version:** 23.9.14.32856
+**Current version:** 23.10.3.29702
 
 **Designed by:** [Sprinterra](https://www.sprinterra.com/acumatica/)
 
