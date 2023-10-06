@@ -120,9 +120,10 @@ ProjectName
     </ItemGroup>
     ```
     > You can add `Acuminator.Analyzers` using NuGet Package Manager UI in Visual Studio
-
-9. Move the Solution file (`{ProjectName}.sln`) to the root project folder
-10. Edit the path to the Extension Library project in the solution file.
+9. Open `AssemblyInfo.cs` info (located at the `src\{ProjectName}\Properties`).
+10. Remove `[assembly: AssemblyVersion("1.0.0.0")]` attribute.
+11. Move the Solution file (`{ProjectName}.sln`) to the root project folder
+12. Edit the path to the Extension Library project in the solution file.
 
 ### Transforming a classic project to using ACUCustomizationUtil
 1. Identify the version of Acumatica ERP in use
