@@ -214,7 +214,7 @@ Date        UTC Time    Local    Type Message
 
 The typical scenarion when working with Acumatica ERP customizations are:
 
-1. Creating a customization project from scratch from scratch.
+1. Creating a customization project from scratch.
 2. Deploying the existing project.
 
 If in the first case, the automation of routine tasks is not a critical factor determining the time spent on creating a project from scratch, then in the second case, deployment automation is a critical condition that directly affects the time for which the programmer will be ready to work with the project.

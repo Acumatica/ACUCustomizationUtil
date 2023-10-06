@@ -52,83 +52,77 @@ ProjectName
 ```
 
 ### Project creation
-1. A root folder (root) is created for the project. The folder name is usually the same as the project name.
-2. A project of Class Library (.NET Framework) type is created in the ProjectName or src directory
-
-![CreateNewProject](img/CreateNewProject.png)
-
-3. The **Directory.Build.props** file is copied to the root folder, where the **SiteDir** variable is defined. The value of this variable should point to the Acumatica instance for which the customization is being developed. The value of the **SiteDir** variable is used in the project file as a substitute for the path to the Acumatica instance.
-
-_Directory.Build.props_
-```xml
-<Project>
+1. Create a root folder for the project. The folder name is usually the same as the project name.  
+2. Create a project of Class Library (.NET Framework) type in the ProjectName or src directory:  
+    ![CreateNewProject](img/CreateNewProject.png)
+3. Create **Directory.Build.props** file in the root project folder:  
+    _Directory.Build.props_
+    ```xml
+    <Project>
+        <PropertyGroup>
+            <TargetFramework>net48</TargetFramework>
+            <SiteDir>C:\Acumatica\instance\23.105.0016\Site</SiteDir> 
+        </PropertyGroup>
+    </Project>
+    ```
+4. Replace path to the site in `<SiteDir>` tag to match yours.
+    > This is where the **SiteDir** variable is defined. The value of this variable should point to the Acumatica instance for which the customization is being developed. The value of the **SiteDir** variable is used in the project file as a substitute for the path to the Acumatica instance.
+5. Change all references to the Site to use `$(SiteDir)` variable:
+    _{ProjectName}.csproj_  
+    ```xml
+      <ItemGroup>
+        <Reference Include="PX.Common, Version=1.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>$(SiteDir)\Bin\PX.Common.dll</HintPath>
+        </Reference>
+        <Reference Include="PX.Data, Version=1.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>$(SiteDir)\Bin\PX.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="PX.Objects, Version=1.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>$(SiteDir)\Bin\PX.Objects.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    ```
+6. Add a BeforeBuild rule to set the build version when using MSBuild:  
+    _{ProjectName}.csproj_  
+    ```xml
+    <Target Name="BeforeBuild">
+      <ItemGroup>
+        <AssemblyAttributes Include="AssemblyVersion">
+          <_Parameter1>$(Version)</_Parameter1>
+        </AssemblyAttributes>
+      </ItemGroup>
+      <MakeDir Directories="$(IntermediateOutputPath)" />
+      <WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs"  AssemblyAttributes="@(AssemblyAttributes)" />
+      <ItemGroup>
+        <Compile Include="$(IntermediateOutputPath)Version.cs" />
+      </ItemGroup>
+    </Target>
+    ```
+7. Add a PostBuildEvent section to copy the project assembly to the instance directory after each successful project build:  
+    _{ProjectName}.csproj_  
+    ```xml
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
-        <SiteDir>C:\Acumatica\instance\23.105.0016\Site</SiteDir>   <--- Variable SiteDir. 
+      <PostBuildEvent>
+          xcopy /F /Y $(TargetPath) $(SiteDir)\Bin\
+          xcopy /F /Y $(TargetDir)$(TargetName).pdb $(SiteDir)\Bin\
+      </PostBuildEvent>
     </PropertyGroup>
-</Project>
-```
-3. The project file should be modified as follows:
+    ```
+8. Add NuGet package `Acuminator.Analyzers to the project:  
+    _{ProjectName}.csproj_  
+    ```xml
+    <ItemGroup>
+      <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Analyzers.dll" />
+      <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Utilities.dll" />
+    </ItemGroup>
+    ```
+    > You can add `Acuminator.Analyzers` using NuGet Package Manager UI in Visual Studio
 
- * All paths to libraries that are connected from the Acumatica instance are written using the $(SiteDir) variable:
-	
-_Project File_
-```xml
-  <ItemGroup>
-    <Reference Include="PX.Common, Version=1.0.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SiteDir)\Bin\PX.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="PX.Data, Version=1.0.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SiteDir)\Bin\PX.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="PX.Objects, Version=1.0.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SiteDir)\Bin\PX.Objects.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-```
- * Adds a BeforeBuild rule with instructions that allow you to set the build version when using MSBuild:
- 
- _Project File_  
-``` xml
-<Target Name="BeforeBuild">
-	<ItemGroup>
-		<AssemblyAttributes Include="AssemblyVersion">
-			<_Parameter1>$(Version)</_Parameter1>
-		</AssemblyAttributes>
-	</ItemGroup>
-	<MakeDir Directories="$(IntermediateOutputPath)" />
-	<WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs"  AssemblyAttributes="@(AssemblyAttributes)" />
-	<ItemGroup>
-		<Compile Include="$(IntermediateOutputPath)Version.cs" />
-	</ItemGroup>
-</Target>
-```
-
- * A PostBuildEvent section is added with instructions that copy the project assembly to the Bin Acumatica instance directory after each successful project build:
- 
- _Project File_  
-``` xml
-<PropertyGroup>
-	<PostBuildEvent>
-			xcopy /F /Y $(TargetPath) $(SiteDir)\Bin\
-			xcopy /F /Y $(TargetDir)$(TargetName).pdb $(SiteDir)\Bin\
-	</PostBuildEvent>
-</PropertyGroup>
-```
-4. Nuget package Acuminator.Analyzers must be installed for the project:
- 
- _Project File_  
-``` xml
- <ItemGroup>
-  <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Analyzers.dll" />
-  <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Utilities.dll" />
-</ItemGroup>
-```
-
-5. The Solution file (ProjectName.sln) should be moved to the root project folder and the path to the Extension Library project should be edited.
+9. Move the Solution file (`{ProjectName}.sln`) to the root project folder
+10. Edit the path to the Extension Library project in the solution file.
 
 ### Transforming a classic project to using ACUCustomizationUtil
 1. Identify the version of Acumatica ERP in use
