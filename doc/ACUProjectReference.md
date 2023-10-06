@@ -91,8 +91,8 @@ _Project File_
 ```
  * Adds a BeforeBuild rule with instructions that allow you to set the build version when using MSBuild:
  
- _Project File_
-```xml
+ _Project File_  
+``` xml
 <Target Name="BeforeBuild">
 	<ItemGroup>
 		<AssemblyAttributes Include="AssemblyVersion">
@@ -109,8 +109,8 @@ _Project File_
 
  * A PostBuildEvent section is added with instructions that copy the project assembly to the Bin Acumatica instance directory after each successful project build:
  
- _Project File_
-```xml
+ _Project File_  
+``` xml
 <PropertyGroup>
 	<PostBuildEvent>
 			xcopy /F /Y $(TargetPath) $(SiteDir)\Bin\
@@ -120,9 +120,9 @@ _Project File_
 ```
 4. Nuget package Acuminator.Analyzers must be installed for the project:
  
- _Project File_
- ```xml
-<ItemGroup>
+ _Project File_  
+``` xml
+ <ItemGroup>
   <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Analyzers.dll" />
   <Analyzer Include="..\..\packages\Acuminator.Analyzers.3.1.2\analyzers\dotnet\cs\Acuminator.Utilities.dll" />
 </ItemGroup>
