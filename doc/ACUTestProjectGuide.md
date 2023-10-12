@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## ACU Test Project Guide (version 23.10.3.29702)
+## ACU Test Project Guide (version 23.10.12.25262)
 
 The test project is a typical customization project and allows developer to add new functionality or debug in the ACUCustomizationUtil code without being distracted by the creation of additional test conditions.
 Below are the profile settings required to work with the test project:
