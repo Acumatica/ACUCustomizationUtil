@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers.CommonTypes;
@@ -16,7 +15,6 @@ public class CstEntityHelper
     private readonly string _packageSourceProjectDir;
     private readonly string _packageSourceBinDir;
     private readonly string _siteRootDir;
-    private readonly string _packageName;
     private readonly string? _erpVersion;
     private readonly string? _dllName;
 
@@ -26,7 +24,6 @@ public class CstEntityHelper
         _packageSourceBinDir = Path.Combine(_packageSourceDir, "Bin");
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
         _siteRootDir = config.Site.InstancePath!;
-        _packageName = config.Pkg.PkgName!;
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
     }
@@ -82,7 +79,7 @@ public class CstEntityHelper
         var dllFile = dllPkgFiles.Any() ? dllPkgFiles.First() : dllAnyFiles.Any() ? dllAnyFiles.First() : null;
         if (dllFile != null)
         {
-            return FileVersionInfo.GetVersionInfo(dllFile)?.FileVersion;
+            return FileVersionInfo.GetVersionInfo(dllFile).FileVersion?[7..17];
         }
 
         throw new Exception($"Assembly (dll) file for customization not found");

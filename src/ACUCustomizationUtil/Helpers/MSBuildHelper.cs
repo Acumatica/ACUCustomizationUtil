@@ -56,8 +56,8 @@ public class MsBuildHelper
 
     private static string GetMsBuildArgs(IAcuConfiguration config)
     {
-
-        var version = $"{config.Erp.ErpVersion?[..6]}.{DateTime.Now:yMd.HHmm}";
+        var datePart = GetDateVersion();
+        var version = $"{config.Erp.ErpVersion?[..6]}.{datePart}";
         var solutionFilePath = config.Src.MsBuildSolutionFile;
         var versionProperty = $"/property:Version={version}";
         
@@ -66,6 +66,13 @@ public class MsBuildHelper
         
 
         return $"{buildConfiguration} {versionProperty} {buildTarget} {solutionFilePath}";
+    }
+
+    private static string GetDateVersion()
+    {
+        var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
+        var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("D3");
+        return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
     }
 
     private string GetMsbuildPath()
