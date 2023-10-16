@@ -151,8 +151,10 @@ public class PackageHelper
         var dateVersion = CstEntityHelper.GetPackageDateVersion();
         var nawErpVersion = cstHelper.GetPackageNawErpVersion();
         var nawDateVersion = CstEntityHelper.GetPackageNawDateVersion();
+        var makeMode = config.Src.MakeMode ?? Messages.MakeModeBase;
         
-        var packageName = config.Src.MakeMode switch
+        
+        var packageName = makeMode switch
         {
             Messages.MakeModeBase => $"{config.Pkg.PkgName}.zip",
             Messages.MakeModeQA => $"{config.Pkg.PkgName}[{config.Erp.ErpVersion}][{fileVersion}].zip",

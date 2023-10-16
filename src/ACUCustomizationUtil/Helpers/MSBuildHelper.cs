@@ -71,7 +71,7 @@ public class MsBuildHelper
     private static string GetDateVersion()
     {
         var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
-        var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("D3");
+        var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
         return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
     }
 

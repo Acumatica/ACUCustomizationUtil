@@ -31,7 +31,7 @@ public abstract class SrcConfigurationBase : ISrcConfiguration
         MsBuildTargetDirectory = MsBuildTargetDirectory.TryGetFullDirectoryPath();
         MsBuildSolutionFile = MsBuildSolutionFile.TryGetFullDirectoryPath();
         if (PkgSourceDirectory != null) PkgSourceBinDirectory = Path.Combine(PkgSourceDirectory, "Bin");
-        MakeMode ??= Messages.MakeModeBase;
+        
         return this;
     }
 }
