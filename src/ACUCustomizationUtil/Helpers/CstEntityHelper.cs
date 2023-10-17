@@ -77,12 +77,12 @@ public class CstEntityHelper
                                                                    ?? throw new InvalidOperationException("Customization dll name MUST be configured"));
         var dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
         var dllFile = dllPkgFiles.Any() ? dllPkgFiles.First() : dllAnyFiles.Any() ? dllAnyFiles.First() : null;
-        if (dllFile != null)
-        {
-            return FileVersionInfo.GetVersionInfo(dllFile).FileVersion?[7..17];
-        }
-
-        throw new Exception($"Assembly (dll) file for customization not found");
+        if (dllFile == null) throw new Exception($"Assembly (dll) file for customization not found");
+        var fv = FileVersionInfo.GetVersionInfo(dllFile).FileVersion;
+        if (fv == null || fv.Split('.').Length != 4)
+            throw new Exception($"Assembly (dll) file for customization does not contain correct version: {fv ?? "version is null"}");
+        var fvArr = fv.Split('.');
+        return $"{fvArr[2]}.{fvArr[3]}";
     }
 
     public static string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.MM.dd");
