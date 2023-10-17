@@ -425,10 +425,12 @@ PS C:\Acumatica\project\ACUProject> acu src get
 
 ```powershell
 C:\Acumatica\project\ACUProject
-├───Bin
-│       ACUProject.dll│
-└───_project
-        ProjectMetadata.xml
+├───cst
+│   ├───Bin
+│   │       ACUProject.dll
+│   │
+│   └───_project
+│           ProjectMetadata.xml
 ```
 
 ##### Check ability to create, upload and publish customization package from CLI
