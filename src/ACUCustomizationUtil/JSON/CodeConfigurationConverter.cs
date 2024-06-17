@@ -40,6 +40,12 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
                 case nameof(code.MsBuildAssemblyName):
                     code.MsBuildAssemblyName = reader.GetString();
                     break;
+                case nameof(code.MsBuildVersionDirectory):
+                    code.MsBuildVersionDirectory = reader.GetString().NormalizeEnvVariables();
+                    break;
+                case nameof(code.MsBuildVersionFile):
+                    code.MsBuildVersionFile = reader.GetString().NormalizeEnvVariables();
+                    break;
                 case nameof(code.MakeMode):
                     code.MakeMode = reader.GetString();
                     break;
