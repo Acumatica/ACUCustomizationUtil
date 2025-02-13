@@ -1,14 +1,15 @@
-﻿using System.IO.Compression;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace ACUCustomizationUtils.Helpers;
 
 public class PackageHelper
 {
+    private const string ProjectXMLFilename = "project.xml";
     private readonly string _packageSourceDir;
     private readonly string _erpVersion;
     private readonly int _level;
@@ -56,14 +57,24 @@ public class PackageHelper
             }
 
         if (_packageFileName == null) throw new ArgumentNullException(nameof(_packageFileName));
-        using FileStream zipFileStream = new(_packageFileName, FileMode.Create);
-        using ZipArchive archive = new(zipFileStream, ZipArchiveMode.Create, true);
-        AddFilesToZipArchive(_packageSourceDir, archive, customizationNode);
+        using MemoryStream memoryStream = new MemoryStream();
+        using ZipFile archive = ZipFile.Create(memoryStream);
+        archive.BeginUpdate();
 
+        AddFilesToZipArchive(_packageSourceDir, archive, customizationNode);
         projectXml.AppendChild(customizationNode);
-        var projectFile = archive.CreateEntry("project.xml", CompressionLevel.Optimal);
-        using StreamWriter streamWriter = new(projectFile.Open());
-        projectXml.Save(streamWriter);
+        projectXml.Save(ProjectXMLFilename);
+        archive.Add(ProjectXMLFilename, ProjectXMLFilename);
+
+        archive.SetComment(MetaDataHelper.CreateMetadataContent());
+        File.WriteAllText(MetaDataHelper.MetadataFileName, MetaDataHelper.CreateMetadataJson());
+        archive.Add(MetaDataHelper.MetadataFileName);
+
+        archive.CommitUpdate();
+        archive.Close();        
+        File.WriteAllBytes(_packageFileName, memoryStream.ToArray());
+        File.Delete(ProjectXMLFilename);
+        File.Delete(MetaDataHelper.MetadataFileName);
     }
 
     #endregion Public members
@@ -92,7 +103,7 @@ public class PackageHelper
 
     #endregion Validators
 
-    private void AddFilesToZipArchive(string path, ZipArchive archive, XmlNode customizationNode)
+    private void AddFilesToZipArchive(string path, ZipFile archive, XmlNode customizationNode)
     {
         if(File.Exists(path)) 
         {
@@ -135,7 +146,7 @@ public class PackageHelper
             var dirInfo = fileInfo.Directory;
             var arcDir = dirInfo?.FullName.Split(_packageSourceDir)[1].TrimStart('\\');
             var arcFileName = Path.Combine(arcDir ?? string.Empty, fileInfo.Name);
-            archive.CreateEntryFromFile(file, arcFileName, CompressionLevel.Optimal);
+            archive.Add(file, arcFileName);
             
             //Add reference to customization project as well
             var fileElement = customizationNode.OwnerDocument!.CreateElement("File");

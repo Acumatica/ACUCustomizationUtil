@@ -25,6 +25,7 @@
         <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.1-dev-00910" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
+        <PackageReference Include="SharpZipLib" Version="1.4.2" />
         <PackageReference Include="Spectre.Console" Version="0.47.1-preview.0.6" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
         <PackageReference Include="System.ServiceModel.Federation" Version="6.0.0" />

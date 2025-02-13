@@ -26,6 +26,7 @@ public class MsBuildHelper
 
     public async Task Execute()
     {
+        MetaDataHelper.SetBuildMetadata(_config);
         //Build solution
         _msbuildPath = GetMsbuildPath();
         _msbuildArgs = GetMsBuildArgs(_config);
@@ -57,10 +58,10 @@ public class MsBuildHelper
     private static string GetMsBuildArgs(IAcuConfiguration config)
     {
         var datePart = GetDateVersion();
-        var version = $"{config.Erp.ErpVersion?[..6]}.{datePart}";
+        var version = $"{config.Erp.ErpVersion?[..6]}.{datePart}";        
         var solutionFilePath = config.Src.MsBuildSolutionFile;
-        var versionProperty = $"/property:Version={version}";
-        
+        var versionProperty = $"/property:Version={version}";        
+
         const string buildConfiguration = "/property:Configuration=Release";
         const string buildTarget = "/target:Rebuild";
         
@@ -73,7 +74,7 @@ public class MsBuildHelper
         var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
         var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
         return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
-    }
+    }    
 
     private string GetMsbuildPath()
     {
