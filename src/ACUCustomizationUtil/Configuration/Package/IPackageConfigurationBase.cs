@@ -8,6 +8,7 @@ namespace ACUCustomizationUtils.Configuration.Package;
 public interface IPackageConfiguration
 {
     Uri? Url { get; }
+    Uri? RestUrl { get; set; }
     string? Login { get; }
     string? Password { get; }
     string? PkgName { get; }

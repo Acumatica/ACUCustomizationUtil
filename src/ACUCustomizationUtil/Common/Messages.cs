@@ -15,4 +15,6 @@ internal static class Messages
     public const string MakeModeISV = "ISV";
     public const string MakeModeQA = "QA";
     public const string MakeModeNAW = "NAW";
+
+    public const string DeserializeError = "Deserialization failed";
 }

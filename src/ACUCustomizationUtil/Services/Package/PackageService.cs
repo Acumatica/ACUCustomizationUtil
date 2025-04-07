@@ -41,7 +41,7 @@ public class PackageService : IPackageService
 
                 _logger.LogInformation("Download package {Package}", config.Pkg.PkgName);
                 ctx.Status("Download in progress, please wait ...");
-                using var client = new SoapClient(config);
+                using var client = new RestClient(config);
                 await client.GetPackage();
                 
             });

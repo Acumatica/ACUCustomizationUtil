@@ -24,7 +24,9 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
             {
                 case nameof(package.Url):
                     var str = reader.GetString();
+                    var strRest = str?.Replace("api/ServiceGate.asmx", "");
                     package.Url = str != null ? new Uri(str) : null;
+                    package.RestUrl = strRest != null ? new Uri(strRest) : null;
                     break;
                 case nameof(package.Login):
                     package.Login = reader.GetString();
