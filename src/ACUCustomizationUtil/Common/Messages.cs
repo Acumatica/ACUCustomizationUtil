@@ -17,6 +17,7 @@ internal static class Messages
     public const string MakeModeNAW = "NAW";
 
     public const string DeserializeError = "Deserialization failed";
+    public const string ErrorLogType = "error";
 
     public static class TenantMode
     {

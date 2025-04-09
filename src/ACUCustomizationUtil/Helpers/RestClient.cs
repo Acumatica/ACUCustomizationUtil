@@ -5,12 +5,13 @@ using System.Net.Http.Json;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
+using static ACUCustomizationUtils.Common.Messages;
 using Request = ACUCustomizationUtils.Helpers.RestModel.Request;
 using Response = ACUCustomizationUtils.Helpers.RestModel.Response;
 
 namespace ACUCustomizationUtils.Helpers
 {
-    internal class RestClient : IDisposable
+    internal class RestClient : IAcuCustomizationClient
     {
         private readonly string? _packageName;
         private readonly string? _packageDirectory;
@@ -22,13 +23,11 @@ namespace ACUCustomizationUtils.Helpers
             var password = configuration.Pkg.Password!;
             _packageName = configuration.Pkg.PkgName;
             _packageDirectory = configuration.Pkg.PkgDirectory;
-
             HttpClientHandler options = new()
             {
                 UseCookies = true,
                 CookieContainer = new System.Net.CookieContainer()
             };
-            Console.WriteLine(baseAddress.ToString());
             _client = new HttpClient(options)
             {
                 BaseAddress = baseAddress,
@@ -59,15 +58,90 @@ namespace ACUCustomizationUtils.Helpers
 
         public async Task UnpublishAllPackages()
         {
-            Request.UnpublishAll model = new()
-            {
-                TenantMode = Messages.TenantMode.All,
-                TenantLoginNames = null
-            };
-            await PostAsync<Response.UnpublishAll>(APIResource.UnpublishAll, model);
+            await UnpublishAllAsync();
         }
 
-        public async Task<Response.GetProject> GetProjectAsync(string projectName, bool isAutoResolveConflicts = true)
+        public async Task UploadPackage()
+        {
+            var packageName = _packageName!;
+            var directory = _packageDirectory!;
+            var file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
+            var filePath = Path.Combine(directory, file);
+            var packageContents = await File.ReadAllBytesAsync(filePath);
+            var projectContentBase64 = Convert.ToBase64String(packageContents);
+
+            await ImportAsync(packageName, projectContentBase64);
+        }
+
+        public async Task PublishPackages()
+        {
+            var packageNames = new[] { _packageName ?? string.Empty };
+            const bool mergeWithExistingPackages = true;
+            bool isPublished = false;
+
+            await PublishBeginAsync(packageNames, mergeWithExistingPackages);
+            while (!isPublished)
+            {
+                await Task.Delay(1000);
+                var res = await PublishEndAsync();
+                isPublished = res.IsCompleted;
+
+                if (res.IsFailed)
+                {
+                    string msg = string.Empty;
+                    foreach (var log in res.Log!.Where(l => l.LogType == Messages.ErrorLogType))
+                    {
+                        msg += $"\n{log.Message}";
+                    }
+                    throw new Exception(msg);
+                }
+            }
+        }
+
+        private async Task<Response.PublishBegin> PublishBeginAsync(string[] projectNames, bool isMergeWithExistingPackages = false, bool isOnlyValidation = false,
+            bool isOnlyDbUpdates = false, bool isReplayPreviouslyExecutedScripts = false, string tenantMode = TenantMode.All)
+        {
+            Request.PublishBegin model = new()
+            {
+                ProjectNames = projectNames,
+                IsMergeWithExistingPackages = isMergeWithExistingPackages,
+                IsOnlyValidation = isOnlyValidation,
+                IsOnlyDbUpdates = isOnlyDbUpdates,
+                IsReplayPreviouslyExecutedScripts = isReplayPreviouslyExecutedScripts,
+                TenantMode = tenantMode
+            };
+            return await PostAsync<Response.PublishBegin>(APIResource.PublishBegin, model);
+        }
+
+        private async Task<Response.UnpublishAll> UnpublishAllAsync(string tenantMode = TenantMode.All, string[]? tenantLoginNames = null)
+        {
+            Request.UnpublishAll model = new()
+            {
+                TenantMode = tenantMode,
+                TenantLoginNames = tenantLoginNames
+            };
+            return await PostAsync<Response.UnpublishAll>(APIResource.UnpublishAll, model);
+        }
+
+        private async Task<Response.PublishEnd> PublishEndAsync()
+        {
+            return await PostAsync<Response.PublishEnd>(APIResource.PublishEnd, null);
+        }
+
+        private async Task<Response.Import> ImportAsync(string projectName, string projectContentBase64, int projectLevel = 0, bool isReplaceIfExists = true, string? projectDescription = null)
+        {
+            Request.Import model = new()
+            {
+                ProjectLevel = projectLevel,
+                IsReplaceIfExists = isReplaceIfExists,
+                ProjectName = projectName,
+                ProjectDescription = projectDescription,
+                ProjectContentBase64 = projectContentBase64,
+            };
+            return await PostAsync<Response.Import>(APIResource.Import, model);
+        }
+
+        private async Task<Response.GetProject> GetProjectAsync(string projectName, bool isAutoResolveConflicts = true)
         {
             Request.GetProject model = new()
             {
@@ -118,7 +192,6 @@ namespace ACUCustomizationUtils.Helpers
         private async Task<T> PostAsync<T>(string resource, object? model)
         {
             using HttpResponseMessage response = await _client.PostAsJsonAsync(resource, model);
-            response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<T>()
                 ?? throw new Exception(Messages.DeserializeError);
         }

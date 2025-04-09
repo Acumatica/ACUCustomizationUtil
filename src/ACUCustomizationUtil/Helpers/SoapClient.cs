@@ -1,12 +1,11 @@
 ﻿using System.Security.Authentication;
 using System.ServiceModel;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using AcuSOAP;
 
 namespace ACUCustomizationUtils.Helpers;
 
-internal class SoapClient : IDisposable
+internal class SoapClient : IAcuCustomizationClient
 {
     private readonly string? _packageName;
     private readonly string? _packageDirectory;
