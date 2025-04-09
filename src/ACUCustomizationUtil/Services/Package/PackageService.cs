@@ -102,7 +102,7 @@ public class PackageService : IPackageService
 
                 _logger.LogInformation("Unpublish package(s) {Package}", config.Pkg.PkgName);
                 ctx.Status("Unpublish in progress, please wait ...");
-                using var client = new SoapClient(config);
+                using var client = new RestClient(config);
                 await client.UnpublishAllPackages();
                 
             });

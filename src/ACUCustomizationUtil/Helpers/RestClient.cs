@@ -38,7 +38,7 @@ namespace ACUCustomizationUtils.Helpers
             {
                 Name = username,
                 Password = password,
-                Tenant = null, 
+                Tenant = null,
                 Branch = null,
                 Locale = null
             };
@@ -55,6 +55,16 @@ namespace ACUCustomizationUtils.Helpers
                 Directory.CreateDirectory(directory);
 
             await File.WriteAllBytesAsync(filePath, Convert.FromBase64String(res.ProjectContentBase64));
+        }
+
+        public async Task UnpublishAllPackages()
+        {
+            Request.UnpublishAll model = new()
+            {
+                TenantMode = Messages.TenantMode.All,
+                TenantLoginNames = null
+            };
+            await PostAsync<Response.UnpublishAll>(APIResource.UnpublishAll, model);
         }
 
         public async Task<Response.GetProject> GetProjectAsync(string projectName, bool isAutoResolveConflicts = true)
