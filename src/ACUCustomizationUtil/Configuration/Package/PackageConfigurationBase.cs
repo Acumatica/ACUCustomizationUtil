@@ -13,6 +13,7 @@ namespace ACUCustomizationUtils.Configuration.Package;
 public abstract class PackageConfigurationBase : IPackageConfiguration
 {
     public Uri? Url { get; set; }
+    public Uri? RestUrl { get; set; }
     public string? Login { get; set; }
     public string? Password { get; set; }
     public string? Tenant { get; set; }
