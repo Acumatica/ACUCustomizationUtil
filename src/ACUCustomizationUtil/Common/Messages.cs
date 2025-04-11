@@ -15,4 +15,14 @@ internal static class Messages
     public const string MakeModeISV = "ISV";
     public const string MakeModeQA = "QA";
     public const string MakeModeNAW = "NAW";
+
+    public const string DeserializeError = "Deserialization failed";
+    public const string ErrorLogType = "error";
+
+    public static class TenantMode
+    {
+        public const string Current = "Current";
+        public const string All = "All";
+        public const string List = "List";
+    }
 }

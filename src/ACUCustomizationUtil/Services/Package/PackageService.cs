@@ -1,5 +1,4 @@
-﻿using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Helpers;
 using ACUCustomizationUtils.Validators.Package;
 using Microsoft.Extensions.Logging;
@@ -41,9 +40,9 @@ public class PackageService : IPackageService
 
                 _logger.LogInformation("Download package {Package}", config.Pkg.PkgName);
                 ctx.Status("Download in progress, please wait ...");
-                using var client = new SoapClient(config);
+                using var client = GetClient(config);
                 await client.GetPackage();
-                
+
             });
         }
         catch (Exception e)
@@ -71,9 +70,9 @@ public class PackageService : IPackageService
 
                 _logger.LogInformation("Publish package {Package}", config.Pkg.PkgName);
                 ctx.Status("Publish in progress, please wait ...");
-                using var client = new SoapClient(config);
+                using var client = GetClient(config);
                 await client.PublishPackages();
-                
+
             });
         }
         catch (Exception e)
@@ -102,9 +101,9 @@ public class PackageService : IPackageService
 
                 _logger.LogInformation("Unpublish package(s) {Package}", config.Pkg.PkgName);
                 ctx.Status("Unpublish in progress, please wait ...");
-                using var client = new SoapClient(config);
+                using var client = GetClient(config);
                 await client.UnpublishAllPackages();
-                
+
             });
         }
         catch (Exception e)
@@ -132,9 +131,9 @@ public class PackageService : IPackageService
 
                 _logger.LogInformation("Uploading package {Package}", config.Pkg.PkgName);
                 ctx.Status("UploadPackage in progress, please wait ...");
-                using var client = new SoapClient(config);
+                using var client = GetClient(config);
                 await client.UploadPackage();
-                
+
             });
         }
         catch (Exception e)
@@ -143,5 +142,20 @@ public class PackageService : IPackageService
         }
 
         _logger.LogInformation("UploadPackage action complete");
+    }
+
+    /// <summary>
+    /// Acumatica introduced the Customization API in version 2022 R2 of its REST API. 
+    /// https://community.acumatica.com/develop-customizations-288/customization-api-17892
+    /// </summary>
+    private IAcuCustomizationClient GetClient(IAcuConfiguration config)
+    {
+        var erpVersion = config.Erp.ErpVersion!.Split('.');
+        if (decimal.TryParse(erpVersion[0] + "." + erpVersion[1], out decimal result)
+            && result >= 22.2m)
+        {
+            return new RestClient(config);
+        }
+        return new SoapClient(config);
     }
 }

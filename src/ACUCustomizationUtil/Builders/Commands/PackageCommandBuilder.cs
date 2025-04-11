@@ -60,11 +60,13 @@ public class PackageCommandBuilder : CommandBuilderBase
     {
         var packageNameOption = GetPackageNameOption();
         var packageDirOption = GetPackageDirectoryOption();
+        var tenantOption = GetTenantOption();
 
         var command = new Command("upload", "Upload package.")
         {
             packageNameOption,
-            packageDirOption
+            packageDirOption,
+            tenantOption
         };
 
         command.SetHandler(
@@ -74,7 +76,7 @@ public class PackageCommandBuilder : CommandBuilderBase
                 _urlOption,
                 _loginOption,
                 _passwordOption,
-                _tenantOption,
+                tenantOption,
                 packageNameOption,
                 packageDirOption));
 
@@ -83,8 +85,13 @@ public class PackageCommandBuilder : CommandBuilderBase
 
     private Command BuildUnpublishAllCommand()
     {
-        var command = new Command("unpublish", "Unpublish all packages.");
+        var tenantOption = GetTenantOption();
 
+        var command = new Command("unpublish", "Unpublish all packages.")
+        {
+            tenantOption
+        };
+        
         command.SetHandler(
             async config => await _packageService.UnpublishAllPackages(config),
             new PackageUnpublishAllConfigurationBinder(ConfigOption!,
@@ -92,7 +99,7 @@ public class PackageCommandBuilder : CommandBuilderBase
                 _urlOption,
                 _loginOption,
                 _passwordOption,
-                _tenantOption));
+                tenantOption));
 
         return command;
     }
@@ -100,9 +107,12 @@ public class PackageCommandBuilder : CommandBuilderBase
     private Command BuildPublishCommand()
     {
         var packageNameOption = GetPackageNameOption();
+        var tenantOption = GetTenantOption();
+
         var command = new Command("publish", "Publish package(s).")
         {
-            packageNameOption
+            packageNameOption,
+            tenantOption
         };
 
         command.SetHandler(
@@ -112,7 +122,7 @@ public class PackageCommandBuilder : CommandBuilderBase
                 _urlOption,
                 _loginOption,
                 _passwordOption,
-                _tenantOption,
+                tenantOption,
                 packageNameOption));
 
         return command;
@@ -122,10 +132,13 @@ public class PackageCommandBuilder : CommandBuilderBase
     {
         var packageNameOption = GetPackageNameOption();
         var packageDirOption = GetPackageDirectoryOption();
+        var tenantOption = GetTenantOption();
+
         var command = new Command("get", "Get package content.")
         {
             packageNameOption,
-            packageDirOption
+            packageDirOption,
+            tenantOption
         };
 
         command.SetHandler(
@@ -135,7 +148,7 @@ public class PackageCommandBuilder : CommandBuilderBase
                 _urlOption,
                 _loginOption,
                 _passwordOption,
-                _tenantOption,
+                tenantOption,
                 packageNameOption,
                 packageDirOption));
 
