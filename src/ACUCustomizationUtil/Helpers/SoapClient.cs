@@ -13,6 +13,7 @@ internal class SoapClient : IAcuCustomizationClient
 
     public SoapClient(IAcuConfiguration configuration)
     {
+        configuration.Pkg.SetDefaultValues(configuration);
         var serviceUrl = configuration.Pkg.Url!;
         var username = configuration.Pkg.Login!;
         var password = configuration.Pkg.Password!;
