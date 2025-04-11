@@ -20,6 +20,8 @@ public abstract class SrcConfigurationBase : ISrcConfiguration
     public string? MsBuildSolutionFile { get; set; }
     public string? MsBuildTargetDirectory { get; set; }
     public string? MsBuildAssemblyName { get; set; }
+    public string? MsBuildVersionDirectory { get; set; }
+    public string? MsBuildVersionFile { get; set; }
     public string? MakeMode { get; set; }
     public abstract bool IsNotNull { get; }
 
@@ -29,6 +31,7 @@ public abstract class SrcConfigurationBase : ISrcConfiguration
     {
         PkgSourceDirectory = PkgSourceDirectory.TryGetFullDirectoryPath();
         MsBuildTargetDirectory = MsBuildTargetDirectory.TryGetFullDirectoryPath();
+        MsBuildVersionDirectory = MsBuildVersionDirectory.TryGetFullDirectoryPath();
         MsBuildSolutionFile = MsBuildSolutionFile.TryGetFullDirectoryPath();
         if (PkgSourceDirectory != null) PkgSourceBinDirectory = Path.Combine(PkgSourceDirectory, "Bin");
         

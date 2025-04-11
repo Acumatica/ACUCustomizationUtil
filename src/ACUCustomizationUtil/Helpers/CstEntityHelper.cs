@@ -17,6 +17,7 @@ public class CstEntityHelper
     private readonly string _siteRootDir;
     private readonly string? _erpVersion;
     private readonly string? _dllName;
+    private readonly string? _versionFilePath;
 
     public CstEntityHelper(IAcuConfiguration config)
     {
@@ -26,6 +27,8 @@ public class CstEntityHelper
         _siteRootDir = config.Site.InstancePath!;
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
+        if (config.Src is { MsBuildVersionDirectory: not null, MsBuildVersionFile: not null })
+            _versionFilePath = Path.Combine(config.Src.MsBuildVersionDirectory, config.Src.MsBuildVersionFile);
     }
 
     #region Public methods
@@ -73,7 +76,18 @@ public class CstEntityHelper
 
     public string? GetPackageFileVersion()
     {
-        var dllPkgFiles = Directory.GetFiles(_packageSourceBinDir, _dllName 
+        if (File.Exists(_versionFilePath))
+        {
+            var versionContent = File.ReadAllText(_versionFilePath);
+            var version = ExtractVersion(versionContent) ?? throw new Exception($"Version.cs file does not contain a valid version");
+            var versionParts = version.Split('.');
+            if (versionParts.Length != 4)
+                throw new Exception($"Version.cs file does not contain a correct version format: {version}");
+
+            return $"{versionParts[2]}.{versionParts[3]}";
+        }
+
+        var dllPkgFiles = Directory.GetFiles(_packageSourceBinDir, _dllName
                                                                    ?? throw new InvalidOperationException("Customization dll name MUST be configured"));
         var dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
         var dllFile = dllPkgFiles.Any() ? dllPkgFiles.First() : dllAnyFiles.Any() ? dllAnyFiles.First() : null;
@@ -97,7 +111,7 @@ public class CstEntityHelper
     public static string GetPackageNawDateVersion() => DateTime.Now.ToString("yyMMdd");
 
     #endregion
-    
+
     #endregion Public methods
 
     #region Private methods
@@ -141,9 +155,26 @@ public class CstEntityHelper
         }
     }
 
+    private static string? ExtractVersion(string content)
+    {
+        var match = Regex.Match(content, @"\[assembly:\s*AssemblyVersion\(""([^""]+)""\)\]");
+        if (match is { Success: true, Groups.Count: > 1 })
+        {
+            return match.Groups[1].Value;
+        }
+
+        match = Regex.Match(content, @"\[assembly:\s*AssemblyFileVersion\(""([^""]+)""\)\]");
+        if (match is { Success: true, Groups.Count: > 1 })
+        {
+            return match.Groups[1].Value;
+        }
+
+        return null;
+    }
+
     #endregion Private methods
 
-    
 
-    
+
+
 }
