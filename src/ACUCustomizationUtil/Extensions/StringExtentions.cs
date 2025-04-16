@@ -77,4 +77,9 @@ public static class StringExtensions
 
         return value;
     }
+
+    public static string EnsureTrailingSlash(this string input)
+    {
+        return input.EndsWith('/') ? input : input + '/';
+    }
 }

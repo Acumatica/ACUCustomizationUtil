@@ -1,29 +1,30 @@
 {
-  "erp": {    
-    "erpVersion": "23.105.0016",
+  "erp": {
+    "erpVersion": "25.100.0054",
     "installationFileName": "AcumaticaERPInstall.msi",
     "destinationDirectory": "%ACUBASEDIR%\\erp",
-	"url": null
+    "url": null
   },
   "site": {
-    "instanceName": "23.105.0016",
-    "instancePath": "%ACUBASEDIR%\\instance\\23.105.0016\\Site",
+    "instanceName": "25.100.0054",
+    "instancePath": "%ACUBASEDIR%\\instance\\25.100.0054\\Site",
     "sqlServerName": "localhost",
-    "dbName": "23.105.0016DB", 
+    "dbName": "25.100.0054",
     "acumaticaAdminName": "admin",
     "acumaticaAdminPassword": "123",
     "dbConnectionString": null,
     "acumaticaToolPath": null,
-	"iisAppPool": null,
+    "iisAppPool": null,
     "iisWebSite": null
   },
   "pkg": {
-    "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",
+    "soapUrl": "http://localhost/25.100.0054/api/ServiceGate.asmx",
+    "restUrl": "http://localhost/25.100.0054",
     "login": "admin",
-    "password": "123",    
+    "password": "123",
     "pkgName": "ACUCustomization",
     "pkgDirectory": "pkg",
-	"tenant": null
+    "tenant": null
   },
   "src": {
     "pkgSourceDirectory": "cst",

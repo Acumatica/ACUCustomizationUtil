@@ -207,7 +207,7 @@ public class PackageUploadConfigurationBinder : CommandParametersBinder
         {
             Pkg = new PackageConfiguration
             {
-                Url = url != null ? new Uri(url) : null,
+                SoapUrl = url != null ? new Uri(url) : null,
                 Login = login, Password = password, Tenant = tenant, PkgName = pkgName, PkgDirectory = pkgDir
             }
         };
@@ -234,7 +234,7 @@ public class PackagePublishConfigurationBinder : CommandParametersBinder
         {
             Pkg = new PackageConfiguration
             {
-                Url = url != null ? new Uri(url) : null,
+                SoapUrl = url != null ? new Uri(url) : null,
                 Login = login, Password = password, Tenant = tenant, PkgName = pkgName
             }
         };
@@ -260,7 +260,7 @@ public class PackageUnpublishAllConfigurationBinder : CommandParametersBinder
         {
             Pkg = new PackageConfiguration
             {
-                Url = url != null ? new Uri(url) : null,
+                SoapUrl = url != null ? new Uri(url) : null,
                 Login = login, Password = password, Tenant = tenant
             }
         };

@@ -83,7 +83,6 @@ public class PackageService : IPackageService
         _logger.LogInformation("PublishPackages action complete");
     }
 
-
     public async Task UnpublishAllPackages(IAcuConfiguration config)
     {
         _logger.LogInformation("Execute UnpublishAllPackages action");
@@ -148,7 +147,7 @@ public class PackageService : IPackageService
     /// Acumatica introduced the Customization API in version 2022 R2 of its REST API. 
     /// https://community.acumatica.com/develop-customizations-288/customization-api-17892
     /// </summary>
-    private IAcuCustomizationClient GetClient(IAcuConfiguration config)
+    private static IAcuCustomizationClient GetClient(IAcuConfiguration config)
     {
         var erpVersion = config.Erp.ErpVersion!.Split('.');
         if (decimal.TryParse(erpVersion[0] + "." + erpVersion[1], out decimal result)

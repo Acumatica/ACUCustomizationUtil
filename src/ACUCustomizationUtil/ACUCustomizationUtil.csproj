@@ -16,17 +16,17 @@
         <Product>ACU: Acumatica Customizatoin Util</Product>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.123" />
-        <PackageReference Include="FluentValidation" Version="11.5.2" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0-preview1.23109.1" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-preview.4.23259.5" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0-preview.4.23259.5" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0-preview.4.23259.5" />
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.1-dev-00910" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
+        <PackageReference Include="Dapper" Version="2.1.66" />
+        <PackageReference Include="FluentValidation" Version="11.11.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.4" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
         <PackageReference Include="SharpZipLib" Version="1.4.2" />
-        <PackageReference Include="Spectre.Console" Version="0.47.1-preview.0.6" />
+        <PackageReference Include="Spectre.Console" Version="0.50.0" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
         <PackageReference Include="System.ServiceModel.Federation" Version="8.1.2" />
         <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />

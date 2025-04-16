@@ -2,7 +2,7 @@
   "profiles": {
     "ACUCustomizationUtil": {
       "commandName": "Project",
-      "commandLineArgs": "src build",
+      "commandLineArgs": "pkg upload",
       "workingDirectory": "$(ProjectDir)..\\..\\proj",
       "environmentVariables": {
         "ACUBASEDIR": "C:\\Acumatica"

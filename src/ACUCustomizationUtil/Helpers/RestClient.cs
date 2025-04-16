@@ -21,26 +21,33 @@ namespace ACUCustomizationUtils.Helpers
             var baseAddress = configuration.Pkg.RestUrl!;
             var username = configuration.Pkg.Login!;
             var password = configuration.Pkg.Password!;
-            _packageName = configuration.Pkg.PkgName;
+            var tenant = configuration.Pkg.Tenant;
+            var branch = configuration.Pkg.Branch;
+			_packageName = configuration.Pkg.PkgName;
             _packageDirectory = configuration.Pkg.PkgDirectory;
             HttpClientHandler options = new()
             {
                 UseCookies = true,
                 CookieContainer = new System.Net.CookieContainer()
             };
+
             _client = new HttpClient(options)
             {
                 BaseAddress = baseAddress,
-                DefaultRequestHeaders = { Accept = { new MediaTypeWithQualityHeaderValue("application/json") } }
+				DefaultRequestHeaders = {
+                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") } 
+                }
             };
+
             Request.Login login = new()
             {
                 Name = username,
                 Password = password,
-                Tenant = null,
-                Branch = null,
+                Tenant = tenant,
+                Branch = branch,
                 Locale = null
             };
+
             Login(login);
         }
 

@@ -12,7 +12,7 @@ namespace ACUCustomizationUtils.Helpers
         public class MetaDataInfo
         {
             public string? Branch { get; set; }
-            public string? MachineName { get; set; }
+            public string? PC { get; set; }
             public string? User { get; set; }
         }
 
@@ -52,7 +52,7 @@ namespace ACUCustomizationUtils.Helpers
         {
             var info = GetMetaDataInfo();
             return $"Branch: {info.Branch}; " +
-                   $"MachineName: {info.MachineName}; " +
+                   $"PC: {info.PC}; " +
                    $"User: {info.User}";
         }
 
@@ -66,7 +66,7 @@ namespace ACUCustomizationUtils.Helpers
             return new MetaDataInfo()
             {
                 Branch = GetCurrentGitBranch(),
-                MachineName = Environment.MachineName,
+                PC = Environment.MachineName,
                 User = Environment.UserName
             };
         }

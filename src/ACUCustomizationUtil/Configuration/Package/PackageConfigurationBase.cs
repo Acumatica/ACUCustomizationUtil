@@ -12,11 +12,12 @@ namespace ACUCustomizationUtils.Configuration.Package;
 /// </remarks>
 public abstract class PackageConfigurationBase : IPackageConfiguration
 {
-    public Uri? Url { get; set; }
+    public Uri? SoapUrl { get; set; }
     public Uri? RestUrl { get; set; }
     public string? Login { get; set; }
     public string? Password { get; set; }
     public string? Tenant { get; set; }
+    public string? Branch { get; set; }
     public string? PkgName { get; set; }
     public string? PkgDirectory { get; set; }
     public string? PackageFilePath { get; private set; }

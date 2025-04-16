@@ -22,11 +22,13 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
             reader.Read();
             switch (propName?.FirstCharToUpper())
             {
-                case nameof(package.Url):
-                    var str = reader.GetString();
-                    var strRest = str?.Replace("api/ServiceGate.asmx", "");
-                    package.Url = str != null ? new Uri(str) : null;
-                    package.RestUrl = strRest != null ? new Uri(strRest) : null;
+                case nameof(package.SoapUrl):
+                    var soap = reader.GetString();
+                    package.SoapUrl = soap != null ? new Uri(soap) : null;
+                    break;
+                case nameof(package.RestUrl):
+                    var rest = reader.GetString();
+                    package.RestUrl = rest != null ? new Uri(rest.EnsureTrailingSlash()) : null;
                     break;
                 case nameof(package.Login):
                     package.Login = reader.GetString();
@@ -36,6 +38,9 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
                     break;
                 case nameof(package.Tenant):
                     package.Tenant = reader.GetString();
+                    break;
+                case nameof(package.Branch):
+                    package.Branch = reader.GetString();
                     break;
                 case nameof(package.PkgName):
                     package.PkgName = reader.GetString();
