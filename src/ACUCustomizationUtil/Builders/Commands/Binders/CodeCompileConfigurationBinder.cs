@@ -19,16 +19,19 @@ public class CodeCompileConfigurationBinder : CommandParametersBinder
         var msBuildSolutionFilePath = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var msBuildTargetDirectoryPath = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
         var msBuildAssemblyFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        var msBuildPath = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+		var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
 
-
-        return new AcuConfiguration
+		return new AcuConfiguration
         {
             Src = new SrcConfiguration
             {
                 MsBuildSolutionFile = msBuildSolutionFilePath,
                 MsBuildTargetDirectory = msBuildTargetDirectoryPath,
-                MsBuildAssemblyName = msBuildAssemblyFileName
-            }
+                MsBuildAssemblyName = msBuildAssemblyFileName,
+				MsBuildPath = msBuildPath,
+				AssemblyInfoPath = msAssemblyInfoPath
+			}
         };
     }
 }

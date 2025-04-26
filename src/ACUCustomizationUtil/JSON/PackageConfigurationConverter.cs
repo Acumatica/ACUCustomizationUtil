@@ -22,13 +22,9 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
             reader.Read();
             switch (propName?.FirstCharToUpper())
             {
-                case nameof(package.SoapUrl):
-                    var soap = reader.GetString();
-                    package.SoapUrl = soap != null ? new Uri(soap) : null;
-                    break;
-                case nameof(package.RestUrl):
+                case nameof(package.Url):
                     var rest = reader.GetString();
-                    package.RestUrl = rest != null ? new Uri(rest.EnsureTrailingSlash()) : null;
+                    package.Url = rest != null ? new Uri(rest.EnsureTrailingSlash()) : null;
                     break;
                 case nameof(package.Login):
                     package.Login = reader.GetString();

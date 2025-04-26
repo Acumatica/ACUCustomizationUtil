@@ -12,8 +12,7 @@ namespace ACUCustomizationUtils.Configuration.Package;
 /// </remarks>
 public abstract class PackageConfigurationBase : IPackageConfiguration
 {
-    public Uri? SoapUrl { get; set; }
-    public Uri? RestUrl { get; set; }
+    public Uri? Url { get; set; }
     public string? Login { get; set; }
     public string? Password { get; set; }
     public string? Tenant { get; set; }
@@ -25,11 +24,6 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
 
     public IPackageConfiguration SetDefaultValues(IAcuConfiguration configuration)
     {
-        if (!string.IsNullOrWhiteSpace(Login) && !string.IsNullOrWhiteSpace(Tenant))
-        {
-            Login = $"{Login}@{Tenant}";
-        }
-
         PkgDirectory = PkgDirectory.TryGetFullDirectoryPath();
         if (PkgName != null && PkgDirectory != null)
         {
@@ -37,7 +31,6 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
             PackageFilePath = Path.Combine(PkgDirectory, file);
         }
         
-
         return this;
     }
 }

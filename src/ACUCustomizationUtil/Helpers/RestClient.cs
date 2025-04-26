@@ -18,7 +18,7 @@ namespace ACUCustomizationUtils.Helpers
         private readonly HttpClient _client;
         public RestClient(IAcuConfiguration configuration)
         {
-            var baseAddress = configuration.Pkg.RestUrl!;
+            var baseAddress = configuration.Pkg.Url!;
             var username = configuration.Pkg.Login!;
             var password = configuration.Pkg.Password!;
             var tenant = configuration.Pkg.Tenant;

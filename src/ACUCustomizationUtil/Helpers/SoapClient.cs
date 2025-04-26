@@ -14,10 +14,16 @@ internal class SoapClient : IAcuCustomizationClient
     public SoapClient(IAcuConfiguration configuration)
     {
         configuration.Pkg.SetDefaultValues(configuration);
-        var serviceUrl = configuration.Pkg.SoapUrl!;
+        var serviceUrl = configuration.Pkg.Url!;
         var username = configuration.Pkg.Login!;
         var password = configuration.Pkg.Password!;
-        _packageName = configuration.Pkg.PkgName;
+        var tenant = configuration.Pkg.Tenant;
+
+        if (!string.IsNullOrEmpty(tenant) && !string.IsNullOrEmpty(username))
+        {
+            username = $"{username}@{tenant}";
+        }
+		_packageName = configuration.Pkg.PkgName;
         _packageDirectory = configuration.Pkg.PkgDirectory;
 
         var endpointAddress = new EndpointAddress(serviceUrl);

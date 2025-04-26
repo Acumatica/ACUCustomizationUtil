@@ -7,13 +7,12 @@ namespace ACUCustomizationUtils.Configuration.Package;
 [JsonConverter(typeof(PackageConfigurationConverter))]
 public interface IPackageConfiguration
 {
-    Uri? SoapUrl { get; }
-    Uri? RestUrl { get; set; }
+    Uri? Url { get; }
     string? Login { get; }
     string? Password { get; }
-    string? PkgName { get; }
     string? Tenant { get; set; }
     string? Branch { get; set; }
+    string? PkgName { get; }
     string? PkgDirectory { get; }
     [JsonIgnore] string? PackageFilePath { get; }
     [JsonIgnore] bool IsNotNull { get; }

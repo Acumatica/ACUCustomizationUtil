@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using Spectre.Console;
@@ -14,22 +15,25 @@ public class MsBuildHelper
     private readonly string? _packageSourceBin;
     private readonly string? _msBuildTargetDirectory;
     private readonly string? _msBuildAssemblyFileName;
+    private readonly MetaDataHelper _metaDataHelper;
 
-    public MsBuildHelper(IAcuConfiguration config, StatusContext ctx)
+	public MsBuildHelper(IAcuConfiguration config, StatusContext ctx)
     {
         _config = config;
         _ctx = ctx;
         _packageSourceBin = _config.Src.PkgSourceBinDirectory!;
         _msBuildTargetDirectory = _config.Src.MsBuildTargetDirectory;
         _msBuildAssemblyFileName = _config.Src.MsBuildAssemblyName;
-    }
+		_metaDataHelper = new MetaDataHelper(_config);
+	}
 
     public async Task Execute()
     {
-        MetaDataHelper.SetBuildMetadata(_config);
+        _metaDataHelper.SetBuildVersion();
+        _metaDataHelper.SetBuildMetadata();
         //Build solution
         _msbuildPath = GetMsbuildPath();
-        _msbuildArgs = GetMsBuildArgs(_config);
+        _msbuildArgs = GetMsBuildArgs();
         var process = new ProcessHelper(_msbuildPath, _msbuildArgs, _ctx);
         await process.Execute();
     }
@@ -54,31 +58,23 @@ public class MsBuildHelper
         });
     }
 
-
-    private static string GetMsBuildArgs(IAcuConfiguration config)
+    private string GetMsBuildArgs()
     {
-        var datePart = GetDateVersion();
-        var version = $"{config.Erp.ErpVersion?[..6]}.{datePart}";        
-        var solutionFilePath = config.Src.MsBuildSolutionFile;
-        var versionProperty = $"/property:Version={version}";        
-
         const string buildConfiguration = "/property:Configuration=Release";
         const string buildTarget = "/target:Rebuild";
-        
+        var solutionFilePath = _config.Src.MsBuildSolutionFile;
 
-        return $"{buildConfiguration} {versionProperty} {buildTarget} {solutionFilePath}";
+        return $"{buildConfiguration} {buildTarget} {solutionFilePath}";
     }
 
-    private static string GetDateVersion()
-    {
-        var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
-        var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
-        return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
-    }    
+
 
     private string GetMsbuildPath()
     {
-        var proc = new Process
+        if ( _config.Src.MsBuildPath != null && File.Exists(_config.Src.MsBuildPath))
+			return _config.Src.MsBuildPath;
+
+		var proc = new Process
         {
             StartInfo = new ProcessStartInfo
             {

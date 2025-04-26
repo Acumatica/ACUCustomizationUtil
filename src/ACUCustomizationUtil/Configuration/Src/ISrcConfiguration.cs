@@ -10,11 +10,11 @@ public interface ISrcConfiguration
     string? PkgSourceDirectory { get; }
     string? PkgDescription { get; }
     string? PkgLevel { get; }
+    string? MsBuildPath { get; }
+    string? AssemblyInfoPath { get; }
     string? MsBuildSolutionFile { get; }
     string? MsBuildTargetDirectory { get; }
     string? MsBuildAssemblyName { get; }
-    string? MsBuildVersionDirectory { get; }
-    string? MsBuildVersionFile { get; }
     string? MakeMode { get; }
     bool IsNotNull { get; }
     string? PkgSourceBinDirectory { get; }

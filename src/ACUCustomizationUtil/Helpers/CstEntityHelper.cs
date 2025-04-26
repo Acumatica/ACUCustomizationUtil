@@ -8,7 +8,6 @@ using ACUCustomizationUtils.Helpers.CommonTypes;
 
 namespace ACUCustomizationUtils.Helpers;
 
-[SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 public class CstEntityHelper
 {
     private readonly string _packageSourceDir;
@@ -27,8 +26,7 @@ public class CstEntityHelper
         _siteRootDir = config.Site.InstancePath!;
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
-        if (config.Src is { MsBuildVersionDirectory: not null, MsBuildVersionFile: not null })
-            _versionFilePath = Path.Combine(config.Src.MsBuildVersionDirectory, config.Src.MsBuildVersionFile);
+        _versionFilePath = config.Src.AssemblyInfoPath;
     }
 
     #region Public methods
@@ -99,18 +97,7 @@ public class CstEntityHelper
         return $"{fvArr[2]}.{fvArr[3]}";
     }
 
-    public static string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.MM.dd");
-
-    #region NAW
-
-    public string GetPackageNawErpVersion()
-    {
-        var erpVersionArray = _erpVersion!.Split('.');
-        return $"{erpVersionArray[0]}R{erpVersionArray[1]}";
-    }
-    public static string GetPackageNawDateVersion() => DateTime.Now.ToString("yyMMdd");
-
-    #endregion
+    public string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.MM.dd");
 
     #endregion Public methods
 
@@ -173,8 +160,4 @@ public class CstEntityHelper
     }
 
     #endregion Private methods
-
-
-
-
 }

@@ -14,31 +14,24 @@ namespace ACUCustomizationUtils.Services.Package;
 /// email: aleksej.slusar@sprinterra.com
 /// Copyright Sprinterra(c) 2023
 /// </remarks>
-public class PackageService : IPackageService
+public class PackageService(ILogger<PackageService> logger) : IPackageService
 {
-    private readonly ILogger<PackageService> _logger;
-
-    public PackageService(ILogger<PackageService> logger)
+	public async Task GetPackage(IAcuConfiguration config)
     {
-        _logger = logger;
-    }
-
-    public async Task GetPackage(IAcuConfiguration config)
-    {
-        _logger.LogInformation("Execute GetPackage action");
+        logger.LogInformation("Execute GetPackage action");
         try
         {
             await AnsiConsole.Status().StartAsync("Download package", async ctx =>
             {
                 ctx.Status("Reading configuration ...");
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
+                logger.LogInformation("Reading configuration");
+                ConfigurationHelper.PrintConfiguration(config, logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
-                _logger.LogInformation("Validate configuration");
+                logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForGet(config.Pkg);
 
-                _logger.LogInformation("Download package {Package}", config.Pkg.PkgName);
+                logger.LogInformation("Download package {Package}", config.Pkg.PkgName);
                 ctx.Status("Download in progress, please wait ...");
                 using var client = GetClient(config);
                 await client.GetPackage();
@@ -47,28 +40,28 @@ public class PackageService : IPackageService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "GetPackage: action error!");
+            logger.LogError(e, "GetPackage: action error!");
         }
 
-        _logger.LogInformation("GetPackage action complete");
+        logger.LogInformation("GetPackage action complete");
     }
 
     public async Task PublishPackages(IAcuConfiguration config)
     {
-        _logger.LogInformation("Execute PublishPackages action");
+        logger.LogInformation("Execute PublishPackages action");
         try
         {
             await AnsiConsole.Status().StartAsync("Publish package", async ctx =>
             {
                 ctx.Status("Reading configuration ...");
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
+                logger.LogInformation("Reading configuration");
+                ConfigurationHelper.PrintConfiguration(config, logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
-                _logger.LogInformation("Validate configuration");
+                logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForPublish(config.Pkg);
 
-                _logger.LogInformation("Publish package {Package}", config.Pkg.PkgName);
+                logger.LogInformation("Publish package {Package}", config.Pkg.PkgName);
                 ctx.Status("Publish in progress, please wait ...");
                 using var client = GetClient(config);
                 await client.PublishPackages();
@@ -77,28 +70,28 @@ public class PackageService : IPackageService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "PublishPackages: action error!");
+            logger.LogError(e, "PublishPackages: action error!");
         }
 
-        _logger.LogInformation("PublishPackages action complete");
+        logger.LogInformation("PublishPackages action complete");
     }
 
     public async Task UnpublishAllPackages(IAcuConfiguration config)
     {
-        _logger.LogInformation("Execute UnpublishAllPackages action");
+        logger.LogInformation("Execute UnpublishAllPackages action");
         try
         {
             await AnsiConsole.Status().StartAsync("Unpublish packages", async ctx =>
             {
                 ctx.Status("Reading configuration ...");
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
+                logger.LogInformation("Reading configuration");
+                ConfigurationHelper.PrintConfiguration(config, logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
-                _logger.LogInformation("Validate configuration");
+                logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForUnpublish(config.Pkg);
 
-                _logger.LogInformation("Unpublish package(s) {Package}", config.Pkg.PkgName);
+                logger.LogInformation("Unpublish package(s) {Package}", config.Pkg.PkgName);
                 ctx.Status("Unpublish in progress, please wait ...");
                 using var client = GetClient(config);
                 await client.UnpublishAllPackages();
@@ -107,28 +100,28 @@ public class PackageService : IPackageService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "UnpublishAllPackages: action error!");
+            logger.LogError(e, "UnpublishAllPackages: action error!");
         }
 
-        _logger.LogInformation("UnpublishAllPackages action complete");
+        logger.LogInformation("UnpublishAllPackages action complete");
     }
 
     public async Task UploadPackage(IAcuConfiguration config)
     {
-        _logger.LogInformation("Execute UploadPackage action");
+        logger.LogInformation("Execute UploadPackage action");
         try
         {
             await AnsiConsole.Status().StartAsync("UploadPackage packages", async ctx =>
             {
                 ctx.Status("Reading configuration ...");
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg));
+                logger.LogInformation("Reading configuration");
+                ConfigurationHelper.PrintConfiguration(config, logger, nameof(IAcuConfiguration.Pkg));
 
                 ctx.Status("Validate configuration ...");
-                _logger.LogInformation("Validate configuration");
+                logger.LogInformation("Validate configuration");
                 PackageValidator.ValidateForUpload(config.Pkg);
 
-                _logger.LogInformation("Uploading package {Package}", config.Pkg.PkgName);
+                logger.LogInformation("Uploading package {Package}", config.Pkg.PkgName);
                 ctx.Status("UploadPackage in progress, please wait ...");
                 using var client = GetClient(config);
                 await client.UploadPackage();
@@ -137,10 +130,10 @@ public class PackageService : IPackageService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "UploadPackage: action error!");
+            logger.LogError(e, "UploadPackage: action error!");
         }
 
-        _logger.LogInformation("UploadPackage action complete");
+        logger.LogInformation("UploadPackage action complete");
     }
 
     /// <summary>

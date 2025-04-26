@@ -24,8 +24,9 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
         var projectDescription = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
         var projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
         var makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
+		var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
-        return new AcuConfiguration
+		return new AcuConfiguration
         {
             Pkg = new PackageConfiguration
             {
@@ -38,8 +39,9 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
                 PkgSourceDirectory = sourceDirectory,
                 PkgDescription = projectDescription,
                 PkgLevel = projectLevel,
-                MakeMode = makeMode
-            }
+                MakeMode = makeMode,
+				AssemblyInfoPath = msAssemblyInfoPath
+			}
         };
     }
 }

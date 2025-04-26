@@ -28,7 +28,7 @@ public class RootCommandBuilder
         _erpCommandBuilder = serviceProvider.GetRequiredService<ErpCommandBuilder>();
         _siteCommandBuilder = serviceProvider.GetRequiredService<SiteCommandBuilder>();
         _packageCommandBuilder = serviceProvider.GetRequiredService<PackageCommandBuilder>();
-        _codeCommandBuilder = serviceProvider.GetRequiredService<CodeCommandBuilder>();
+        _codeCommandBuilder = serviceProvider.GetRequiredService<SrcCommandBuilder>();
 
         _configOption = BuildConfigOption();
         _userConfigOption = BuildUserConfigOption();

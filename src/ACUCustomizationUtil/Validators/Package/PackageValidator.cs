@@ -36,6 +36,7 @@ public abstract class PackageValidator : OptionsValidatorBase
 
     private static void Validate(IPackageConfiguration obj, IValidator<IPackageConfiguration> validator)
     {
-        validator.ValidateAndThrowArgumentException(obj);
+        new PackageGlobalValidator().ValidateAndThrowArgumentException(obj);
+		validator.ValidateAndThrowArgumentException(obj);
     }
 }

@@ -18,21 +18,23 @@
     "iisWebSite": null
   },
   "pkg": {
-    "soapUrl": "http://localhost/25.100.0054/api/ServiceGate.asmx",
-    "restUrl": "http://localhost/25.100.0054",
+    "url": "http://localhost/25.100.0054",
     "login": "admin",
     "password": "123",
     "pkgName": "ACUCustomization",
     "pkgDirectory": "pkg",
-    "tenant": null
+    "tenant": null,
+    "branch": null
   },
   "src": {
     "pkgSourceDirectory": "cst",
     "pkgLevel": "0",
+    "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+    "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",
     "msBuildSolutionFile": "ACUCustomization.sln",
     "msBuildTargetDirectory": "src\\ACUCustomization\\bin\\Release",
     "msBuildAssemblyName": "ACUCustomization.dll",
     "makeMode": null,
-	  "pkgDescription": null
+    "pkgDescription": null
   }
 }

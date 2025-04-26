@@ -31,6 +31,12 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
                 case nameof(code.PkgLevel):
                     code.PkgLevel = reader.GetString();
                     break;
+                case nameof(code.MsBuildPath):
+                    code.MsBuildPath = reader.GetString().NormalizeEnvVariables();
+                    break;
+                case nameof(code.AssemblyInfoPath):
+                    code.AssemblyInfoPath = reader.GetString().NormalizeEnvVariables();
+                    break;
                 case nameof(code.MsBuildSolutionFile):
                     code.MsBuildSolutionFile = reader.GetString().NormalizeEnvVariables();
                     break;
@@ -39,12 +45,6 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
                     break;
                 case nameof(code.MsBuildAssemblyName):
                     code.MsBuildAssemblyName = reader.GetString();
-                    break;
-                case nameof(code.MsBuildVersionDirectory):
-                    code.MsBuildVersionDirectory = reader.GetString().NormalizeEnvVariables();
-                    break;
-                case nameof(code.MsBuildVersionFile):
-                    code.MsBuildVersionFile = reader.GetString().NormalizeEnvVariables();
                     break;
                 case nameof(code.MakeMode):
                     code.MakeMode = reader.GetString();

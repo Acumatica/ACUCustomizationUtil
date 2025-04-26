@@ -13,16 +13,11 @@ namespace ACUCustomizationUtils.Builders.Commands;
 /// email: aleksej.slusar@sprinterra.com
 /// Copyright Sprinterra(c) 2023
 /// </remarks>
-public class CodeCommandBuilder : CommandBuilderBase
+public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 {
-    private readonly ISrcService _projectService;
+    private readonly ISrcService _projectService = projectService;
 
-    public CodeCommandBuilder(ISrcService projectService)
-    {
-        _projectService = projectService;
-    }
-
-    public override Command BuildCommand()
+	public override Command BuildCommand()
     {
         var srcCommand = BuildSrcCommand();
         var makeCommand = BuildMakeCommand();
@@ -46,7 +41,7 @@ public class CodeCommandBuilder : CommandBuilderBase
         var packageName = GetPackageNameOption();
         var packageDirectory = GetPackageDirectoryOption();
         var makeMode = BuildMakeModeOption();
-        
+        var msAssemblyInfoPath = GetMsBuildAssemblyInfoPathOption();
 
         var command = new Command("make", "Create customization package from source code")
         {
@@ -63,8 +58,9 @@ public class CodeCommandBuilder : CommandBuilderBase
                 packageDirectory,
                 projectDescription,
                 projectLevel,
-                makeMode
-            ));
+                makeMode,
+				msAssemblyInfoPath
+			));
 
         return command;
     }
@@ -99,11 +95,17 @@ public class CodeCommandBuilder : CommandBuilderBase
         var msBuildSolutionFilePath = GetMsBuildSolutionFileNameOption();
         var msBuildTargetDirectory = GetMsBuildTargetDirectoryOption();
         var msBuildAssemblyFile = GetMsBuildAssemblyFileNameOption();
+        var msBuildPath = GetMsBuildPathOption();
+        var msAssemblyInfoPath = GetMsBuildAssemblyInfoPathOption();
         
         var command = new Command("build", "Build dll from extension library source code")
         {
-            msBuildSolutionFilePath, msBuildTargetDirectory, msBuildAssemblyFile
-        };
+            msBuildSolutionFilePath, 
+            msBuildTargetDirectory, 
+            msBuildAssemblyFile, 
+            msBuildPath, 
+            msAssemblyInfoPath
+		};
 
         command.SetHandler(_projectService.CompileSolution,
             new CodeCompileConfigurationBinder(
@@ -111,7 +113,9 @@ public class CodeCommandBuilder : CommandBuilderBase
                 UserConfigOption!,
                 msBuildSolutionFilePath,
                 msBuildTargetDirectory, 
-                msBuildAssemblyFile
+                msBuildAssemblyFile,
+                msBuildPath, 
+                msAssemblyInfoPath
             ));
 
         return command;
@@ -151,6 +155,16 @@ public class CodeCommandBuilder : CommandBuilderBase
     {
         return new Option<string>("--pkgDirectory", "Package destination directory");
     }
+    
+    private static Option<string> GetMsBuildPathOption()
+    {
+        return new Option<string>("--msBuildPath", "MSBuild full path");
+    }
+    
+    private static Option<string> GetMsBuildAssemblyInfoPathOption()
+    {
+        return new Option<string>("--assemblyInfoPath", "External code assembly info file full name");
+    }
 
     private static Option<string> GetMsBuildSolutionFileNameOption()
     {
@@ -167,7 +181,6 @@ public class CodeCommandBuilder : CommandBuilderBase
         return new Option<string>("--assemblyName", "External code build ");
     }
 
-
     private static Option<string> BuildMakeModeOption()
     {
         return new Option<string>(
@@ -179,8 +192,7 @@ public class CodeCommandBuilder : CommandBuilderBase
                 var optionValue = result.Tokens.Single().Value;
                 if (optionValue != Messages.MakeModeBase
                     && optionValue != Messages.MakeModeQA
-                    && optionValue != Messages.MakeModeISV
-                    && optionValue != Messages.MakeModeNAW) 
+                    && optionValue != Messages.MakeModeISV) 
                     return Messages.MakeModeBase;
                 
                 return optionValue;

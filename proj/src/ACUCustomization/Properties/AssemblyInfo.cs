@@ -23,14 +23,15 @@ using System.Runtime.InteropServices;
 [assembly: Guid("7b2be52b-ceaf-4a50-a8c7-07f0a1185e78")]
 
 // Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-// [assembly: AssemblyVersion("1.0.0.0")]
-// [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("25.100.25112.1134")]
+[assembly: AssemblyFileVersion("25.100.25112.1134")]
+
+// Assembly metadata:
+[assembly: AssemblyMetadata("GitBranch", "develop")]
+[assembly: AssemblyMetadata("GitHash", "6e1ba91843de136967c1f7720314cd31d9272f36")]
+[assembly: AssemblyMetadata("BuildUser", "aslusar")]
+[assembly: AssemblyMetadata("BuildMachine", "SPRINT039")]
+[assembly: AssemblyMetadata("MakeMode", "Base")]
+
+
+

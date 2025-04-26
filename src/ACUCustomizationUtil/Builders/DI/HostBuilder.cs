@@ -31,7 +31,7 @@ public static class HostBuilder
                 services.AddSingleton<ErpCommandBuilder>();
                 services.AddSingleton<SiteCommandBuilder>();
                 services.AddSingleton<PackageCommandBuilder>();
-                services.AddSingleton<CodeCommandBuilder>();
+                services.AddSingleton<SrcCommandBuilder>();
             })
             .UseSerilog()
             .Build();
