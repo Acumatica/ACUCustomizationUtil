@@ -9,6 +9,7 @@ using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.ERP;
 
 namespace ACUCustomizationUtils.Builders.Commands;
+
 /// <summary>
 /// This class is the point of building an application commands routing (ERP subcommand)
 /// </summary>
@@ -35,7 +36,7 @@ public class ErpCommandBuilder : CommandBuilderBase
         {
             downloadCommand,
             installCommand,
-            deleteCommand
+            deleteCommand,
         };
 
         return erpCommand;
@@ -46,16 +47,21 @@ public class ErpCommandBuilder : CommandBuilderBase
         var version = GetVersionOption();
         var directory = GetDestinationDirectoryOption();
         var file = GetFileNameOption();
-        var command = new Command("install", "Install ERP.")
-        {
-            version,
-            directory,
-            file
-        };
+        var command = new Command("install", "Install ERP.") { version, directory, file };
 
         command.SetHandler(
-            async config => { await _erpService.InstallErp(config); },
-            new ErpInstallConfigurationBinder(ConfigOption!, UserConfigOption!, version, directory, file));
+            async config =>
+            {
+                await _erpService.InstallErp(config);
+            },
+            new ErpInstallConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                version,
+                directory,
+                file
+            )
+        );
 
         return command;
     }
@@ -65,16 +71,21 @@ public class ErpCommandBuilder : CommandBuilderBase
         var version = GetVersionOption();
         var directory = GetDestinationDirectoryOption();
         var file = GetFileNameOption();
-        var command = new Command("delete", "Delete ERP.")
-        {
-            version,
-            directory,
-            file
-        };
+        var command = new Command("delete", "Delete ERP.") { version, directory, file };
 
         command.SetHandler(
-            async config => { await _erpService.UninstallErp(config); },
-            new ErpDeleteConfigurationBinder(ConfigOption!, UserConfigOption!, version, directory, file));
+            async config =>
+            {
+                await _erpService.UninstallErp(config);
+            },
+            new ErpDeleteConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                version,
+                directory,
+                file
+            )
+        );
 
         return command;
     }
@@ -90,12 +101,23 @@ public class ErpCommandBuilder : CommandBuilderBase
             version,
             directory,
             file,
-            url
+            url,
         };
 
         command.SetHandler(
-            async config => { await _erpService.DownloadErp(config); },
-            new ErpDownloadConfigurationBinder(ConfigOption!, UserConfigOption!, version, directory, file, url));
+            async config =>
+            {
+                await _erpService.DownloadErp(config);
+            },
+            new ErpDownloadConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                version,
+                directory,
+                file,
+                url
+            )
+        );
 
         return command;
     }
@@ -105,41 +127,42 @@ public class ErpCommandBuilder : CommandBuilderBase
         return new Option<string>(
             name: "--installerName",
             description: "Name of ERP installer file",
-            getDefaultValue: () => Messages.AcumaticaErpInstallMsi);
+            getDefaultValue: () => Messages.AcumaticaErpInstallMsi
+        );
     }
 
     private static Option<string> GetUrlOption()
     {
-        return new Option<string>(
-            name: "--url",
-            description: "ERP installer download url");
+        return new Option<string>(name: "--url", description: "ERP installer download url");
     }
 
     private static Option<string> GetDestinationDirectoryOption()
     {
         return new Option<string>(
             name: "--destinationDirectory",
-            description: "Base directory for install ERP");
+            description: "Base directory for install ERP"
+        );
     }
 
     private static Option<string> GetVersionOption()
     {
-        return new Option<string>(
-            name: "--erpVersion",
-            description: "ERP version");
+        return new Option<string>(name: "--erpVersion", description: "ERP version");
     }
 }
 
 public class ErpInstallConfigurationBinder : CommandParametersBinder
 {
-    public ErpInstallConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
-        : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public ErpInstallConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -151,22 +174,25 @@ public class ErpInstallConfigurationBinder : CommandParametersBinder
             {
                 ErpVersion = erpVersion,
                 DestinationDirectory = destinationDirectory,
-                InstallationFileName = installationFileName
-            }
+                InstallationFileName = installationFileName,
+            },
         };
     }
 }
 
 public class ErpDownloadConfigurationBinder : CommandParametersBinder
 {
-    public ErpDownloadConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
-        : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public ErpDownloadConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -180,22 +206,25 @@ public class ErpDownloadConfigurationBinder : CommandParametersBinder
                 ErpVersion = erpVersion,
                 Url = !string.IsNullOrWhiteSpace(url) ? new Uri(url) : null,
                 DestinationDirectory = destinationDirectory,
-                InstallationFileName = installationFileName
-            }
+                InstallationFileName = installationFileName,
+            },
         };
     }
 }
 
 public class ErpDeleteConfigurationBinder : CommandParametersBinder
 {
-    public ErpDeleteConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
-        : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public ErpDeleteConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -207,8 +236,8 @@ public class ErpDeleteConfigurationBinder : CommandParametersBinder
             {
                 ErpVersion = erpVersion,
                 DestinationDirectory = destinationDirectory,
-                InstallationFileName = installationFileName
-            }
+                InstallationFileName = installationFileName,
+            },
         };
     }
 }

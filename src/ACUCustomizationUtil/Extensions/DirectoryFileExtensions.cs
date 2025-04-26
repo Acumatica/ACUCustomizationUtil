@@ -14,7 +14,8 @@ public static class DirectoryFileExtensions
 
     public static void TryCheckFileDirectory(this string? fullFileName)
     {
-        if (fullFileName == null) return;
+        if (fullFileName == null)
+            return;
         var file = new FileInfo(fullFileName);
         file.DirectoryName?.TryCheckCreateDirectory();
     }
@@ -22,7 +23,9 @@ public static class DirectoryFileExtensions
     public static string? TryGetFullDirectoryPath(this string? path)
     {
         if (path != null)
-            return path.PathIsAbsolute() == false ? Path.Combine(Environment.CurrentDirectory, path) : path;
+            return path.PathIsAbsolute() == false
+                ? Path.Combine(Environment.CurrentDirectory, path)
+                : path;
         return null;
     }
 

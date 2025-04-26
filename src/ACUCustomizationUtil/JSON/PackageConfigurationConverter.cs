@@ -7,8 +7,11 @@ namespace ACUCustomizationUtils.JSON;
 
 public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration>
 {
-    public override IPackageConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert,
-        JsonSerializerOptions options)
+    public override IPackageConfiguration Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
@@ -16,8 +19,10 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
         var package = new PackageConfiguration();
         while (reader.Read())
         {
-            if (reader.TokenType == JsonTokenType.EndObject) return package;
-            if (reader.TokenType != JsonTokenType.PropertyName) throw new JsonException("Expected PropertyName token");
+            if (reader.TokenType == JsonTokenType.EndObject)
+                return package;
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("Expected PropertyName token");
             var propName = reader.GetString();
             reader.Read();
             switch (propName?.FirstCharToUpper())
@@ -50,7 +55,11 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
         throw new JsonException("Expected EndObject token");
     }
 
-    public override void Write(Utf8JsonWriter writer, IPackageConfiguration value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer,
+        IPackageConfiguration value,
+        JsonSerializerOptions options
+    )
     {
         throw new NotImplementedException();
     }

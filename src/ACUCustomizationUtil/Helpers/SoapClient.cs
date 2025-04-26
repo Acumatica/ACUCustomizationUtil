@@ -23,27 +23,30 @@ internal class SoapClient : IAcuCustomizationClient
         {
             username = $"{username}@{tenant}";
         }
-		_packageName = configuration.Pkg.PkgName;
+        _packageName = configuration.Pkg.PkgName;
         _packageDirectory = configuration.Pkg.PkgDirectory;
 
         var endpointAddress = new EndpointAddress(serviceUrl);
-        var basicHttpBinding = new BasicHttpBinding(endpointAddress.Uri.Scheme.ToLower() == "http"
-            ? BasicHttpSecurityMode.None
-            : BasicHttpSecurityMode.Transport)
+        var basicHttpBinding = new BasicHttpBinding(
+            endpointAddress.Uri.Scheme.ToLower() == "http"
+                ? BasicHttpSecurityMode.None
+                : BasicHttpSecurityMode.Transport
+        )
         {
             OpenTimeout = TimeSpan.MaxValue,
             CloseTimeout = TimeSpan.MaxValue,
             ReceiveTimeout = TimeSpan.MaxValue,
             SendTimeout = TimeSpan.MaxValue,
             AllowCookies = true,
-            MaxReceivedMessageSize = 6553600
+            MaxReceivedMessageSize = 6553600,
         };
         _client = new ServiceGateSoapClient(basicHttpBinding, endpointAddress);
         var login = _client.LoginAsync(username, password);
 
         if (login.Result.Code != ErrorCode.OK)
             throw new InvalidCredentialException(
-                $"Error login to service: {login.Result.Code} {login.Result.Message}");
+                $"Error login to service: {login.Result.Code} {login.Result.Message}"
+            );
     }
 
     public async Task GetPackage()

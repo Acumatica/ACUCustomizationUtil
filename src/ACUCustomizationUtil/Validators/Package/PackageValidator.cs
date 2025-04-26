@@ -4,8 +4,9 @@ using ACUCustomizationUtils.Validators.Site;
 using FluentValidation;
 
 namespace ACUCustomizationUtils.Validators.Package;
+
 /// <summary>
-/// Configuration validator - validate required configuration parameters for execute Package subcommands 
+/// Configuration validator - validate required configuration parameters for execute Package subcommands
 /// </summary>
 /// <remarks>
 /// Authored by Aleksej Slusar
@@ -34,9 +35,12 @@ public abstract class PackageValidator : OptionsValidatorBase
         Validate(configuration, new PackageUploadValidator());
     }
 
-    private static void Validate(IPackageConfiguration obj, IValidator<IPackageConfiguration> validator)
+    private static void Validate(
+        IPackageConfiguration obj,
+        IValidator<IPackageConfiguration> validator
+    )
     {
         new PackageGlobalValidator().ValidateAndThrowArgumentException(obj);
-		validator.ValidateAndThrowArgumentException(obj);
+        validator.ValidateAndThrowArgumentException(obj);
     }
 }

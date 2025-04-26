@@ -32,21 +32,33 @@ public class SrcService : ISrcService
         _logger.LogInformation("Execute GetProjectSource action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Download project source items", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg),
-                    nameof(IAcuConfiguration.Src));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Download project source items",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Pkg),
+                            nameof(IAcuConfiguration.Src)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SrcValidator.ValidateForSrc(config);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SrcValidator.ValidateForSrc(config);
 
-                _logger.LogInformation("Download source items for project {Package}", config.Pkg.PkgName);
-                ctx.Status("Download in progress, please wait ...");
-                await GetProjectSourceExAsync(config);
-            });
+                        _logger.LogInformation(
+                            "Download source items for project {Package}",
+                            config.Pkg.PkgName
+                        );
+                        ctx.Status("Download in progress, please wait ...");
+                        await GetProjectSourceExAsync(config);
+                    }
+                );
             _logger.LogInformation("GetProjectSource action complete");
         }
         catch (Exception e)
@@ -60,21 +72,33 @@ public class SrcService : ISrcService
         _logger.LogInformation("Execute MakeProjectFromSource action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Making project from source", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg),
-                    nameof(IAcuConfiguration.Src));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Making project from source",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Pkg),
+                            nameof(IAcuConfiguration.Src)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SrcValidator.ValidateForMake(config);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SrcValidator.ValidateForMake(config);
 
-                _logger.LogInformation("Making package for project {Package}", config.Pkg.PkgName);
-                ctx.Status("Making in progress, please wait ...");
-                await MakeProjectFromSourceExAsync(config);
-            });
+                        _logger.LogInformation(
+                            "Making package for project {Package}",
+                            config.Pkg.PkgName
+                        );
+                        ctx.Status("Making in progress, please wait ...");
+                        await MakeProjectFromSourceExAsync(config);
+                    }
+                );
             _logger.LogInformation("MakeProjectFromSource action complete");
         }
         catch (Exception e)
@@ -88,27 +112,38 @@ public class SrcService : ISrcService
         _logger.LogInformation("Execute CompileSolution action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Compile external library code", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Pkg),
-                    nameof(IAcuConfiguration.Src));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Compile external library code",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Pkg),
+                            nameof(IAcuConfiguration.Src)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SrcValidator.ValidateForBuild(config);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SrcValidator.ValidateForBuild(config);
 
-                _logger.LogInformation("Compile external library code for project {Package}",
-                    config.Pkg.PkgName);
-                ctx.Status("Compile in progress, please wait ...");
-                var msBuildHelper = new MsBuildHelper(config, ctx);
-                await msBuildHelper.Execute();
+                        _logger.LogInformation(
+                            "Compile external library code for project {Package}",
+                            config.Pkg.PkgName
+                        );
+                        ctx.Status("Compile in progress, please wait ...");
+                        var msBuildHelper = new MsBuildHelper(config, ctx);
+                        await msBuildHelper.Execute();
 
-                ctx.Status("Copy external library assembly to package source");
-                _logger.LogInformation("Copy external library assembly to package source");
-                await msBuildHelper.CopyAssemblyToPackageBinAsync();
-            });
+                        ctx.Status("Copy external library assembly to package source");
+                        _logger.LogInformation("Copy external library assembly to package source");
+                        await msBuildHelper.CopyAssemblyToPackageBinAsync();
+                    }
+                );
 
             _logger.LogInformation("CompileSolution action success");
         }
@@ -130,14 +165,18 @@ public class SrcService : ISrcService
 
         sourceDirectory.TryCheckCreateDirectory();
         if (!Directory.Exists(sourceDirectory))
-            throw new Exception($"Directory {sourceDirectory} is not exist or access is not allowed to it");
+            throw new Exception(
+                $"Directory {sourceDirectory} is not exist or access is not allowed to it"
+            );
 
         var dataHelper = new DatabaseHelper(config);
         var itemHandler = new CstEntityHelper(config);
 
-        var projectInfo = await dataHelper.GetCustomizationProjectAsync(packageName) ??
-                          throw new Exception(
-                              $"Project {packageName} does not found for connection {connectionString}");
+        var projectInfo =
+            await dataHelper.GetCustomizationProjectAsync(packageName)
+            ?? throw new Exception(
+                $"Project {packageName} does not found for connection {connectionString}"
+            );
 
         //Clear directory
         itemHandler.ClearProjectDirectory();

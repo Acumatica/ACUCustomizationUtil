@@ -15,6 +15,7 @@ public interface IAcuConfiguration
     IPackageConfiguration Pkg { get; init; }
     ISrcConfiguration Src { get; init; }
 
-    [JsonIgnore] bool IsNotNull { get; }
+    [JsonIgnore]
+    bool IsNotNull { get; }
     void OnDeserialized();
 }

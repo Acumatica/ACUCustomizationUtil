@@ -6,6 +6,7 @@ using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Services.Package;
 
 namespace ACUCustomizationUtils.Builders.Commands;
+
 /// <summary>
 /// This class is the point of building an application commands routing (Package subcommand)
 /// </summary>
@@ -16,13 +17,13 @@ namespace ACUCustomizationUtils.Builders.Commands;
 /// </remarks>
 public class PackageCommandBuilder(IPackageService packageService) : CommandBuilderBase
 {
-	private readonly Option<string> _urlOption = GetUrlOption();
+    private readonly Option<string> _urlOption = GetUrlOption();
     private readonly Option<string> _loginOption = GetLoginOption();
     private readonly Option<string> _passwordOption = GetPasswordOption();
     private readonly Option<string> _tenantOption = GetTenantOption();
     private readonly Option<string> _branchOption = GetBranchOption();
 
-	public override Command BuildCommand()
+    public override Command BuildCommand()
     {
         var getCommand = BuildGetCommand();
         var publishCommand = BuildPublishCommand();
@@ -34,9 +35,9 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
             getCommand,
             publishCommand,
             unpublishAllCommand,
-            uploadCommand
+            uploadCommand,
         };
-        
+
         packageCommand.AddGlobalOption(_urlOption);
         packageCommand.AddGlobalOption(_loginOption);
         packageCommand.AddGlobalOption(_passwordOption);
@@ -56,39 +57,42 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
         {
             packageNameOption,
             packageDirOption,
-            tenantOption
+            tenantOption,
         };
 
         command.SetHandler(
             packageService.UploadPackage,
-            new PackageUploadConfigurationBinder(ConfigOption!,
+            new PackageUploadConfigurationBinder(
+                ConfigOption!,
                 UserConfigOption!,
                 _urlOption,
                 _loginOption,
                 _passwordOption,
                 tenantOption,
                 packageNameOption,
-                packageDirOption));
+                packageDirOption
+            )
+        );
 
         return command;
     }
 
     private Command BuildUnpublishAllCommand()
     {
+        var command = new Command("unpublish", "Unpublish all packages.") { };
 
-        var command = new Command("unpublish", "Unpublish all packages.")
-        {
-        };
-        
         command.SetHandler(
             async config => await packageService.UnpublishAllPackages(config),
-            new PackageUnpublishAllConfigurationBinder(ConfigOption!,
+            new PackageUnpublishAllConfigurationBinder(
+                ConfigOption!,
                 UserConfigOption!,
                 _urlOption,
                 _loginOption,
                 _passwordOption,
                 _tenantOption,
-                _branchOption));
+                _branchOption
+            )
+        );
 
         return command;
     }
@@ -97,21 +101,21 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
     {
         var packageNameOption = GetPackageNameOption();
 
-        var command = new Command("publish", "Publish package(s).")
-        {
-            packageNameOption,
-        };
+        var command = new Command("publish", "Publish package(s).") { packageNameOption };
 
         command.SetHandler(
             async config => await packageService.PublishPackages(config),
-            new PackagePublishConfigurationBinder(ConfigOption!,
+            new PackagePublishConfigurationBinder(
+                ConfigOption!,
                 UserConfigOption!,
                 _urlOption,
                 _loginOption,
                 _passwordOption,
                 _tenantOption,
                 _branchOption,
-                packageNameOption));
+                packageNameOption
+            )
+        );
 
         return command;
     }
@@ -129,15 +133,18 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
 
         command.SetHandler(
             async config => await packageService.GetPackage(config),
-            new PackageUploadConfigurationBinder(ConfigOption!,
+            new PackageUploadConfigurationBinder(
+                ConfigOption!,
                 UserConfigOption!,
                 _urlOption,
                 _loginOption,
                 _passwordOption,
                 _tenantOption,
                 _branchOption,
-				packageNameOption,
-                packageDirOption));
+                packageNameOption,
+                packageDirOption
+            )
+        );
 
         return command;
     }
@@ -178,11 +185,16 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
     }
 }
 
-public class PackageUploadConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-	params Option<string>?[] commandOptions) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
+public class PackageUploadConfigurationBinder(
+    Option<FileInfo> configFile,
+    Option<FileInfo> userConfigFile,
+    params Option<string>?[] commandOptions
+) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
 {
-	protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -197,22 +209,27 @@ public class PackageUploadConfigurationBinder(Option<FileInfo> configFile, Optio
             Pkg = new PackageConfiguration
             {
                 Url = url != null ? new Uri(url) : null,
-                Login = login, 
-                Password = password, 
-                Tenant = tenant, 
-                Branch = branch, 
-                PkgName = pkgName, 
-                PkgDirectory = pkgDir
-            }
+                Login = login,
+                Password = password,
+                Tenant = tenant,
+                Branch = branch,
+                PkgName = pkgName,
+                PkgDirectory = pkgDir,
+            },
         };
     }
 }
 
-public class PackagePublishConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-	params Option<string>?[] commandOptions) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
+public class PackagePublishConfigurationBinder(
+    Option<FileInfo> configFile,
+    Option<FileInfo> userConfigFile,
+    params Option<string>?[] commandOptions
+) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
 {
-	protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -225,17 +242,25 @@ public class PackagePublishConfigurationBinder(Option<FileInfo> configFile, Opti
             Pkg = new PackageConfiguration
             {
                 Url = url != null ? new Uri(url) : null,
-                Login = login, Password = password, Tenant = tenant, PkgName = pkgName
-            }
+                Login = login,
+                Password = password,
+                Tenant = tenant,
+                PkgName = pkgName,
+            },
         };
     }
 }
 
-public class PackageUnpublishAllConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-	params Option<string>?[] commandOptions) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
+public class PackageUnpublishAllConfigurationBinder(
+    Option<FileInfo> configFile,
+    Option<FileInfo> userConfigFile,
+    params Option<string>?[] commandOptions
+) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
 {
-	protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -247,8 +272,10 @@ public class PackageUnpublishAllConfigurationBinder(Option<FileInfo> configFile,
             Pkg = new PackageConfiguration
             {
                 Url = url != null ? new Uri(url) : null,
-                Login = login, Password = password, Tenant = tenant
-            }
+                Login = login,
+                Password = password,
+                Tenant = tenant,
+            },
         };
     }
 }

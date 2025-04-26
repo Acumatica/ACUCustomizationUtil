@@ -17,15 +17,15 @@ public class MsBuildHelper
     private readonly string? _msBuildAssemblyFileName;
     private readonly MetaDataHelper _metaDataHelper;
 
-	public MsBuildHelper(IAcuConfiguration config, StatusContext ctx)
+    public MsBuildHelper(IAcuConfiguration config, StatusContext ctx)
     {
         _config = config;
         _ctx = ctx;
         _packageSourceBin = _config.Src.PkgSourceBinDirectory!;
         _msBuildTargetDirectory = _config.Src.MsBuildTargetDirectory;
         _msBuildAssemblyFileName = _config.Src.MsBuildAssemblyName;
-		_metaDataHelper = new MetaDataHelper(_config);
-	}
+        _metaDataHelper = new MetaDataHelper(_config);
+    }
 
     public async Task Execute()
     {
@@ -49,7 +49,9 @@ public class MsBuildHelper
                 packageDllFile.TryCheckFileDirectory();
                 File.Copy(assemblyDllFile, packageDllFile, true);
                 if (!File.Exists(packageDllFile))
-                    throw new InvalidOperationException($"Source file {assemblyDllFile} not copied to {packageDllFile}!");
+                    throw new InvalidOperationException(
+                        $"Source file {assemblyDllFile} not copied to {packageDllFile}!"
+                    );
             }
             else
             {
@@ -67,14 +69,12 @@ public class MsBuildHelper
         return $"{buildConfiguration} {buildTarget} {solutionFilePath}";
     }
 
-
-
     private string GetMsbuildPath()
     {
-        if ( _config.Src.MsBuildPath != null && File.Exists(_config.Src.MsBuildPath))
-			return _config.Src.MsBuildPath;
+        if (_config.Src.MsBuildPath != null && File.Exists(_config.Src.MsBuildPath))
+            return _config.Src.MsBuildPath;
 
-		var proc = new Process
+        var proc = new Process
         {
             StartInfo = new ProcessStartInfo
             {
@@ -82,15 +82,16 @@ public class MsBuildHelper
                 Arguments = "/R C:\\ MSBuild.exe",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                CreateNoWindow = true
-            }
+                CreateNoWindow = true,
+            },
         };
 
         proc.Start();
         while (!proc.StandardOutput.EndOfStream)
         {
             var line = proc.StandardOutput.ReadLine();
-            if (line is null || !File.Exists(line)) continue;
+            if (line is null || !File.Exists(line))
+                continue;
             return line;
         }
 

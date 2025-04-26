@@ -11,13 +11,17 @@ namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
 public class CodeSrcConfigurationBinder : CommandParametersBinder
 {
-    public CodeSrcConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions) : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public CodeSrcConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var dbConnection = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -29,18 +33,12 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
             Site = new SiteConfiguration
             {
                 DbConnectionString = dbConnection,
-                InstancePath = instancePath
+                InstancePath = instancePath,
             },
 
-            Pkg = new PackageConfiguration
-            {
-                PkgName = packageName
-            },
+            Pkg = new PackageConfiguration { PkgName = packageName },
 
-            Src = new SrcConfiguration
-            {
-                PkgSourceDirectory = sourceDirectory
-            }
+            Src = new SrcConfiguration { PkgSourceDirectory = sourceDirectory },
         };
     }
 }

@@ -10,13 +10,17 @@ namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
 public class CodeMakeConfigurationBinder : CommandParametersBinder
 {
-    public CodeMakeConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions) : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public CodeMakeConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -24,14 +28,14 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
         var projectDescription = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
         var projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
         var makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
-		var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
-		return new AcuConfiguration
+        return new AcuConfiguration
         {
             Pkg = new PackageConfiguration
             {
                 PkgName = packageName,
-                PkgDirectory = packageDirectory
+                PkgDirectory = packageDirectory,
             },
 
             Src = new SrcConfiguration
@@ -40,8 +44,8 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
                 PkgDescription = projectDescription,
                 PkgLevel = projectLevel,
                 MakeMode = makeMode,
-				AssemblyInfoPath = msAssemblyInfoPath
-			}
+                AssemblyInfoPath = msAssemblyInfoPath,
+            },
         };
     }
 }

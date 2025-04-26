@@ -2,6 +2,7 @@
 using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.Configuration.Package;
+
 /// <summary>
 /// POCO configuration class for acu util (Package section)
 /// </summary>
@@ -30,7 +31,7 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
             var file = PkgName!.EndsWith(".zip") ? PkgName : $"{PkgName}.zip";
             PackageFilePath = Path.Combine(PkgDirectory, file);
         }
-        
+
         return this;
     }
 }

@@ -5,8 +5,9 @@ using ACUCustomizationUtils.Extensions;
 using FluentValidation;
 
 namespace ACUCustomizationUtils.Validators.Site;
+
 /// <summary>
-/// Configuration validator - validate required configuration parameters for execute Site subcommands 
+/// Configuration validator - validate required configuration parameters for execute Site subcommands
 /// </summary>
 /// <remarks>
 /// Authored by Aleksej Slusar
@@ -19,7 +20,7 @@ public abstract class SiteValidator : OptionsValidatorBase
     {
         Validate(configuration, new SiteInstallValidatorV());
     }
-    
+
     public static void ValidateForInstall(ISiteConfiguration configuration)
     {
         Validate(configuration, new SiteInstallValidator());

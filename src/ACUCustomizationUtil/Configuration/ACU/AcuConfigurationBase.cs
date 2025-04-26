@@ -6,8 +6,9 @@ using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Configuration.Src;
 
 namespace ACUCustomizationUtils.Configuration.ACU;
+
 /// <summary>
-/// POCO configuration class for acu util 
+/// POCO configuration class for acu util
 /// </summary>
 /// <remarks>
 /// Authored by Aleksej Slusar
@@ -30,7 +31,6 @@ public abstract class AcuConfigurationBase : IJsonOnDeserialized, IAcuConfigurat
     public IPackageConfiguration Pkg { get; init; }
     public ISrcConfiguration Src { get; init; }
     public abstract bool IsNotNull { get; }
-
 
     [OnDeserialized]
     public virtual void OnDeserialized()

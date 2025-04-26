@@ -7,8 +7,11 @@ namespace ACUCustomizationUtils.JSON;
 
 public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
 {
-    public override ISrcConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert,
-        JsonSerializerOptions options)
+    public override ISrcConfiguration Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
@@ -16,8 +19,10 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
         var code = new SrcConfiguration();
         while (reader.Read())
         {
-            if (reader.TokenType == JsonTokenType.EndObject) return code;
-            if (reader.TokenType != JsonTokenType.PropertyName) throw new JsonException("Expected PropertyName token");
+            if (reader.TokenType == JsonTokenType.EndObject)
+                return code;
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("Expected PropertyName token");
             var propName = reader.GetString();
             _ = reader.Read();
             switch (propName?.FirstCharToUpper())
@@ -55,7 +60,11 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
         throw new JsonException("Expected EndObject token");
     }
 
-    public override void Write(Utf8JsonWriter writer, ISrcConfiguration value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer,
+        ISrcConfiguration value,
+        JsonSerializerOptions options
+    )
     {
         throw new NotImplementedException();
     }

@@ -13,8 +13,11 @@ public abstract class CommandParametersBinder : BinderBase<IAcuConfiguration>
     private readonly Option<FileInfo> _userConfigFile;
     private readonly Option<string>?[] _commandOptions;
 
-    protected CommandParametersBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
+    protected CommandParametersBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
     {
         _configFile = configFile;
         _userConfigFile = userConfigFile;
@@ -27,11 +30,17 @@ public abstract class CommandParametersBinder : BinderBase<IAcuConfiguration>
         var userConfigFile = bindingContext.ParseResult.GetValueForOption(_userConfigFile);
         var userInput = GetUserConfiguration(bindingContext, _commandOptions);
         userInput.OnDeserialized();
-        var acuConfiguration = ConfigurationHelper.GetConfiguration(configFile, userConfigFile, userInput);
+        var acuConfiguration = ConfigurationHelper.GetConfiguration(
+            configFile,
+            userConfigFile,
+            userInput
+        );
 
         return acuConfiguration;
     }
 
-    protected abstract IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions);
+    protected abstract IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    );
 }

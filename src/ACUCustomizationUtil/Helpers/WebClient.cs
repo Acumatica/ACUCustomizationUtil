@@ -8,8 +8,11 @@ public class WebClient : IDisposable
     private readonly HttpClient? _httpClient;
     private readonly IProgress<TaskProgressReport>? _progress;
 
-    public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded,
-        double? progressPercentage);
+    public delegate void ProgressChangedHandler(
+        long? totalFileSize,
+        long totalBytesDownloaded,
+        double? progressPercentage
+    );
 
     public event ProgressChangedHandler? ProgressChanged;
 
@@ -24,10 +27,16 @@ public class WebClient : IDisposable
     public async Task DownloadFileAsync()
     {
         var token = new CancellationToken();
-        var response = await _httpClient!.GetAsync(_downloadUrl, HttpCompletionOption.ResponseHeadersRead, token);
+        var response = await _httpClient!.GetAsync(
+            _downloadUrl,
+            HttpCompletionOption.ResponseHeadersRead,
+            token
+        );
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception($"The request returned with HTTP status code {response.StatusCode}");
+            throw new Exception(
+                $"The request returned with HTTP status code {response.StatusCode}"
+            );
         }
 
         var total = response.Content.Headers.ContentLength ?? -1L;
@@ -42,7 +51,12 @@ public class WebClient : IDisposable
         await CopyStreamWithProgressAsync(source, destination, total, token);
     }
 
-    private async Task CopyStreamWithProgressAsync(Stream input, Stream output, long total, CancellationToken token)
+    private async Task CopyStreamWithProgressAsync(
+        Stream input,
+        Stream output,
+        long total,
+        CancellationToken token
+    )
     {
         const int ioBufferSize = 8 * 1024; // Optimal size depends on your scenario
 
@@ -52,7 +66,10 @@ public class WebClient : IDisposable
         var totalRead = 0L;
         var buffer = new byte[ioBufferSize];
         int read;
-        var canReportProgress = total != -1 /*&& progress != null*/;
+        var canReportProgress =
+            total
+            != -1 /*&& progress != null*/
+        ;
 
         while ((read = await input.ReadAsync(buffer, token)) > 0)
         {
@@ -87,7 +104,9 @@ public class WebClient : IDisposable
         {
             var totalFileSize = Convert.ToDouble(TotalFileSize);
             var totalBytesDownloaded = Convert.ToDouble(TotalBytesDownloaded);
-            var percent = Convert.ToInt16(Math.Round(totalBytesDownloaded / totalFileSize * 100, 0));
+            var percent = Convert.ToInt16(
+                Math.Round(totalBytesDownloaded / totalFileSize * 100, 0)
+            );
 
             return percent;
         }

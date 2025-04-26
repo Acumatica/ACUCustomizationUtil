@@ -3,8 +3,9 @@ using ACUCustomizationUtils.Extensions;
 using FluentValidation;
 
 namespace ACUCustomizationUtils.Validators.Erp;
+
 /// <summary>
-/// Configuration validator - validate required configuration parameters for execute Erp subcommands 
+/// Configuration validator - validate required configuration parameters for execute Erp subcommands
 /// </summary>
 /// <remarks>
 /// Authored by Aleksej Slusar

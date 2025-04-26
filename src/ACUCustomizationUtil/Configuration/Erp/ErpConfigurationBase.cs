@@ -2,6 +2,7 @@
 using ACUCustomizationUtils.Configuration.ACU;
 
 namespace ACUCustomizationUtils.Configuration.Erp;
+
 /// <summary>
 /// POCO configuration class for acu util (ERP section)
 /// </summary>
@@ -41,7 +42,8 @@ public abstract class ErpConfigurationBase : IErpConfiguration
 
     private static Uri? GetDownloadUri(string? version)
     {
-        if (version == null) return null;
+        if (version == null)
+            return null;
         var majorNbr = version[..4];
         var uri = new UriBuilder(Messages.DownloadUri(majorNbr, version)).Uri;
 

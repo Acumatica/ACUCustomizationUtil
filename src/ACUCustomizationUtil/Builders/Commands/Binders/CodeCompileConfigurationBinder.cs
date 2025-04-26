@@ -8,30 +8,40 @@ namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
 public class CodeCompileConfigurationBinder : CommandParametersBinder
 {
-    public CodeCompileConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions) : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public CodeCompileConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
-        var msBuildSolutionFilePath = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var msBuildTargetDirectoryPath = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var msBuildAssemblyFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        var msBuildSolutionFilePath = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[0]!
+        );
+        var msBuildTargetDirectoryPath = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[1]!
+        );
+        var msBuildAssemblyFileName = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[2]!
+        );
         var msBuildPath = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
-		var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
 
-		return new AcuConfiguration
+        return new AcuConfiguration
         {
             Src = new SrcConfiguration
             {
                 MsBuildSolutionFile = msBuildSolutionFilePath,
                 MsBuildTargetDirectory = msBuildTargetDirectoryPath,
                 MsBuildAssemblyName = msBuildAssemblyFileName,
-				MsBuildPath = msBuildPath,
-				AssemblyInfoPath = msAssemblyInfoPath
-			}
+                MsBuildPath = msBuildPath,
+                AssemblyInfoPath = msAssemblyInfoPath,
+            },
         };
     }
 }

@@ -2,6 +2,7 @@ using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.Configuration.Site;
+
 /// <summary>
 /// POCO configuration class for acu util (Site section)
 /// </summary>
@@ -27,15 +28,20 @@ public abstract class SiteConfigurationBase : ISiteConfiguration
 
     public ISiteConfiguration SetDefaultValues(IAcuConfiguration configuration)
     {
-        AcumaticaToolPath ??= configuration.Erp.InstallationDirectory != null
-            ? Path.Combine(configuration.Erp.InstallationDirectory!, "Acumatica ERP\\Data\\ac.exe")
-            : null;
+        AcumaticaToolPath ??=
+            configuration.Erp.InstallationDirectory != null
+                ? Path.Combine(
+                    configuration.Erp.InstallationDirectory!,
+                    "Acumatica ERP\\Data\\ac.exe"
+                )
+                : null;
         SqlServerName ??= "localhost";
-        InstancePath = InstancePath.TryGetFullDirectoryPath();  
+        InstancePath = InstancePath.TryGetFullDirectoryPath();
         DbName ??= InstanceName != null ? $"{InstanceName}DB" : null;
-        DbConnectionString ??= SqlServerName != null && DbName != null
-            ? $"Data Source={SqlServerName};Initial Catalog={DbName};Integrated Security=True;Encrypt=False;"
-            : null;
+        DbConnectionString ??=
+            SqlServerName != null && DbName != null
+                ? $"Data Source={SqlServerName};Initial Catalog={DbName};Integrated Security=True;Encrypt=False;"
+                : null;
         IisAppPool ??= "DefaultAppPool";
         IisWebSite ??= "Default Web Site";
         IisDbUsername ??= null;

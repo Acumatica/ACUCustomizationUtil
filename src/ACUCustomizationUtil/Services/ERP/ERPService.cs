@@ -40,25 +40,43 @@ public class ErpService : IErpService
     {
         WebClient.ProgressChangedHandler OnDownloadProgressChanged(StatusContext ctx)
         {
-            return (size, downloaded, percentage) => { ctx.Status($"Progress: {downloaded}/{size} {percentage}%"); };
+            return (size, downloaded, percentage) =>
+            {
+                ctx.Status($"Progress: {downloaded}/{size} {percentage}%");
+            };
         }
 
         _logger.LogInformation("Execute DownloadErp action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Download ERP installation", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Download ERP installation",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Erp)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ErpValidator.ValidateForDownload(config.Erp);
+                        _logger.LogInformation("Validate configuration");
+                        ErpValidator.ValidateForDownload(config.Erp);
 
-                _logger.LogInformation("Downloading installation file {ErpInstallationFilePath}", config.Erp.InstallationFilePath!);
-                using var client = new WebClient(config.Erp.Url!, config.Erp.InstallationFilePath!);
-                client.ProgressChanged += OnDownloadProgressChanged(ctx);
-                await client.DownloadFileAsync();
-            });
+                        _logger.LogInformation(
+                            "Downloading installation file {ErpInstallationFilePath}",
+                            config.Erp.InstallationFilePath!
+                        );
+                        using var client = new WebClient(
+                            config.Erp.Url!,
+                            config.Erp.InstallationFilePath!
+                        );
+                        client.ProgressChanged += OnDownloadProgressChanged(ctx);
+                        await client.DownloadFileAsync();
+                    }
+                );
             _logger.LogInformation("DownloadErp action success");
         }
         catch (Exception e)
@@ -81,23 +99,40 @@ public class ErpService : IErpService
         _logger.LogInformation("Execute InstallErp action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Install ERP", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Install ERP",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Erp)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ErpValidator.ValidateForInstall(config.Erp);
+                        _logger.LogInformation("Validate configuration");
+                        ErpValidator.ValidateForInstall(config.Erp);
 
-                _logger.LogInformation("Starting installing ERP to {Dir}", config.Erp.InstallationDirectory);
-                ctx.Status("Installation in progress, please wait ...");
-                var processArgs = GetErpInstallCmdArgs(config.Erp.InstallationFilePath!,
-                    config.Erp.InstallationDirectory!);
-                var processHelper = new ProcessHelper(Messages.Msiexec, processArgs, ctx);
-                await processHelper.Execute();
-                await Task.Run(() => { File.Delete(config.Erp.InstallationFilePath!); });
-            });
-            
+                        _logger.LogInformation(
+                            "Starting installing ERP to {Dir}",
+                            config.Erp.InstallationDirectory
+                        );
+                        ctx.Status("Installation in progress, please wait ...");
+                        var processArgs = GetErpInstallCmdArgs(
+                            config.Erp.InstallationFilePath!,
+                            config.Erp.InstallationDirectory!
+                        );
+                        var processHelper = new ProcessHelper(Messages.Msiexec, processArgs, ctx);
+                        await processHelper.Execute();
+                        await Task.Run(() =>
+                        {
+                            File.Delete(config.Erp.InstallationFilePath!);
+                        });
+                    }
+                );
+
             _logger.LogInformation("Install ERP success");
         }
         catch (Exception e)
@@ -116,19 +151,34 @@ public class ErpService : IErpService
         _logger.LogInformation("Execute UninstallErp action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Uninstalling ERP", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Erp));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Uninstalling ERP",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Erp)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ErpValidator.ValidateForDelete(config.Erp);
+                        _logger.LogInformation("Validate configuration");
+                        ErpValidator.ValidateForDelete(config.Erp);
 
-                _logger.LogInformation("Start uninstalling ERP from {Dir}", config.Erp.InstallationDirectory);
-                ctx.Status("Uninstall ERP in progress, please wait ...");
-                await Task.Run(() => { Directory.Delete(config.Erp.InstallationDirectory!, true); });
-            });
-            
+                        _logger.LogInformation(
+                            "Start uninstalling ERP from {Dir}",
+                            config.Erp.InstallationDirectory
+                        );
+                        ctx.Status("Uninstall ERP in progress, please wait ...");
+                        await Task.Run(() =>
+                        {
+                            Directory.Delete(config.Erp.InstallationDirectory!, true);
+                        });
+                    }
+                );
+
             _logger.LogInformation("Uninstall ERP success");
         }
         catch (Exception e)

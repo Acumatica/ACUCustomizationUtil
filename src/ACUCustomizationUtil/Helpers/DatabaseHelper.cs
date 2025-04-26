@@ -10,7 +10,7 @@ public class DatabaseHelper
 {
     private readonly Func<DbConnection> _connectionFactory;
     private readonly IAcuConfiguration _config;
-    
+
     public DatabaseHelper(IAcuConfiguration config)
     {
         _config = config;
@@ -24,8 +24,9 @@ public class DatabaseHelper
         const int companyId = 2;
         const string nullValue = null!;
         const int zeroValue = 0;
-        
-        const string sql = @"UPDATE users 
+
+        const string sql =
+            @"UPDATE users 
                              SET LockedOutDate = @NullValue, 
                                  LastLockedOutDate = @NullValue, 
                                  FailedPasswordAttemptCount = @ZeroValue, 
@@ -35,8 +36,15 @@ public class DatabaseHelper
                                AND CompanyID = @CompanyID";
         object[] parameters =
         {
-            new { NullValue = nullValue,  ZeroValue = zeroValue, UserName = username, Password = password, CompanyId = companyId }
-        }; 
+            new
+            {
+                NullValue = nullValue,
+                ZeroValue = zeroValue,
+                UserName = username,
+                Password = password,
+                CompanyId = companyId,
+            },
+        };
         await using var connection = _connectionFactory();
         await connection.ExecuteAsync(sql, parameters);
     }
@@ -45,8 +53,9 @@ public class DatabaseHelper
     {
         const string serverLogin = @"IIS APPPOOL\DefaultAppPool";
         const string databaseUser = @"DefaultAppPool";
-        
-        const string sql = @"IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = @ServerLogin)
+
+        const string sql =
+            @"IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = @ServerLogin)
                               BEGIN
                                 EXEC('
                                     CREATE LOGIN ['+@ServerLogin+']
@@ -54,33 +63,38 @@ public class DatabaseHelper
                                     DEFAULT_LANGUAGE=[us_english]
                                 ')
                               END";
-        
-        const string sql1 = @"IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = @DatabaseUser)
+
+        const string sql1 =
+            @"IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = @DatabaseUser)
                               BEGIN
                                 EXEC('
                                     CREATE USER '+@DatabaseUser+'
                                     FOR LOGIN ['+@ServerLogin+']
                                 ')
                               END";
-        
-        const string sql2 = @"IF EXISTS (SELECT name FROM sys.database_principals WHERE name = @DatabaseUser)
+
+        const string sql2 =
+            @"IF EXISTS (SELECT name FROM sys.database_principals WHERE name = @DatabaseUser)
                               BEGIN
                                 EXEC sp_addrolemember 'db_owner', @DatabaseUser
                               END";
-        
+
         await using var connection = _connectionFactory();
         await connection.OpenAsync();
         var tr = await connection.BeginTransactionAsync();
         try
         {
             //Create login
-            object[] parameters = { new {ServerLogin = serverLogin } };
+            object[] parameters = { new { ServerLogin = serverLogin } };
             await connection.ExecuteAsync(sql, parameters, tr);
 
             //Create db user
-            object[] parametersA = { new {ServerLogin = serverLogin, DatabaseUser = databaseUser } };
+            object[] parametersA =
+            {
+                new { ServerLogin = serverLogin, DatabaseUser = databaseUser },
+            };
             await connection.ExecuteAsync(sql1, parametersA, tr);
-        
+
             //Add role to user
             object[] parametersB = { new { DatabaseUser = databaseUser } };
             await connection.ExecuteAsync(sql2, parametersB, tr);
@@ -94,16 +108,19 @@ public class DatabaseHelper
         }
     }
 
-    public async Task<IEnumerable<CustomizationProjectEntity>?> GetCustomizationProjectEntitiesAsync(string projectName)
+    public async Task<IEnumerable<CustomizationProjectEntity>?> GetCustomizationProjectEntitiesAsync(
+        string projectName
+    )
     {
-        const string sql = @"SELECT * FROM CustObject 
+        const string sql =
+            @"SELECT * FROM CustObject 
                                  WHERE ProjectID IN 
                                       (SELECT TOP 1 ProjID 
                                        FROM CustProject 
                                        WHERE Name = @ProjectName) 
                                  ORDER by Type";
-        
-        object param = new {ProjectName = projectName };
+
+        object param = new { ProjectName = projectName };
         await using var connection = _connectionFactory();
         return await connection.QueryAsync<CustomizationProjectEntity>(sql, param);
     }
@@ -111,9 +128,8 @@ public class DatabaseHelper
     public async Task<CustomizationProject?> GetCustomizationProjectAsync(string projectName)
     {
         const string sql = @"SELECT * FROM CustProject WHERE Name = @ProjectName";
-        object param =  new {ProjectName = projectName } ;
+        object param = new { ProjectName = projectName };
         await using var connection = _connectionFactory();
         return await connection.QuerySingleAsync<CustomizationProject>(sql, param);
     }
-
 }

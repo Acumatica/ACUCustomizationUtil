@@ -35,32 +35,52 @@ public class SiteService : ISiteService
         _logger.LogInformation("Execute InstallSite action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Install Acumatica instance", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Install Acumatica instance",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Site)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SiteValidator.ValidateForInstall(config.Site);
-                SiteValidator.ValidateForInstallV(config);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SiteValidator.ValidateForInstall(config.Site);
+                        SiteValidator.ValidateForInstallV(config);
 
-                //Install
-                _logger.LogInformation("Installing new Acumatica instance {Instance}", config.Site.InstanceName);
-                ctx.Status("Installation in progress, please wait ...");
-                var processArgs = GetSiteInstallCmdArgs(config.Site);
-                var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
-                await processHelper.Execute();
-                
-                //Fix DB
-                ctx.Status("Update some database values, please wait ...");
-                var dbHelper = new DatabaseHelper(config);
-                _logger.LogInformation("Reset admin passwords to default for new Acumatica instance");
-                _logger.LogInformation("Check & create server login for IIS DefaultAppPool");
-                await dbHelper.UpdateAdminPasswordDefault();
-                await dbHelper.UpdateServerLoginDefault();
-            });
+                        //Install
+                        _logger.LogInformation(
+                            "Installing new Acumatica instance {Instance}",
+                            config.Site.InstanceName
+                        );
+                        ctx.Status("Installation in progress, please wait ...");
+                        var processArgs = GetSiteInstallCmdArgs(config.Site);
+                        var processHelper = new ProcessHelper(
+                            config.Site.AcumaticaToolPath!,
+                            processArgs,
+                            ctx
+                        );
+                        await processHelper.Execute();
+
+                        //Fix DB
+                        ctx.Status("Update some database values, please wait ...");
+                        var dbHelper = new DatabaseHelper(config);
+                        _logger.LogInformation(
+                            "Reset admin passwords to default for new Acumatica instance"
+                        );
+                        _logger.LogInformation(
+                            "Check & create server login for IIS DefaultAppPool"
+                        );
+                        await dbHelper.UpdateAdminPasswordDefault();
+                        await dbHelper.UpdateServerLoginDefault();
+                    }
+                );
             _logger.LogInformation("InstallSite action success");
         }
         catch (Exception? e)
@@ -75,22 +95,38 @@ public class SiteService : ISiteService
 
         try
         {
-            await AnsiConsole.Status().StartAsync("Update Acumatica instance", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Update Acumatica instance",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Site)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SiteValidator.ValidateForUpdate(config.Site);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SiteValidator.ValidateForUpdate(config.Site);
 
-                _logger.LogInformation("Updating Acumatica instance {Instance}", config.Site.InstanceName);
-                ctx.Status("Updating in progress, please wait ...");
-                var processArgs = GetSiteUpdateCmdArgs(config.Site);
-                var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
-                await processHelper.Execute();
-            });
+                        _logger.LogInformation(
+                            "Updating Acumatica instance {Instance}",
+                            config.Site.InstanceName
+                        );
+                        ctx.Status("Updating in progress, please wait ...");
+                        var processArgs = GetSiteUpdateCmdArgs(config.Site);
+                        var processHelper = new ProcessHelper(
+                            config.Site.AcumaticaToolPath!,
+                            processArgs,
+                            ctx
+                        );
+                        await processHelper.Execute();
+                    }
+                );
 
             _logger.LogInformation("UpdateSite action complete");
         }
@@ -105,22 +141,38 @@ public class SiteService : ISiteService
         _logger.LogInformation("Execute UpdateDatabase action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Update Acumatica database", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Update Acumatica database",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Site)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SiteValidator.ValidateForUpdate(config.Site);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SiteValidator.ValidateForUpdate(config.Site);
 
-                _logger.LogInformation("Updating Acumatica database {Database}", config.Site.DbName);
-                ctx.Status("Update in progress, please wait ...");
-                var processArgs = GetDatabaseUpdateCmdArgs(config.Site);
-                var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
-                await processHelper.Execute();
-            });
+                        _logger.LogInformation(
+                            "Updating Acumatica database {Database}",
+                            config.Site.DbName
+                        );
+                        ctx.Status("Update in progress, please wait ...");
+                        var processArgs = GetDatabaseUpdateCmdArgs(config.Site);
+                        var processHelper = new ProcessHelper(
+                            config.Site.AcumaticaToolPath!,
+                            processArgs,
+                            ctx
+                        );
+                        await processHelper.Execute();
+                    }
+                );
             _logger.LogInformation("UpdateDatabase action complete");
         }
         catch (Exception e)
@@ -134,22 +186,35 @@ public class SiteService : ISiteService
         _logger.LogInformation("Execute DeleteSite action");
         try
         {
-            await AnsiConsole.Status().StartAsync("Delete Acumatica instance", async ctx =>
-            {
-                _logger.LogInformation("Reading configuration");
-                ctx.Status("Reading configuration ...");
-                ConfigurationHelper.PrintConfiguration(config, _logger, nameof(IAcuConfiguration.Site));
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Delete Acumatica instance",
+                    async ctx =>
+                    {
+                        _logger.LogInformation("Reading configuration");
+                        ctx.Status("Reading configuration ...");
+                        ConfigurationHelper.PrintConfiguration(
+                            config,
+                            _logger,
+                            nameof(IAcuConfiguration.Site)
+                        );
 
-                _logger.LogInformation("Validate configuration");
-                ctx.Status("Validate configuration ...");
-                SiteValidator.ValidateForDelete(config.Site);
+                        _logger.LogInformation("Validate configuration");
+                        ctx.Status("Validate configuration ...");
+                        SiteValidator.ValidateForDelete(config.Site);
 
-                _logger.LogInformation("Deleting Acumatica instance");
-                ctx.Status("Deletion in progress, please wait ...");
-                var processArgs = GetSiteDeleteCmdArgs(config.Site);
-                var processHelper = new ProcessHelper(config.Site.AcumaticaToolPath!, processArgs, ctx);
-                await processHelper.Execute();
-            });
+                        _logger.LogInformation("Deleting Acumatica instance");
+                        ctx.Status("Deletion in progress, please wait ...");
+                        var processArgs = GetSiteDeleteCmdArgs(config.Site);
+                        var processHelper = new ProcessHelper(
+                            config.Site.AcumaticaToolPath!,
+                            processArgs,
+                            ctx
+                        );
+                        await processHelper.Execute();
+                    }
+                );
             _logger.LogInformation("DeleteSite action complete");
         }
         catch (Exception e)

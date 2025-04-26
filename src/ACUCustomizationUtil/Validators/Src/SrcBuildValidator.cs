@@ -12,7 +12,7 @@ internal class SrcBuildValidator : AbstractValidator<ISrcConfiguration>
         RuleFor(c => c.PkgSourceBinDirectory).NotNull();
         RuleFor(c => c.MsBuildPath).Must(File.Exists).When(c => c.MsBuildPath != null);
         RuleFor(c => c.AssemblyInfoPath).NotNull().Must(File.Exists);
-		RuleFor(c => c.MsBuildTargetDirectory).NotNull();
+        RuleFor(c => c.MsBuildTargetDirectory).NotNull();
         RuleFor(c => c.MsBuildAssemblyName).NotNull();
         RuleFor(c => c.MsBuildSolutionFile).NotNull().Must(File.Exists);
     }

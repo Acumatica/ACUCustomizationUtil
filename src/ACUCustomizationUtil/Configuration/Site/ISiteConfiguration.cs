@@ -17,6 +17,8 @@ public interface ISiteConfiguration
     string? AcumaticaAdminPassword { get; }
     string? IisAppPool { get; }
     string? IisWebSite { get; }
-    [JsonIgnore] bool IsNotNull { get; }
+
+    [JsonIgnore]
+    bool IsNotNull { get; }
     ISiteConfiguration SetDefaultValues(IAcuConfiguration configuration);
 }

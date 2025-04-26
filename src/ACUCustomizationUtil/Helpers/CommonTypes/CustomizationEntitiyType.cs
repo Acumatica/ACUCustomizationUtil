@@ -18,5 +18,5 @@ public enum CustomizationEntityType
     WikiArticle,
     EntityEndpoint,
     ReportDefinition,
-    PushNotification
+    PushNotification,
 }

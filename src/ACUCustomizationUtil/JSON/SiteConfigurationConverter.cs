@@ -7,8 +7,11 @@ namespace ACUCustomizationUtils.JSON;
 
 public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
 {
-    public override ISiteConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert,
-        JsonSerializerOptions options)
+    public override ISiteConfiguration Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
@@ -16,8 +19,10 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
         var site = new SiteConfiguration();
         while (reader.Read())
         {
-            if (reader.TokenType == JsonTokenType.EndObject) return site;
-            if (reader.TokenType != JsonTokenType.PropertyName) throw new JsonException("Expected PropertyName token");
+            if (reader.TokenType == JsonTokenType.EndObject)
+                return site;
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("Expected PropertyName token");
             var propName = reader.GetString();
             reader.Read();
             switch (propName?.FirstCharToUpper())
@@ -65,14 +70,17 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
                 case nameof(site.AcumaticaAdminPassword):
                     site.AcumaticaAdminPassword = reader.GetString();
                     break;
-                
             }
         }
 
         throw new JsonException("Expected EndObject token");
     }
 
-    public override void Write(Utf8JsonWriter writer, ISiteConfiguration value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer,
+        ISiteConfiguration value,
+        JsonSerializerOptions options
+    )
     {
         throw new NotImplementedException();
     }

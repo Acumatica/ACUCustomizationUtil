@@ -32,6 +32,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("BuildUser", "aslusar")]
 [assembly: AssemblyMetadata("BuildMachine", "SPRINT039")]
 [assembly: AssemblyMetadata("MakeMode", "Base")]
-
-
-

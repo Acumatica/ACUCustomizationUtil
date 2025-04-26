@@ -14,8 +14,12 @@ public interface IPackageConfiguration
     string? Branch { get; set; }
     string? PkgName { get; }
     string? PkgDirectory { get; }
-    [JsonIgnore] string? PackageFilePath { get; }
-    [JsonIgnore] bool IsNotNull { get; }
+
+    [JsonIgnore]
+    string? PackageFilePath { get; }
+
+    [JsonIgnore]
+    bool IsNotNull { get; }
 
     IPackageConfiguration SetDefaultValues(IAcuConfiguration configuration);
 }

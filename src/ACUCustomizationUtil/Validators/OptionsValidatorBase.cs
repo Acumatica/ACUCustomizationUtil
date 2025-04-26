@@ -2,6 +2,7 @@
 using FluentValidation;
 
 namespace ACUCustomizationUtils.Validators;
+
 /// <summary>
 /// Base abstract option validator
 /// </summary>

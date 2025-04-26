@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ACUCustomizationUtils.Helpers;
 
-public static class ConfigurationHelper 
+public static class ConfigurationHelper
 {
     public static void WriteConfig(IAcuConfiguration config)
     {
@@ -13,14 +13,17 @@ public static class ConfigurationHelper
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
+            WriteIndented = true,
         };
         var configJson = JsonSerializer.Serialize(config, options);
         File.WriteAllText("acu.json", configJson);
     }
 
-    public static IAcuConfiguration GetConfiguration(FileSystemInfo? configFile, FileSystemInfo? userConfigFile,
-        IAcuConfiguration? userInput = null)
+    public static IAcuConfiguration GetConfiguration(
+        FileSystemInfo? configFile,
+        FileSystemInfo? userConfigFile,
+        IAcuConfiguration? userInput = null
+    )
     {
         //Read configurations
         var config = ReadConfig(configFile?.FullName);
@@ -47,11 +50,16 @@ public static class ConfigurationHelper
         }
     }
 
-    public static void PrintConfiguration<T>(IAcuConfiguration config, ILogger<T> logger, params string[]? types)
+    public static void PrintConfiguration<T>(
+        IAcuConfiguration config,
+        ILogger<T> logger,
+        params string[]? types
+    )
     {
         var res = new List<(string?, string, object)>();
         ReadConfigurationValues(config, nameof(IAcuConfiguration), res);
-        if (!res.Any()) return;
+        if (!res.Any())
+            return;
 
         logger.LogInformation("Current configuration parameters:");
         foreach (var (type, name, value) in res.Where(r => types?.Contains(r.Item1) ?? true))
@@ -60,18 +68,23 @@ public static class ConfigurationHelper
 
     private static IAcuConfiguration ReadConfig(string? filename)
     {
-        if (filename == null || !File.Exists(filename)) return AcuNullConfiguration.Instance;
+        if (filename == null || !File.Exists(filename))
+            return AcuNullConfiguration.Instance;
         var options = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
         var data = File.ReadAllText(filename);
         var config = JsonSerializer.Deserialize<IAcuConfiguration>(data, options);
         return config!;
     }
 
-    private static void ReadConfigurationValues(object config, string? currentConfigType,
-        ICollection<(string?, string, object)> res)
+    private static void ReadConfigurationValues(
+        object config,
+        string? currentConfigType,
+        ICollection<(string?, string, object)> res
+    )
     {
         var t = config.GetType();
         var properties = t.GetProperties().Where(prop => prop is { CanRead: true, CanWrite: true });
@@ -85,7 +98,8 @@ public static class ConfigurationHelper
             else
             {
                 var value = prop.GetValue(config, null);
-                if (value != null) res.Add((currentConfigType, prop.Name, value));
+                if (value != null)
+                    res.Add((currentConfigType, prop.Name, value));
             }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
- 
+
 namespace ACUCustomizationUtils.Helpers.RestModel.Request
 {
     internal class Login

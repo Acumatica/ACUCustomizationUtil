@@ -1,8 +1,9 @@
 ﻿using ACUCustomizationUtils.Configuration.ACU;
 
 namespace ACUCustomizationUtils.Validators.Src;
+
 /// <summary>
-/// Configuration validator - validate required configuration parameters for execute Code subcommands 
+/// Configuration validator - validate required configuration parameters for execute Code subcommands
 /// </summary>
 /// <remarks>
 /// Authored by Aleksej Slusar
@@ -29,5 +30,4 @@ public abstract class SrcValidator : OptionsValidatorBase
         Validate(configuration.Pkg, new PackageBuildValidator());
         Validate(configuration.Src, new SrcBuildValidator());
     }
-    
 }

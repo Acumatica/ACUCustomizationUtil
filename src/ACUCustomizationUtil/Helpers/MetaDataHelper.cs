@@ -1,33 +1,33 @@
-﻿using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration.ACU;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using ACUCustomizationUtils.Common;
+using ACUCustomizationUtils.Configuration.ACU;
 
 namespace ACUCustomizationUtils.Helpers
 {
     public class MetaDataHelper(IAcuConfiguration config)
-	{
+    {
         public const string MetadataFileName = "manifest.json";
-		private readonly IAcuConfiguration _config = config;
+        private readonly IAcuConfiguration _config = config;
 
-		public void SetBuildVersion()
-		{
+        public void SetBuildVersion()
+        {
             try
             {
-				SetAssemblyVersion();
+                SetAssemblyVersion();
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error writing version to file AssemblyInfo.cs: {ex}");
             }
-		}
+        }
 
-		public void SetBuildMetadata()
+        public void SetBuildMetadata()
         {
             try
             {
-				SetAssemblyMetadata();
+                SetAssemblyMetadata();
             }
             catch (Exception ex)
             {
@@ -35,131 +35,159 @@ namespace ACUCustomizationUtils.Helpers
             }
         }
 
-		private void SetAssemblyVersion()
-		{
-			var assemblyInfoPath = GetAccemblyInfoFullPath();
-			var version = GetAssemblyVersion();
+        private void SetAssemblyVersion()
+        {
+            var assemblyInfoPath = GetAccemblyInfoFullPath();
+            var version = GetAssemblyVersion();
 
-			if (version != null)
-			{
-				AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, "AssemblyVersion", null, version);
-				AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, "AssemblyFileVersion", null, version);
-			}
-			else
-			{
-				throw new ArgumentNullException(nameof(version), "Version is null");
-			}
-		}
+            if (version != null)
+            {
+                AddOrUpdateAssemblyMetadataAttribute(
+                    assemblyInfoPath,
+                    "AssemblyVersion",
+                    null,
+                    version
+                );
+                AddOrUpdateAssemblyMetadataAttribute(
+                    assemblyInfoPath,
+                    "AssemblyFileVersion",
+                    null,
+                    version
+                );
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(version), "Version is null");
+            }
+        }
 
-		private void SetAssemblyMetadata()
-		{
-			string assemblyInfoPath = GetAccemblyInfoFullPath();
-			
-			// Define metadata values
-			var newValues = new Dictionary<string, string>
-			{
-				["GitBranch"] = GetCurrentGitBranch(),
-				["GitHash"] = GetCurrentGitHash(),
-				["BuildUser"] = Environment.UserName,
-				["BuildMachine"] = Environment.MachineName
-			};
+        private void SetAssemblyMetadata()
+        {
+            string assemblyInfoPath = GetAccemblyInfoFullPath();
 
-			foreach (var attr in newValues)
-			{
-				AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, "AssemblyMetadata", attr.Key, attr.Value);
-			}				
-		}
+            // Define metadata values
+            var newValues = new Dictionary<string, string>
+            {
+                ["GitBranch"] = GetCurrentGitBranch(),
+                ["GitHash"] = GetCurrentGitHash(),
+                ["BuildUser"] = Environment.UserName,
+                ["BuildMachine"] = Environment.MachineName,
+            };
+
+            foreach (var attr in newValues)
+            {
+                AddOrUpdateAssemblyMetadataAttribute(
+                    assemblyInfoPath,
+                    "AssemblyMetadata",
+                    attr.Key,
+                    attr.Value
+                );
+            }
+        }
 
         public string CreateMetadataJson()
         {
-			var data = new
+            var data = new
             {
                 GitBranch = GetCurrentGitBranch(),
-				GitHash = GetCurrentGitHash(),
-				BuildUser = Environment.UserName,
-				BuildMachine = Environment.MachineName,
-				AssemblyVersion = GetAssemblyInfoAttributeValue(GetAccemblyInfoFullPath(), "AssemblyVersion"),
-				_config.Src.MakeMode
-			};
+                GitHash = GetCurrentGitHash(),
+                BuildUser = Environment.UserName,
+                BuildMachine = Environment.MachineName,
+                AssemblyVersion = GetAssemblyInfoAttributeValue(
+                    GetAccemblyInfoFullPath(),
+                    "AssemblyVersion"
+                ),
+                _config.Src.MakeMode,
+            };
 
-			// Serialize the object to JSON
-			JsonSerializerOptions options = new()
-			{
-				WriteIndented = true
-			};
-			
-			return JsonSerializer.Serialize(data, options);
-		}
+            // Serialize the object to JSON
+            JsonSerializerOptions options = new() { WriteIndented = true };
 
-		private static void AddOrUpdateAssemblyMetadataAttribute(string filePath, string attributeName, string? key, string value)
-		{
-			string content = File.ReadAllText(filePath);
-			string attributePattern;
-			string replacement;
-
-			if (!string.IsNullOrEmpty(key))
-			{
-				// Пример: [assembly: AssemblyMetadata("GitBranch", "main")]
-				attributePattern = $@"\[assembly:\s*{Regex.Escape(attributeName)}\(""{Regex.Escape(key)}"",\s*"".*?""\)\]";
-				replacement = $@"[assembly: {attributeName}(""{key}"", ""{value}"")]";
-			}
-			else
-			{
-				// Пример: [assembly: AssemblyTitle("MyApp")]
-				attributePattern = $@"\[assembly:\s*{Regex.Escape(attributeName)}\(\s*""[^""]*""\s*\)\]";
-				replacement = $@"[assembly: {attributeName}(""{value}"")]";
-			}
-
-			if (Regex.IsMatch(content, attributePattern))
-			{
-				// Обновляем существующий атрибут
-				content = Regex.Replace(content, attributePattern, replacement);
-			}
-			else
-			{
-				// Добавляем новый атрибут после последнего using/атрибута
-				var lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
-				int insertIndex = lines.FindLastIndex(line =>
-					line.TrimStart().StartsWith("[assembly:", StringComparison.OrdinalIgnoreCase) ||
-					line.TrimStart().StartsWith("using ", StringComparison.OrdinalIgnoreCase)
-				);
-
-				if (insertIndex == -1) insertIndex = lines.Count - 1;
-
-				lines.Insert(insertIndex + 1, replacement);
-				content = string.Join(Environment.NewLine, lines);
-			}
-
-			File.WriteAllText(filePath, content);
-		}
-
-		private string GetAccemblyInfoFullPath()
-        {
-            if (_config.Src.AssemblyInfoPath != null && File.Exists(_config.Src.AssemblyInfoPath))
-			{
-				return _config.Src.AssemblyInfoPath;
-			}
-
-			throw new ArgumentNullException(nameof(_config.Src.AssemblyInfoPath), "Assembly name is null");
+            return JsonSerializer.Serialize(data, options);
         }
 
-		private static string GetCurrentGitBranch()
+        private static void AddOrUpdateAssemblyMetadataAttribute(
+            string filePath,
+            string attributeName,
+            string? key,
+            string value
+        )
+        {
+            string content = File.ReadAllText(filePath);
+            string attributePattern;
+            string replacement;
+
+            if (!string.IsNullOrEmpty(key))
+            {
+                // Пример: [assembly: AssemblyMetadata("GitBranch", "main")]
+                attributePattern =
+                    $@"\[assembly:\s*{Regex.Escape(attributeName)}\(""{Regex.Escape(key)}"",\s*"".*?""\)\]";
+                replacement = $@"[assembly: {attributeName}(""{key}"", ""{value}"")]";
+            }
+            else
+            {
+                // Пример: [assembly: AssemblyTitle("MyApp")]
+                attributePattern =
+                    $@"\[assembly:\s*{Regex.Escape(attributeName)}\(\s*""[^""]*""\s*\)\]";
+                replacement = $@"[assembly: {attributeName}(""{value}"")]";
+            }
+
+            if (Regex.IsMatch(content, attributePattern))
+            {
+                // Обновляем существующий атрибут
+                content = Regex.Replace(content, attributePattern, replacement);
+            }
+            else
+            {
+                // Добавляем новый атрибут после последнего using/атрибута
+                var lines = content
+                    .Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+                    .ToList();
+                int insertIndex = lines.FindLastIndex(line =>
+                    line.TrimStart().StartsWith("[assembly:", StringComparison.OrdinalIgnoreCase)
+                    || line.TrimStart().StartsWith("using ", StringComparison.OrdinalIgnoreCase)
+                );
+
+                if (insertIndex == -1)
+                    insertIndex = lines.Count - 1;
+
+                lines.Insert(insertIndex + 1, replacement);
+                content = string.Join(Environment.NewLine, lines);
+            }
+
+            File.WriteAllText(filePath, content);
+        }
+
+        private string GetAccemblyInfoFullPath()
+        {
+            if (_config.Src.AssemblyInfoPath != null && File.Exists(_config.Src.AssemblyInfoPath))
+            {
+                return _config.Src.AssemblyInfoPath;
+            }
+
+            throw new ArgumentNullException(
+                nameof(_config.Src.AssemblyInfoPath),
+                "Assembly name is null"
+            );
+        }
+
+        private static string GetCurrentGitBranch()
         {
             ProcessStartInfo psi = new()
-			{
+            {
                 FileName = "git",
                 Arguments = "rev-parse --abbrev-ref HEAD",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
             };
 
-			using Process process = new() { StartInfo = psi };
-			process.Start();
-			string output = process.StandardOutput.ReadToEnd().Trim();
-			process.WaitForExit();
-			return output;
-		}
+            using Process process = new() { StartInfo = psi };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd().Trim();
+            process.WaitForExit();
+            return output;
+        }
 
         private static string GetCurrentGitHash()
         {
@@ -169,75 +197,79 @@ namespace ACUCustomizationUtils.Helpers
                 Arguments = "rev-parse HEAD",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
             };
 
-			using Process process = new() { StartInfo = psi };
-			process.Start();
-			string output = process.StandardOutput.ReadToEnd().Trim();
-			process.WaitForExit();
-			return output;
-		}
+            using Process process = new() { StartInfo = psi };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd().Trim();
+            process.WaitForExit();
+            return output;
+        }
 
-		public string GetAssemblyVersion()
-		{
-			var datePart = GetDateVersion();
-			var isvPart = GetISVVersion();
+        public string GetAssemblyVersion()
+        {
+            var datePart = GetDateVersion();
+            var isvPart = GetISVVersion();
 
-			var majorPart = $"{_config.Erp.ErpVersion?[..6]}";
-			var makeMode = _config.Src.MakeMode ?? Messages.MakeModeBase;
-			var minorPart = makeMode switch
-			{
-				Messages.MakeModeBase => datePart,
-				Messages.MakeModeQA => datePart,
-				Messages.MakeModeISV => isvPart,
-				_ => datePart
-			};
+            var majorPart = $"{_config.Erp.ErpVersion?[..6]}";
+            var makeMode = _config.Src.MakeMode ?? Messages.MakeModeBase;
+            var minorPart = makeMode switch
+            {
+                Messages.MakeModeBase => datePart,
+                Messages.MakeModeQA => datePart,
+                Messages.MakeModeISV => isvPart,
+                _ => datePart,
+            };
 
-			var version = $"{majorPart}.{minorPart}";
-			return version;
-		}
+            var version = $"{majorPart}.{minorPart}";
+            return version;
+        }
 
-		private static string GetDateVersion()
-		{
-			var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
-			var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
-			return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
-		}
+        private static string GetDateVersion()
+        {
+            var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
+            var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
+            return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
+        }
 
-		private static string GetISVVersion() => DateTime.Now.ToString("yyyy.MM.dd");
+        private static string GetISVVersion() => DateTime.Now.ToString("yyyy.MM.dd");
 
-		public string? GetAssemblyInfoAttributeValue(string filePath, string attributeName, string? key = null)
-		{
-			if (!File.Exists(filePath))
-			{
-				throw new FileNotFoundException($"File not found: {filePath}");
-			}
+        public string? GetAssemblyInfoAttributeValue(
+            string filePath,
+            string attributeName,
+            string? key = null
+        )
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"File not found: {filePath}");
+            }
 
-			string fileContent = File.ReadAllText(filePath);
+            string fileContent = File.ReadAllText(filePath);
 
-			// Pattern to match the attribute: [assembly: AttributeName("value")] or [assembly: AttributeName(key="value")]
-			string pattern = $@"\[assembly:\s*{Regex.Escape(attributeName)}\s*\((?:[^)]*)\)\]";
-			Match match = Regex.Match(fileContent, pattern);
+            // Pattern to match the attribute: [assembly: AttributeName("value")] or [assembly: AttributeName(key="value")]
+            string pattern = $@"\[assembly:\s*{Regex.Escape(attributeName)}\s*\((?:[^)]*)\)\]";
+            Match match = Regex.Match(fileContent, pattern);
 
-			if (!match.Success)
-			{
-				return null;
-			}
+            if (!match.Success)
+            {
+                return null;
+            }
 
-			string attributeContent = match.Value;
+            string attributeContent = match.Value;
 
-			if (string.IsNullOrEmpty(key))
-			{
-				// Find the first quoted value
-				Match valueMatch = Regex.Match(attributeContent, @"""([^""]*)""");
-				return valueMatch.Success ? valueMatch.Groups[1].Value : null;
-			}
+            if (string.IsNullOrEmpty(key))
+            {
+                // Find the first quoted value
+                Match valueMatch = Regex.Match(attributeContent, @"""([^""]*)""");
+                return valueMatch.Success ? valueMatch.Groups[1].Value : null;
+            }
 
-			// Find the value for the specified key
-			string keyPattern = $@"{Regex.Escape(key)}\s*=\s*""([^""]*)""";
-			Match keyMatch = Regex.Match(attributeContent, keyPattern);
-			return keyMatch.Success ? keyMatch.Groups[1].Value : null;
-		}
-	}
+            // Find the value for the specified key
+            string keyPattern = $@"{Regex.Escape(key)}\s*=\s*""([^""]*)""";
+            Match keyMatch = Regex.Match(attributeContent, keyPattern);
+            return keyMatch.Success ? keyMatch.Groups[1].Value : null;
+        }
+    }
 }

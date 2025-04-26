@@ -1,6 +1,7 @@
 using System.CommandLine;
 
 namespace ACUCustomizationUtils.Builders.Commands.Common;
+
 /// <summary>
 /// This class is the base command builder
 /// </summary>
@@ -15,7 +16,10 @@ public abstract class CommandBuilderBase : ICommandBuilder
     protected Option<FileInfo?>? UserConfigOption;
     public abstract Command BuildCommand();
 
-    public ICommandBuilder SetGlobalOptions(Option<FileInfo?> configOption, Option<FileInfo?> userConfigOption)
+    public ICommandBuilder SetGlobalOptions(
+        Option<FileInfo?> configOption,
+        Option<FileInfo?> userConfigOption
+    )
     {
         ConfigOption = configOption;
         UserConfigOption = userConfigOption;

@@ -3,6 +3,7 @@ using Serilog;
 using Serilog.Events;
 
 namespace ACUCustomizationUtils.Builders.Log;
+
 /// <summary>
 /// This class is the point of building an application Logger
 /// </summary>

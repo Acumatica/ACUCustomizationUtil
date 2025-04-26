@@ -11,6 +11,8 @@ internal class PackageUploadValidator : AbstractValidator<IPackageConfiguration>
         RuleFor(c => c.PkgName).NotNull();
         RuleFor(c => c.PkgDirectory).NotNull();
         RuleFor(c => c.PackageFilePath).NotNull();
-        RuleFor(c => c.PackageFilePath).Must(File.Exists).WithMessage("Package {PropertyValue} is not found!");
+        RuleFor(c => c.PackageFilePath)
+            .Must(File.Exists)
+            .WithMessage("Package {PropertyValue} is not found!");
     }
 }

@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
-        <AssemblyName>acu</AssemblyName>
-        <RootNamespace>ACUCustomizationUtils</RootNamespace>
-        <LangVersion>default</LangVersion>
-        <ApplicationIcon>acumatica.ico</ApplicationIcon>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <Deterministic>false</Deterministic>
-        <Company>Sprinterra (c) 2023</Company>
-        <Product>ACU: Acumatica Customizatoin Util</Product>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.1.66" />
-        <PackageReference Include="FluentValidation" Version="11.11.0" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.4" />
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-        <PackageReference Include="Spectre.Console" Version="0.50.0" />
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-        <PackageReference Include="System.ServiceModel.Federation" Version="8.1.2" />
-        <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
-        <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="acu.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
-        <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
-        <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Helpers\Proxy\" />
-      <Folder Include="Properties\" />
-    </ItemGroup>
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-      <Exec Command="xcopy /F /Y $(ProjectDir)acu.json $(ProjectDir)..\..\proj\" />
-    </Target>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <AssemblyName>acu</AssemblyName>
+    <RootNamespace>ACUCustomizationUtils</RootNamespace>
+    <LangVersion>default</LangVersion>
+    <ApplicationIcon>acumatica.ico</ApplicationIcon>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <Company>Sprinterra (c) 2023</Company>
+    <Product>ACU: Acumatica Customizatoin Util</Product>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.4" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Spectre.Console" Version="0.50.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="8.1.2" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="acu.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\Proxy\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="xcopy /F /Y $(ProjectDir)acu.json $(ProjectDir)..\..\proj\" />
+  </Target>
 </Project>

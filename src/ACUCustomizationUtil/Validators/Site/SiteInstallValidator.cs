@@ -19,7 +19,6 @@ internal class SiteInstallValidator : AbstractValidator<ISiteConfiguration>
         RuleFor(c => c.DbName).NotNull();
         RuleFor(c => c.IisAppPool).NotNull();
         RuleFor(c => c.IisWebSite).NotNull();
-        
     }
 }
 
@@ -28,7 +27,10 @@ internal class SiteInstallValidatorV : AbstractValidator<IAcuConfiguration>
     public SiteInstallValidatorV()
     {
         RuleFor(c => c)
-            .Must(c => c.Erp.ErpVersion == FileVersionInfo.GetVersionInfo(c.Site.AcumaticaToolPath!).FileVersion)
+            .Must(c =>
+                c.Erp.ErpVersion
+                == FileVersionInfo.GetVersionInfo(c.Site.AcumaticaToolPath!).FileVersion
+            )
             .WithMessage("Acumatica tool file version is not equal configured ERP version");
     }
 }

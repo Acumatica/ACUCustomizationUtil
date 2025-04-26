@@ -1,10 +1,10 @@
-﻿using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration.ACU;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
+using ACUCustomizationUtils.Common;
+using ACUCustomizationUtils.Configuration.ACU;
 using static ACUCustomizationUtils.Common.Messages;
 using Request = ACUCustomizationUtils.Helpers.RestModel.Request;
 using Response = ACUCustomizationUtils.Helpers.RestModel.Response;
@@ -16,6 +16,7 @@ namespace ACUCustomizationUtils.Helpers
         private readonly string? _packageName;
         private readonly string? _packageDirectory;
         private readonly HttpClient _client;
+
         public RestClient(IAcuConfiguration configuration)
         {
             var baseAddress = configuration.Pkg.Url!;
@@ -23,20 +24,21 @@ namespace ACUCustomizationUtils.Helpers
             var password = configuration.Pkg.Password!;
             var tenant = configuration.Pkg.Tenant;
             var branch = configuration.Pkg.Branch;
-			_packageName = configuration.Pkg.PkgName;
+            _packageName = configuration.Pkg.PkgName;
             _packageDirectory = configuration.Pkg.PkgDirectory;
             HttpClientHandler options = new()
             {
                 UseCookies = true,
-                CookieContainer = new System.Net.CookieContainer()
+                CookieContainer = new System.Net.CookieContainer(),
             };
 
             _client = new HttpClient(options)
             {
                 BaseAddress = baseAddress,
-				DefaultRequestHeaders = {
-                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") } 
-                }
+                DefaultRequestHeaders =
+                {
+                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") },
+                },
             };
 
             Request.Login login = new()
@@ -45,7 +47,7 @@ namespace ACUCustomizationUtils.Helpers
                 Password = password,
                 Tenant = tenant,
                 Branch = branch,
-                Locale = null
+                Locale = null,
             };
 
             Login(login);
@@ -60,7 +62,10 @@ namespace ACUCustomizationUtils.Helpers
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
 
-            await File.WriteAllBytesAsync(filePath, Convert.FromBase64String(res.ProjectContentBase64));
+            await File.WriteAllBytesAsync(
+                filePath,
+                Convert.FromBase64String(res.ProjectContentBase64)
+            );
         }
 
         public async Task UnpublishAllPackages()
@@ -105,8 +110,14 @@ namespace ACUCustomizationUtils.Helpers
             }
         }
 
-        private async Task<Response.PublishBegin> PublishBeginAsync(string[] projectNames, bool isMergeWithExistingPackages = false, bool isOnlyValidation = false,
-            bool isOnlyDbUpdates = false, bool isReplayPreviouslyExecutedScripts = false, string tenantMode = TenantMode.All)
+        private async Task<Response.PublishBegin> PublishBeginAsync(
+            string[] projectNames,
+            bool isMergeWithExistingPackages = false,
+            bool isOnlyValidation = false,
+            bool isOnlyDbUpdates = false,
+            bool isReplayPreviouslyExecutedScripts = false,
+            string tenantMode = TenantMode.All
+        )
         {
             Request.PublishBegin model = new()
             {
@@ -115,17 +126,20 @@ namespace ACUCustomizationUtils.Helpers
                 IsOnlyValidation = isOnlyValidation,
                 IsOnlyDbUpdates = isOnlyDbUpdates,
                 IsReplayPreviouslyExecutedScripts = isReplayPreviouslyExecutedScripts,
-                TenantMode = tenantMode
+                TenantMode = tenantMode,
             };
             return await PostAsync<Response.PublishBegin>(APIResource.PublishBegin, model);
         }
 
-        private async Task<Response.UnpublishAll> UnpublishAllAsync(string tenantMode = TenantMode.All, string[]? tenantLoginNames = null)
+        private async Task<Response.UnpublishAll> UnpublishAllAsync(
+            string tenantMode = TenantMode.All,
+            string[]? tenantLoginNames = null
+        )
         {
             Request.UnpublishAll model = new()
             {
                 TenantMode = tenantMode,
-                TenantLoginNames = tenantLoginNames
+                TenantLoginNames = tenantLoginNames,
             };
             return await PostAsync<Response.UnpublishAll>(APIResource.UnpublishAll, model);
         }
@@ -135,7 +149,13 @@ namespace ACUCustomizationUtils.Helpers
             return await PostAsync<Response.PublishEnd>(APIResource.PublishEnd, null);
         }
 
-        private async Task<Response.Import> ImportAsync(string projectName, string projectContentBase64, int projectLevel = 0, bool isReplaceIfExists = true, string? projectDescription = null)
+        private async Task<Response.Import> ImportAsync(
+            string projectName,
+            string projectContentBase64,
+            int projectLevel = 0,
+            bool isReplaceIfExists = true,
+            string? projectDescription = null
+        )
         {
             Request.Import model = new()
             {
@@ -148,12 +168,15 @@ namespace ACUCustomizationUtils.Helpers
             return await PostAsync<Response.Import>(APIResource.Import, model);
         }
 
-        private async Task<Response.GetProject> GetProjectAsync(string projectName, bool isAutoResolveConflicts = true)
+        private async Task<Response.GetProject> GetProjectAsync(
+            string projectName,
+            bool isAutoResolveConflicts = true
+        )
         {
             Request.GetProject model = new()
             {
                 IsAutoResolveConflicts = isAutoResolveConflicts,
-                ProjectName = projectName
+                ProjectName = projectName,
             };
             return await PostAsync<Response.GetProject>(APIResource.GetProject, model);
         }
@@ -164,7 +187,8 @@ namespace ACUCustomizationUtils.Helpers
             if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
             {
                 throw new InvalidCredentialException(
-                    $"Error login to service: {response.StatusCode} {response.Content}");
+                    $"Error login to service: {response.StatusCode} {response.Content}"
+                );
             }
         }
 
@@ -191,7 +215,11 @@ namespace ACUCustomizationUtils.Helpers
             HttpRequestMessage message = new(HttpMethod.Post, resource);
             if (model != null)
             {
-                message.Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+                message.Content = new StringContent(
+                    JsonSerializer.Serialize(model),
+                    Encoding.UTF8,
+                    "application/json"
+                );
             }
             return message;
         }

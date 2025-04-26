@@ -18,7 +18,7 @@ public abstract class SrcConfigurationBase : ISrcConfiguration
     public string? PkgDescription { get; set; }
     public string? PkgLevel { get; set; }
     public string? MsBuildPath { get; set; }
-	public string? AssemblyInfoPath { get; set; }
+    public string? AssemblyInfoPath { get; set; }
     public string? MsBuildSolutionFile { get; set; }
     public string? MsBuildTargetDirectory { get; set; }
     public string? MsBuildAssemblyName { get; set; }
@@ -26,17 +26,16 @@ public abstract class SrcConfigurationBase : ISrcConfiguration
     public abstract bool IsNotNull { get; }
     public string? PkgSourceBinDirectory { get; private set; }
 
-
-
-	public ISrcConfiguration SetDefaultValues(IAcuConfiguration configuration)
+    public ISrcConfiguration SetDefaultValues(IAcuConfiguration configuration)
     {
         PkgSourceDirectory = PkgSourceDirectory.TryGetFullDirectoryPath();
         MsBuildTargetDirectory = MsBuildTargetDirectory.TryGetFullDirectoryPath();
         MsBuildPath = MsBuildPath.TryGetFullDirectoryPath();
-		AssemblyInfoPath = AssemblyInfoPath.TryGetFullDirectoryPath();
-		MsBuildSolutionFile = MsBuildSolutionFile.TryGetFullDirectoryPath();
-        if (PkgSourceDirectory != null) PkgSourceBinDirectory = Path.Combine(PkgSourceDirectory, "Bin");
-        
+        AssemblyInfoPath = AssemblyInfoPath.TryGetFullDirectoryPath();
+        MsBuildSolutionFile = MsBuildSolutionFile.TryGetFullDirectoryPath();
+        if (PkgSourceDirectory != null)
+            PkgSourceBinDirectory = Path.Combine(PkgSourceDirectory, "Bin");
+
         return this;
     }
 }

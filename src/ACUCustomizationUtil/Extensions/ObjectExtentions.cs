@@ -5,9 +5,12 @@ public static class ObjectExtensions
     public static T CopyValues<T>(this T target, T source)
     {
         var targetType = target?.GetType();
-        if (targetType == null) return target;
+        if (targetType == null)
+            return target;
 
-        var properties = targetType.GetProperties().Where(prop => prop is { CanRead: true, CanWrite: true });
+        var properties = targetType
+            .GetProperties()
+            .Where(prop => prop is { CanRead: true, CanWrite: true });
         foreach (var prop in properties)
         {
             if (prop.PropertyType.Assembly == targetType.Assembly)
@@ -19,7 +22,8 @@ public static class ObjectExtensions
             else
             {
                 var value = prop.GetValue(source, null);
-                if (value != null) prop.SetValue(target, value, null);
+                if (value != null)
+                    prop.SetValue(target, value, null);
             }
         }
 

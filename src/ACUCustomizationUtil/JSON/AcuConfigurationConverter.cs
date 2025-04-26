@@ -9,8 +9,11 @@ namespace ACUCustomizationUtils.JSON;
 
 public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
 {
-    public override IAcuConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert,
-        JsonSerializerOptions options)
+    public override IAcuConfiguration Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
@@ -24,7 +27,8 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
                 return configuration;
             }
 
-            if (reader.TokenType != JsonTokenType.PropertyName) throw new JsonException("Expected PropertyName token");
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException("Expected PropertyName token");
 
             var propertyName = reader.GetString()?.FirstCharToUpper();
             reader.Read();
@@ -45,13 +49,21 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
 
                 case nameof(configuration.Pkg):
                     var packageConverter = new PackageConfigurationConverter();
-                    var package = packageConverter.Read(ref reader, typeof(IErpConfiguration), options);
+                    var package = packageConverter.Read(
+                        ref reader,
+                        typeof(IErpConfiguration),
+                        options
+                    );
                     configuration.Pkg.CopyValues(package);
                     break;
 
                 case nameof(configuration.Src):
                     var projectConverter = new SrcConfigurationConverter();
-                    var project = projectConverter.Read(ref reader, typeof(IErpConfiguration), options);
+                    var project = projectConverter.Read(
+                        ref reader,
+                        typeof(IErpConfiguration),
+                        options
+                    );
                     configuration.Src.CopyValues(project);
                     break;
             }
@@ -60,7 +72,11 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
         throw new JsonException("Expected EndObject token");
     }
 
-    public override void Write(Utf8JsonWriter writer, IAcuConfiguration value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer,
+        IAcuConfiguration value,
+        JsonSerializerOptions options
+    )
     {
         throw new NotImplementedException();
     }

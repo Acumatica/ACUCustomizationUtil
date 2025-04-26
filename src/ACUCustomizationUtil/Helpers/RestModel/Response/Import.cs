@@ -1,6 +1,4 @@
 ﻿namespace ACUCustomizationUtils.Helpers.RestModel.Response
 {
-    public class Import : Logs
-    {
-    }
+    public class Import : Logs { }
 }

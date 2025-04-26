@@ -5,6 +5,7 @@ using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Services.Src;
 
 namespace ACUCustomizationUtils.Builders.Commands;
+
 /// <summary>
 /// This class is the point of building an application commands routing (Code subcommand)
 /// </summary>
@@ -17,7 +18,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 {
     private readonly ISrcService _projectService = projectService;
 
-	public override Command BuildCommand()
+    public override Command BuildCommand()
     {
         var srcCommand = BuildSrcCommand();
         var makeCommand = BuildMakeCommand();
@@ -27,7 +28,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
         {
             srcCommand,
             makeCommand,
-            compileCommand
+            compileCommand,
         };
 
         return pkgCommand;
@@ -45,12 +46,15 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 
         var command = new Command("make", "Create customization package from source code")
         {
-            sourceDirectory, packageName, packageDirectory, makeMode
+            sourceDirectory,
+            packageName,
+            packageDirectory,
+            makeMode,
         };
 
-        command.SetHandler(_projectService.MakeProjectFromSource,
-            new CodeMakeConfigurationBinder
-            (
+        command.SetHandler(
+            _projectService.MakeProjectFromSource,
+            new CodeMakeConfigurationBinder(
                 ConfigOption!,
                 UserConfigOption!,
                 packageName,
@@ -59,8 +63,9 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
                 projectDescription,
                 projectLevel,
                 makeMode,
-				msAssemblyInfoPath
-			));
+                msAssemblyInfoPath
+            )
+        );
 
         return command;
     }
@@ -74,19 +79,23 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 
         var command = new Command("get", "Get customization project source")
         {
-            packageName, dbConnection, instancePath, sourceDirectory
+            packageName,
+            dbConnection,
+            instancePath,
+            sourceDirectory,
         };
 
-        command.SetHandler(_projectService.GetProjectSource,
-            new CodeSrcConfigurationBinder
-            (
+        command.SetHandler(
+            _projectService.GetProjectSource,
+            new CodeSrcConfigurationBinder(
                 ConfigOption!,
                 UserConfigOption!,
                 packageName,
                 dbConnection,
                 instancePath,
                 sourceDirectory
-            ));
+            )
+        );
         return command;
     }
 
@@ -97,26 +106,28 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
         var msBuildAssemblyFile = GetMsBuildAssemblyFileNameOption();
         var msBuildPath = GetMsBuildPathOption();
         var msAssemblyInfoPath = GetMsBuildAssemblyInfoPathOption();
-        
+
         var command = new Command("build", "Build dll from extension library source code")
         {
-            msBuildSolutionFilePath, 
-            msBuildTargetDirectory, 
-            msBuildAssemblyFile, 
-            msBuildPath, 
-            msAssemblyInfoPath
-		};
+            msBuildSolutionFilePath,
+            msBuildTargetDirectory,
+            msBuildAssemblyFile,
+            msBuildPath,
+            msAssemblyInfoPath,
+        };
 
-        command.SetHandler(_projectService.CompileSolution,
+        command.SetHandler(
+            _projectService.CompileSolution,
             new CodeCompileConfigurationBinder(
                 ConfigOption!,
                 UserConfigOption!,
                 msBuildSolutionFilePath,
-                msBuildTargetDirectory, 
+                msBuildTargetDirectory,
                 msBuildAssemblyFile,
-                msBuildPath, 
+                msBuildPath,
                 msAssemblyInfoPath
-            ));
+            )
+        );
 
         return command;
     }
@@ -155,15 +166,18 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
     {
         return new Option<string>("--pkgDirectory", "Package destination directory");
     }
-    
+
     private static Option<string> GetMsBuildPathOption()
     {
         return new Option<string>("--msBuildPath", "MSBuild full path");
     }
-    
+
     private static Option<string> GetMsBuildAssemblyInfoPathOption()
     {
-        return new Option<string>("--assemblyInfoPath", "External code assembly info file full name");
+        return new Option<string>(
+            "--assemblyInfoPath",
+            "External code assembly info file full name"
+        );
     }
 
     private static Option<string> GetMsBuildSolutionFileNameOption()
@@ -175,7 +189,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
     {
         return new Option<string>("--targetDirectory", "External code build target directory");
     }
-    
+
     private static Option<string> GetMsBuildAssemblyFileNameOption()
     {
         return new Option<string>("--assemblyName", "External code build ");
@@ -185,17 +199,21 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
     {
         return new Option<string>(
             name: "--mode",
-            description: "Mode for make package: QA|ISV", 
+            description: "Mode for make package: QA|ISV",
             parseArgument: result =>
             {
-                if (result.Tokens.Count == 0) return Messages.MakeModeBase;
-                var optionValue = result.Tokens.Single().Value;
-                if (optionValue != Messages.MakeModeBase
-                    && optionValue != Messages.MakeModeQA
-                    && optionValue != Messages.MakeModeISV) 
+                if (result.Tokens.Count == 0)
                     return Messages.MakeModeBase;
-                
+                var optionValue = result.Tokens.Single().Value;
+                if (
+                    optionValue != Messages.MakeModeBase
+                    && optionValue != Messages.MakeModeQA
+                    && optionValue != Messages.MakeModeISV
+                )
+                    return Messages.MakeModeBase;
+
                 return optionValue;
-            });
+            }
+        );
     }
 }

@@ -1,6 +1,6 @@
 <Project>
-    <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
-        <SiteDir Condition="'$(SiteDir)'==''">C:\Acumatica\instance\25.100.0054\Site</SiteDir>
-    </PropertyGroup>  
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <SiteDir Condition="'$(SiteDir)'==''">C:\Acumatica\instance\25.100.0054\Site</SiteDir>
+  </PropertyGroup>
 </Project>

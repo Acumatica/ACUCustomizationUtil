@@ -8,6 +8,7 @@ using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.Site;
 
 namespace ACUCustomizationUtils.Builders.Commands;
+
 /// <summary>
 /// This class is the point of building an application commands routing (Site subcommand)
 /// </summary>
@@ -38,7 +39,7 @@ public class SiteCommandBuilder : CommandBuilderBase
         {
             installCommand,
             updateCommand,
-            deleteCommand
+            deleteCommand,
         };
 
         siteCommand.AddGlobalOption(_acuToolPathOption!);
@@ -62,28 +63,45 @@ public class SiteCommandBuilder : CommandBuilderBase
             instanceNameOption,
             instancePathOption,
             acuAdminName,
-            acuAdminPassword
+            acuAdminPassword,
         };
-        command.SetHandler(async config => { await _siteService.InstallSite(config); },
-            new SiteInstallConfigurationBinder(ConfigOption!, UserConfigOption!, _acuToolPathOption,
+        command.SetHandler(
+            async config =>
+            {
+                await _siteService.InstallSite(config);
+            },
+            new SiteInstallConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                _acuToolPathOption,
                 serverNameOption,
                 databaseNameOption,
                 instanceNameOption,
                 instancePathOption,
                 acuAdminName,
-                acuAdminPassword));
+                acuAdminPassword
+            )
+        );
 
         return command;
     }
-
 
     private Command BuildDeleteCommand()
     {
         var instanceNameOption = GetInstanceOption();
         var command = new Command("delete", "Delete Acumatica instance.") { instanceNameOption };
-        command.SetHandler(async config => { await _siteService.DeleteSite(config); },
-            new SiteDeleteConfigurationBinder(ConfigOption!, UserConfigOption!, _acuToolPathOption,
-                instanceNameOption));
+        command.SetHandler(
+            async config =>
+            {
+                await _siteService.DeleteSite(config);
+            },
+            new SiteDeleteConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                _acuToolPathOption,
+                instanceNameOption
+            )
+        );
 
         return command;
     }
@@ -94,7 +112,8 @@ public class SiteCommandBuilder : CommandBuilderBase
         var updateDatabaseCommand = BuildUpdateDatabaseCommand();
         var command = new Command("update", "Update Acumatica instance.")
         {
-            updateInstanceCommand, updateDatabaseCommand
+            updateInstanceCommand,
+            updateDatabaseCommand,
         };
 
         return command;
@@ -106,12 +125,22 @@ public class SiteCommandBuilder : CommandBuilderBase
         var databaseNameOption = GetDatabaseNameOption();
         var command = new Command("database", "Update Acumatica database.")
         {
-            serverNameOption, databaseNameOption
+            serverNameOption,
+            databaseNameOption,
         };
-        command.SetHandler(async config => { await _siteService.UpdateDatabase(config); },
-            new SiteUpdateDatabaseConfigurationBinder(ConfigOption!, UserConfigOption!, _acuToolPathOption,
+        command.SetHandler(
+            async config =>
+            {
+                await _siteService.UpdateDatabase(config);
+            },
+            new SiteUpdateDatabaseConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                _acuToolPathOption,
                 serverNameOption,
-                databaseNameOption));
+                databaseNameOption
+            )
+        );
 
         return command;
     }
@@ -120,14 +149,20 @@ public class SiteCommandBuilder : CommandBuilderBase
     {
         var instanceNameOption = GetInstanceOption();
 
-        var command = new Command("instance", "Update Acumatica instance.")
-        {
-            instanceNameOption
-        };
+        var command = new Command("instance", "Update Acumatica instance.") { instanceNameOption };
 
-        command.SetHandler(async config => { await _siteService.UpdateSite(config); },
-            new SiteUpdateInstanceConfigurationBinder(ConfigOption!, UserConfigOption!, _acuToolPathOption,
-                instanceNameOption));
+        command.SetHandler(
+            async config =>
+            {
+                await _siteService.UpdateSite(config);
+            },
+            new SiteUpdateInstanceConfigurationBinder(
+                ConfigOption!,
+                UserConfigOption!,
+                _acuToolPathOption,
+                instanceNameOption
+            )
+        );
 
         return command;
     }
@@ -154,8 +189,10 @@ public class SiteCommandBuilder : CommandBuilderBase
 
     private static Option<string> GetServerNameOption()
     {
-        return new Option<string>("--sqlServerName",
-            description: "SQL Server instance for Acumatica database");
+        return new Option<string>(
+            "--sqlServerName",
+            description: "SQL Server instance for Acumatica database"
+        );
     }
 
     private static Option<string> GetInstanceOption()
@@ -171,14 +208,17 @@ public class SiteCommandBuilder : CommandBuilderBase
 
 public class SiteInstallConfigurationBinder : CommandParametersBinder
 {
-    public SiteInstallConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
-        : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public SiteInstallConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
         var acuToolPath = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
         var serverName = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
@@ -198,88 +238,105 @@ public class SiteInstallConfigurationBinder : CommandParametersBinder
                 InstanceName = instanceName,
                 InstancePath = instancePath,
                 AcumaticaAdminName = acuAdminName,
-                AcumaticaAdminPassword = acuAdminPassword
-            }
+                AcumaticaAdminPassword = acuAdminPassword,
+            },
         };
     }
 }
 
 public class SiteDeleteConfigurationBinder : CommandParametersBinder
 {
-    public SiteDeleteConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
-        : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public SiteDeleteConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
-        var acuToolPath =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[0] ?? throw new InvalidOperationException());
-        var instanceName =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[1] ?? throw new InvalidOperationException());
+        var acuToolPath = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[0] ?? throw new InvalidOperationException()
+        );
+        var instanceName = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[1] ?? throw new InvalidOperationException()
+        );
         return new AcuConfiguration
         {
             Site = new SiteConfiguration
             {
                 AcumaticaToolPath = acuToolPath,
-                InstanceName = instanceName
-            }
+                InstanceName = instanceName,
+            },
         };
     }
 }
 
 public class SiteUpdateDatabaseConfigurationBinder : CommandParametersBinder
 {
-    public SiteUpdateDatabaseConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions) : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public SiteUpdateDatabaseConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
-        var acuToolPath =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[0] ?? throw new InvalidOperationException());
-        var sqlServerName =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[1] ?? throw new InvalidOperationException());
-        var dbName =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[2] ?? throw new InvalidOperationException());
+        var acuToolPath = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[0] ?? throw new InvalidOperationException()
+        );
+        var sqlServerName = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[1] ?? throw new InvalidOperationException()
+        );
+        var dbName = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[2] ?? throw new InvalidOperationException()
+        );
         return new AcuConfiguration
         {
             Site = new SiteConfiguration
             {
                 AcumaticaToolPath = acuToolPath,
                 SqlServerName = sqlServerName,
-                DbName = dbName
-            }
+                DbName = dbName,
+            },
         };
     }
 }
 
 public class SiteUpdateInstanceConfigurationBinder : CommandParametersBinder
 {
-    public SiteUpdateInstanceConfigurationBinder(Option<FileInfo> configFile, Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions)
-        : base(configFile, userConfigFile, commandOptions)
-    {
-    }
+    public SiteUpdateInstanceConfigurationBinder(
+        Option<FileInfo> configFile,
+        Option<FileInfo> userConfigFile,
+        params Option<string>?[] commandOptions
+    )
+        : base(configFile, userConfigFile, commandOptions) { }
 
-    protected override IAcuConfiguration GetUserConfiguration(BindingContext bindingContext,
-        Option<string>?[] commandOptions)
+    protected override IAcuConfiguration GetUserConfiguration(
+        BindingContext bindingContext,
+        Option<string>?[] commandOptions
+    )
     {
-        var acuToolPath =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[0] ?? throw new InvalidOperationException());
-        var instanceName =
-            bindingContext.ParseResult.GetValueForOption(commandOptions[1] ?? throw new InvalidOperationException());
+        var acuToolPath = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[0] ?? throw new InvalidOperationException()
+        );
+        var instanceName = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[1] ?? throw new InvalidOperationException()
+        );
         return new AcuConfiguration
         {
             Site = new SiteConfiguration
             {
                 AcumaticaToolPath = acuToolPath,
-                InstanceName = instanceName
-            }
+                InstanceName = instanceName,
+            },
         };
     }
 }
