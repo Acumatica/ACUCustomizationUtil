@@ -20,7 +20,8 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
     public string? Branch { get; set; }
     public string? PkgName { get; set; }
     public string? PkgDirectory { get; set; }
-    public string? PackageFilePath { get; private set; }
+	public string? PkgSuffix { get; set; }
+	public string? PackageFilePath { get; private set; }
     public abstract bool IsNotNull { get; }
 
     public IPackageConfiguration SetDefaultValues(IAcuConfiguration configuration)

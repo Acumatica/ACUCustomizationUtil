@@ -14,6 +14,7 @@ public interface IPackageConfiguration
     string? Branch { get; set; }
     string? PkgName { get; }
     string? PkgDirectory { get; }
+    string? PkgSuffix { get; set; }
 
     [JsonIgnore]
     string? PackageFilePath { get; }

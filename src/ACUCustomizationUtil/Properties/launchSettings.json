@@ -2,7 +2,7 @@
   "profiles": {
     "ACUCustomizationUtil": {
       "commandName": "Project",
-      "commandLineArgs": "src make --mode ISV",
+      "commandLineArgs": "src make --mode QA",
       "workingDirectory": "$(ProjectDir)..\\..\\proj",
       "environmentVariables": {
         "ACUBASEDIR": "C:\\Acumatica"

@@ -49,6 +49,9 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
                 case nameof(package.PkgDirectory):
                     package.PkgDirectory = reader.GetString().NormalizeEnvVariables();
                     break;
+                case nameof(package.PkgSuffix):
+                    package.PkgSuffix = reader.GetString().NormalizeEnvVariables();
+                    break;
             }
         }
 

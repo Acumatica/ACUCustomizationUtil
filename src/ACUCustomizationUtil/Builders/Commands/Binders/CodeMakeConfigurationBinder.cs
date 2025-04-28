@@ -8,16 +8,13 @@ using ACUCustomizationUtils.Configuration.Src;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
-public class CodeMakeConfigurationBinder : CommandParametersBinder
+public class CodeMakeConfigurationBinder(
+	Option<FileInfo> configFile,
+	Option<FileInfo> userConfigFile,
+	params Option<string>?[] commandOptions
+	) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
 {
-    public CodeMakeConfigurationBinder(
-        Option<FileInfo> configFile,
-        Option<FileInfo> userConfigFile,
-        params Option<string>?[] commandOptions
-    )
-        : base(configFile, userConfigFile, commandOptions) { }
-
-    protected override IAcuConfiguration GetUserConfiguration(
+	protected override IAcuConfiguration GetUserConfiguration(
         BindingContext bindingContext,
         Option<string>?[] commandOptions
     )
@@ -28,14 +25,15 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
         var projectDescription = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
         var projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
         var makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
-        var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        var packageSuffix = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
         return new AcuConfiguration
         {
             Pkg = new PackageConfiguration
             {
                 PkgName = packageName,
-                PkgDirectory = packageDirectory,
+				PkgSuffix = packageSuffix,
+				PkgDirectory = packageDirectory
             },
 
             Src = new SrcConfiguration
@@ -43,8 +41,7 @@ public class CodeMakeConfigurationBinder : CommandParametersBinder
                 PkgSourceDirectory = sourceDirectory,
                 PkgDescription = projectDescription,
                 PkgLevel = projectLevel,
-                MakeMode = makeMode,
-                AssemblyInfoPath = msAssemblyInfoPath,
+                MakeMode = makeMode
             },
         };
     }

@@ -41,14 +41,15 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
         var sourceDirectory = GetSourceDirectoryOption();
         var packageName = GetPackageNameOption();
         var packageDirectory = GetPackageDirectoryOption();
-        var makeMode = BuildMakeModeOption();
-        var msAssemblyInfoPath = GetMsBuildAssemblyInfoPathOption();
+        var packageSuffix = GetPackageSuffixOption();
+		var makeMode = BuildMakeModeOption();
 
         var command = new Command("make", "Create customization package from source code")
         {
             sourceDirectory,
             packageName,
             packageDirectory,
+            packageSuffix,
             makeMode,
         };
 
@@ -63,7 +64,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
                 projectDescription,
                 projectLevel,
                 makeMode,
-                msAssemblyInfoPath
+                packageSuffix
             )
         );
 
@@ -160,6 +161,11 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
     private static Option<string> GetPackageNameOption()
     {
         return new Option<string>("--pkgName", "Package name");
+    }
+
+    private static Option<string> GetPackageSuffixOption()
+    {
+        return new Option<string>("--pkgSuffix", "Package suffix");
     }
 
     private static Option<string> GetPackageDirectoryOption()

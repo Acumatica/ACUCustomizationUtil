@@ -75,7 +75,7 @@ public class CstEntityHelper
         xDoc.Save(fileName);
     }
 
-    public string? GetPackageFileVersion()
+    public string? GetPackageAssemblyVersion()
     {
         if (File.Exists(_versionFilePath))
         {
@@ -99,8 +99,8 @@ public class CstEntityHelper
         );
         var dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
         var dllFile =
-            dllPkgFiles.Any() ? dllPkgFiles.First()
-            : dllAnyFiles.Any() ? dllAnyFiles.First()
+            dllPkgFiles.Length > 0 ? dllPkgFiles.First()
+            : dllAnyFiles.Length > 0 ? dllAnyFiles.First()
             : null;
         if (dllFile == null)
             throw new Exception($"Assembly (dll) file for customization not found");
