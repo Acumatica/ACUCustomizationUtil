@@ -20,9 +20,9 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
 {
     private readonly ILogger<SrcService> _logger = logger;
 
-	#region Public methods
+    #region Public methods
 
-	public async Task GetProjectSource(IAcuConfiguration config)
+    public async Task GetProjectSource(IAcuConfiguration config)
     {
         _logger.LogInformation("Execute GetProjectSource action");
         try

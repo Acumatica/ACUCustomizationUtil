@@ -42,7 +42,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
         var packageName = GetPackageNameOption();
         var packageDirectory = GetPackageDirectoryOption();
         var packageSuffix = GetPackageSuffixOption();
-		var makeMode = BuildMakeModeOption();
+        var makeMode = BuildMakeModeOption();
 
         var command = new Command("make", "Create customization package from source code")
         {

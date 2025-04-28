@@ -7,18 +7,22 @@ using ACUCustomizationUtils.Configuration.ACU;
 namespace ACUCustomizationUtils.Helpers
 {
     public class MetaDataHelper(IAcuConfiguration config)
-	{
-		public const string MetadataFileName = "manifest.json";
-        private static readonly JsonSerializerOptions json_write_options = new() { WriteIndented = true };
+    {
+        public const string MetadataFileName = "manifest.json";
+        private static readonly JsonSerializerOptions json_write_options = new()
+        {
+            WriteIndented = true,
+        };
         private readonly IAcuConfiguration _config = config;
-		private readonly string? _packageName;
+        private readonly string? _packageName;
 
-		public MetaDataHelper(IAcuConfiguration config, string packageName) : this(config)
-		{
-			_packageName = packageName;
-		}
+        public MetaDataHelper(IAcuConfiguration config, string packageName)
+            : this(config)
+        {
+            _packageName = packageName;
+        }
 
-		public void SetBuildVersion()
+        public void SetBuildVersion()
         {
             try
             {
@@ -104,65 +108,64 @@ namespace ACUCustomizationUtils.Helpers
                     GetAccemblyInfoFullPath(),
                     "AssemblyVersion"
                 ),
-                _config.Src.MakeMode,
-                PackageName = _packageName
-			};
+                MakeMode = _config.Src.MakeMode ?? Messages.MakeModeBase,
+                PackageName = _packageName,
+            };
 
             // Serialize the object to JSON
             return JsonSerializer.Serialize(data, json_write_options);
         }
 
-		private static void AddOrUpdateAssemblyMetadataAttribute(
-				   string filePath,
-				   string attributeName,
-				   string? key,
-				   string value
-			   )
-		{
-			string content = File.ReadAllText(filePath);
-			string attributePattern;
-			string replacement;
+        private static void AddOrUpdateAssemblyMetadataAttribute(
+            string filePath,
+            string attributeName,
+            string? key,
+            string value
+        )
+        {
+            string content = File.ReadAllText(filePath);
+            string attributePattern;
+            string replacement;
 
-			if (!string.IsNullOrEmpty(key))
-			{
-				// Example: [assembly: AssemblyMetadata("GitBranch", "main")]  
-				attributePattern =
-					$@"\[assembly:\s*{Regex.Escape(attributeName)}\(""{Regex.Escape(key)}"",\s*"".*?""\)\]";
-				replacement = $@"[assembly: {attributeName}(""{key}"", ""{value}"")]";
-			}
-			else
-			{
-				// Example: [assembly: AssemblyTitle("MyApp")]  
-				attributePattern =
-					$@"\[assembly:\s*{Regex.Escape(attributeName)}\(\s*""[^""]*""\s*\)\]";
-				replacement = $@"[assembly: {attributeName}(""{value}"")]";
-			}
+            if (!string.IsNullOrEmpty(key))
+            {
+                // Example: [assembly: AssemblyMetadata("GitBranch", "main")]
+                attributePattern =
+                    $@"\[assembly:\s*{Regex.Escape(attributeName)}\(""{Regex.Escape(key)}"",\s*"".*?""\)\]";
+                replacement = $@"[assembly: {attributeName}(""{key}"", ""{value}"")]";
+            }
+            else
+            {
+                // Example: [assembly: AssemblyTitle("MyApp")]
+                attributePattern =
+                    $@"\[assembly:\s*{Regex.Escape(attributeName)}\(\s*""[^""]*""\s*\)\]";
+                replacement = $@"[assembly: {attributeName}(""{value}"")]";
+            }
 
-			if (Regex.IsMatch(content, attributePattern))
-			{
-				// Update the existing attribute  
-				content = Regex.Replace(content, attributePattern, replacement);
-			}
-			else
-			{
-				// Add a new attribute after the last using/attribute  
-				var lines = content
-					.Split([Environment.NewLine], StringSplitOptions.None)
-					.ToList();
-				int insertIndex = lines.FindLastIndex(line =>
-					line.TrimStart().StartsWith("[assembly:", StringComparison.OrdinalIgnoreCase)
-					|| line.TrimStart().StartsWith("using ", StringComparison.OrdinalIgnoreCase)
-				);
+            if (Regex.IsMatch(content, attributePattern))
+            {
+                // Update the existing attribute
+                content = Regex.Replace(content, attributePattern, replacement);
+            }
+            else
+            {
+                // Add a new attribute after the last using/attribute
+                var lines = content.Split([Environment.NewLine], StringSplitOptions.None).ToList();
+                int insertIndex = lines.FindLastIndex(line =>
+                    line.TrimStart().StartsWith("[assembly:", StringComparison.OrdinalIgnoreCase)
+                    || line.TrimStart().StartsWith("using ", StringComparison.OrdinalIgnoreCase)
+                );
 
-				if (insertIndex == -1)
-					insertIndex = lines.Count - 1;
+                if (insertIndex == -1)
+                    insertIndex = lines.Count - 1;
 
-				lines.Insert(insertIndex + 1, replacement);
-				content = string.Join(Environment.NewLine, lines);
-			}
+                lines.Insert(insertIndex + 1, replacement);
+                content = string.Join(Environment.NewLine, lines);
+            }
 
-			File.WriteAllText(filePath, content);
-        }
+            File.WriteAllText(filePath, content);
+        }
+
         private string GetAccemblyInfoFullPath()
         {
             if (_config.Src.AssemblyInfoPath != null && File.Exists(_config.Src.AssemblyInfoPath))
@@ -197,7 +200,7 @@ namespace ACUCustomizationUtils.Helpers
         private static string GetCurrentGitHash()
         {
             ProcessStartInfo psi = new()
-			{
+            {
                 FileName = "git",
                 Arguments = "rev-parse HEAD",
                 RedirectStandardOutput = true,
@@ -276,7 +279,5 @@ namespace ACUCustomizationUtils.Helpers
             Match keyMatch = Regex.Match(attributeContent, keyPattern);
             return keyMatch.Success ? keyMatch.Groups[1].Value : null;
         }
-
-        
-	}
+    }
 }

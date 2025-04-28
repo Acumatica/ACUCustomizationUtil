@@ -30,12 +30,15 @@
     "password": "123",                                                                                                        Service gate passworg
     "pkgName": "ACUCustomization",                                                                                            Package name
     "pkgDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\pkg"                                                          Package directory
-    "tenant": null,                                                                                                           Tenant to connect
+    "tenant": null,                                                                                                           Tenant to login
+	"branch": null																											  Branch to login	
   },
 
   "src": {                                                                                                                    Parameters for code command
     "pkgSourceDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\cst",                                                   Directory with package source code
     "pkgLevel": "0",                                                                                                          Package level
+	"msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path
+    "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",												  External code assembly info file full name
     "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path
     "msBuildTargetDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\src\\ACUCustomization\\bin\\Release",               External library solution build
                                                                                                                               targetdirectory

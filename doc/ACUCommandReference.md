@@ -56,18 +56,23 @@
 |             |              | --sourceDirectory       | Customization source items directory                                  
 |             | make         |                         | Create customization package from source code                         
 |             |              | --sourceDirectory       | Customization source items directory                                  
-|             |              | --packageName           | Package name                                                          
+|             |              | --packageName           | Package name
+|             |              | --pkgSuffix             | Package name suffix (to add the task number to the package name)                
 |             |              | --packageDirectory      | Package destination directory                                         
 |             |              | --makeMode              | Mode for create package QA or ISV                                     
 |             | build        |                         | Compile external library source code                                  
 |             |              | --solutionFile          | External code solution file full name                                 
-|             |              | --targetDirectory       | External code build target directory                                  
+|             |              | --targetDirectory       | External code build target directory
+|             |              | --msBuildPath           | MSBuild full path
+|             |              | --assemblyInfoPath      | External code assembly info file full name
+|             |              |                         | 
 | **Command** | **Commands** | **Options**             | **Description**                                                           
 | pkg         |              |                         |                                                                       
 |             |              | --url                   | Acumatica instance url                                                
 |             |              | --login                 | User login                                                            
 |             |              | --password              | User password                                                         
-|             |              | --tenant                | Tenant to login                                                       
+|             |              | --tenant                | Tenant to login
+|             |              | --branch                | Branch to login                                                        
 |             | get          |                         | Get package content.                                                  
 |             |              | --packageName           | Package name                                                          
 |             |              | --packageDir            | Package directory                                                     

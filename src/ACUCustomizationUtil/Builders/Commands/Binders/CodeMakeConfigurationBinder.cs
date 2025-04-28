@@ -9,12 +9,12 @@ using ACUCustomizationUtils.Configuration.Src;
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
 public class CodeMakeConfigurationBinder(
-	Option<FileInfo> configFile,
-	Option<FileInfo> userConfigFile,
-	params Option<string>?[] commandOptions
-	) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
+    Option<FileInfo> configFile,
+    Option<FileInfo> userConfigFile,
+    params Option<string>?[] commandOptions
+) : CommandParametersBinder(configFile, userConfigFile, commandOptions)
 {
-	protected override IAcuConfiguration GetUserConfiguration(
+    protected override IAcuConfiguration GetUserConfiguration(
         BindingContext bindingContext,
         Option<string>?[] commandOptions
     )
@@ -32,8 +32,8 @@ public class CodeMakeConfigurationBinder(
             Pkg = new PackageConfiguration
             {
                 PkgName = packageName,
-				PkgSuffix = packageSuffix,
-				PkgDirectory = packageDirectory
+                PkgSuffix = packageSuffix,
+                PkgDirectory = packageDirectory,
             },
 
             Src = new SrcConfiguration
@@ -41,7 +41,7 @@ public class CodeMakeConfigurationBinder(
                 PkgSourceDirectory = sourceDirectory,
                 PkgDescription = projectDescription,
                 PkgLevel = projectLevel,
-                MakeMode = makeMode
+                MakeMode = makeMode,
             },
         };
     }
