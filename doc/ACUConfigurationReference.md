@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Configuration Reference (version 23.10.17.38782)
+## Configuration Reference (version 25.4.28.27610)
 ```
 {
   "erp": {                                                                                                                    Parameters for erp command
@@ -31,14 +31,14 @@
     "pkgName": "ACUCustomization",                                                                                            Package name
     "pkgDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\pkg"                                                          Package directory
     "tenant": null,                                                                                                           Tenant to login
-	"branch": null																											  Branch to login	
+    "branch": null											                      Branch to login	
   },
 
   "src": {                                                                                                                    Parameters for code command
     "pkgSourceDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\cst",                                                   Directory with package source code
     "pkgLevel": "0",                                                                                                          Package level
-	"msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path
-    "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",												  External code assembly info file full name
+    "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path
+    "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",						      External code assembly info file full name
     "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path
     "msBuildTargetDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\src\\ACUCustomization\\bin\\Release",               External library solution build
                                                                                                                               targetdirectory
