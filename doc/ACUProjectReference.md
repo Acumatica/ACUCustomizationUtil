@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Project Configuration Guide (version 25.04.30.08070)
+## Project Configuration Guide (version 25.05.09.1425)
 
 ### Introduction
 
@@ -117,3 +117,10 @@ If it is necessary to switch the project to use a common Acumatica instance
 6. Using the Acumatica utility of the appropriate version, delete the Acumatica instance that the project is running with
 7. Make changes in the acu.json file: sections erp & site
 8. Delete the ProjectName.webapp directory
+
+
+
+
+
+
+

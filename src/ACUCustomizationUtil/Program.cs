@@ -9,7 +9,7 @@ using System.CommandLine.Help;
 using System.CommandLine.Parsing;
 using System.Reflection;
 
-[assembly: AssemblyVersion("25.04.30.08070")]
+[assembly: AssemblyVersion("25.05.09.1425")]
 
 namespace ACUCustomizationUtils;
 

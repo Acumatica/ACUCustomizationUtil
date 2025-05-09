@@ -1,6 +1,6 @@
 
 # Acumatica Customization Utility — New Release  
-**Version**: 25.4.28.27610
+**Version**: 25.04.30.0807
 
 ---
 
@@ -111,3 +111,6 @@ The `metadata.json` file included in the customization `.zip` now contains detai
 For more details on migration or any issues during upgrade, please refer to internal documentation or contact the development team.
 
 ---
+
+
+
