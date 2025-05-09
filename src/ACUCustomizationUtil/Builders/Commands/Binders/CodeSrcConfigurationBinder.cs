@@ -1,11 +1,10 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Builders.Commands.Common;
-using ACUCustomizationUtils.Configuration;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Configuration.Src;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
@@ -23,10 +22,10 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var dbConnection = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? dbConnection = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
 
         return new AcuConfiguration
         {

@@ -4,24 +4,24 @@ public static class ObjectExtensions
 {
     public static T CopyValues<T>(this T target, T source)
     {
-        var targetType = target?.GetType();
+        Type? targetType = target?.GetType();
         if (targetType == null)
             return target;
 
-        var properties = targetType
+        IEnumerable<System.Reflection.PropertyInfo> properties = targetType
             .GetProperties()
             .Where(prop => prop is { CanRead: true, CanWrite: true });
-        foreach (var prop in properties)
+        foreach (System.Reflection.PropertyInfo? prop in properties)
         {
             if (prop.PropertyType.Assembly == targetType.Assembly)
             {
-                var targetObject = prop.GetValue(target);
-                var sourceObject = prop.GetValue(source);
+                object? targetObject = prop.GetValue(target);
+                object? sourceObject = prop.GetValue(source);
                 targetObject.CopyValues(sourceObject);
             }
             else
             {
-                var value = prop.GetValue(source, null);
+                object? value = prop.GetValue(source, null);
                 if (value != null)
                     prop.SetValue(target, value, null);
             }

@@ -1,10 +1,10 @@
-﻿using System.Net.Http.Headers;
+﻿using ACUCustomizationUtils.Common;
+using ACUCustomizationUtils.Configuration.ACU;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
-using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration.ACU;
 using static ACUCustomizationUtils.Common.Messages;
 using Request = ACUCustomizationUtils.Helpers.RestModel.Request;
 using Response = ACUCustomizationUtils.Helpers.RestModel.Response;
@@ -19,11 +19,11 @@ namespace ACUCustomizationUtils.Helpers
 
         public RestClient(IAcuConfiguration configuration)
         {
-            var baseAddress = configuration.Pkg.Url!;
-            var username = configuration.Pkg.Login!;
-            var password = configuration.Pkg.Password!;
-            var tenant = configuration.Pkg.Tenant;
-            var branch = configuration.Pkg.Branch;
+            Uri baseAddress = configuration.Pkg.Url!;
+            string username = configuration.Pkg.Login!;
+            string password = configuration.Pkg.Password!;
+            string? tenant = configuration.Pkg.Tenant;
+            string? branch = configuration.Pkg.Branch;
             _packageName = configuration.Pkg.PkgName;
             _packageDirectory = configuration.Pkg.PkgDirectory;
             HttpClientHandler options = new()
@@ -55,10 +55,10 @@ namespace ACUCustomizationUtils.Helpers
 
         public async Task GetPackage()
         {
-            var res = await GetProjectAsync(_packageName!);
-            var directory = _packageDirectory!;
-            var file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
-            var filePath = Path.Combine(directory, file);
+            Response.GetProject res = await GetProjectAsync(_packageName!);
+            string directory = _packageDirectory!;
+            string file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
+            string filePath = Path.Combine(directory, file);
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
 
@@ -75,19 +75,19 @@ namespace ACUCustomizationUtils.Helpers
 
         public async Task UploadPackage()
         {
-            var packageName = _packageName!;
-            var directory = _packageDirectory!;
-            var file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
-            var filePath = Path.Combine(directory, file);
-            var packageContents = await File.ReadAllBytesAsync(filePath);
-            var projectContentBase64 = Convert.ToBase64String(packageContents);
+            string packageName = _packageName!;
+            string directory = _packageDirectory!;
+            string file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
+            string filePath = Path.Combine(directory, file);
+            byte[] packageContents = await File.ReadAllBytesAsync(filePath);
+            string projectContentBase64 = Convert.ToBase64String(packageContents);
 
             await ImportAsync(packageName, projectContentBase64);
         }
 
         public async Task PublishPackages()
         {
-            var packageNames = new[] { _packageName ?? string.Empty };
+            string[] packageNames = new[] { _packageName ?? string.Empty };
             const bool mergeWithExistingPackages = true;
             bool isPublished = false;
 
@@ -95,13 +95,13 @@ namespace ACUCustomizationUtils.Helpers
             while (!isPublished)
             {
                 await Task.Delay(1000);
-                var res = await PublishEndAsync();
+                Response.PublishEnd res = await PublishEndAsync();
                 isPublished = res.IsCompleted;
 
                 if (res.IsFailed)
                 {
                     string msg = string.Empty;
-                    foreach (var log in res.Log!.Where(l => l.LogType == Messages.ErrorLogType))
+                    foreach (RestModel.Log? log in res.Log!.Where(l => l.LogType == Messages.ErrorLogType))
                     {
                         msg += $"\n{log.Message}";
                     }

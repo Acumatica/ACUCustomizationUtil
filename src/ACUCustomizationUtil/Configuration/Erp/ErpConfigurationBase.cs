@@ -44,8 +44,8 @@ public abstract class ErpConfigurationBase : IErpConfiguration
     {
         if (version == null)
             return null;
-        var majorNbr = version[..4];
-        var uri = new UriBuilder(Messages.DownloadUri(majorNbr, version)).Uri;
+        string majorNbr = version[..4];
+        Uri uri = new UriBuilder(Messages.DownloadUri(majorNbr, version)).Uri;
 
         return uri;
     }

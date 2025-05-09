@@ -54,3 +54,4 @@ bin
 *.user
 packages
 /proj/packages
+/release/*

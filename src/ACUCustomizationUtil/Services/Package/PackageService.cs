@@ -41,7 +41,7 @@ public class PackageService(ILogger<PackageService> logger) : IPackageService
 
                         logger.LogInformation("Download package {Package}", config.Pkg.PkgName);
                         ctx.Status("Download in progress, please wait ...");
-                        using var client = GetClient(config);
+                        using IAcuCustomizationClient client = GetClient(config);
                         await client.GetPackage();
                     }
                 );
@@ -79,7 +79,7 @@ public class PackageService(ILogger<PackageService> logger) : IPackageService
 
                         logger.LogInformation("Publish package {Package}", config.Pkg.PkgName);
                         ctx.Status("Publish in progress, please wait ...");
-                        using var client = GetClient(config);
+                        using IAcuCustomizationClient client = GetClient(config);
                         await client.PublishPackages();
                     }
                 );
@@ -117,7 +117,7 @@ public class PackageService(ILogger<PackageService> logger) : IPackageService
 
                         logger.LogInformation("Unpublish package(s) {Package}", config.Pkg.PkgName);
                         ctx.Status("Unpublish in progress, please wait ...");
-                        using var client = GetClient(config);
+                        using IAcuCustomizationClient client = GetClient(config);
                         await client.UnpublishAllPackages();
                     }
                 );
@@ -155,7 +155,7 @@ public class PackageService(ILogger<PackageService> logger) : IPackageService
 
                         logger.LogInformation("Uploading package {Package}", config.Pkg.PkgName);
                         ctx.Status("UploadPackage in progress, please wait ...");
-                        using var client = GetClient(config);
+                        using IAcuCustomizationClient client = GetClient(config);
                         await client.UploadPackage();
                     }
                 );
@@ -174,7 +174,7 @@ public class PackageService(ILogger<PackageService> logger) : IPackageService
     /// </summary>
     private static IAcuCustomizationClient GetClient(IAcuConfiguration config)
     {
-        var erpVersion = config.Erp.ErpVersion!.Split('.');
+        string[] erpVersion = config.Erp.ErpVersion!.Split('.');
         if (
             decimal.TryParse(erpVersion[0] + "." + erpVersion[1], out decimal result)
             && result >= 22.2m

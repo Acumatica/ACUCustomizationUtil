@@ -1,6 +1,4 @@
-﻿using ACUCustomizationUtils.Configuration.Erp;
-
-namespace ACUCustomizationUtils.Configuration.Package;
+﻿namespace ACUCustomizationUtils.Configuration.Package;
 
 public class NullPackageConfiguration : PackageConfigurationBase
 {

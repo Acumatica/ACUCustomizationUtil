@@ -1,5 +1,4 @@
-﻿using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 
 namespace ACUCustomizationUtils.Services.Package;
 

@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using ACUCustomizationUtils.Common;
+using ACUCustomizationUtils.Configuration.ACU;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration.ACU;
 
 namespace ACUCustomizationUtils.Helpers
 {
@@ -48,8 +48,8 @@ namespace ACUCustomizationUtils.Helpers
 
         private void SetAssemblyVersion()
         {
-            var assemblyInfoPath = GetAccemblyInfoFullPath();
-            var version = GetAssemblyVersion();
+            string assemblyInfoPath = GetAccemblyInfoFullPath();
+            string version = GetAssemblyVersion();
 
             if (version != null)
             {
@@ -77,7 +77,7 @@ namespace ACUCustomizationUtils.Helpers
             string assemblyInfoPath = GetAccemblyInfoFullPath();
 
             // Define metadata values
-            var newValues = new Dictionary<string, string>
+            Dictionary<string, string> newValues = new Dictionary<string, string>
             {
                 ["GitBranch"] = GetCurrentGitBranch(),
                 ["GitHash"] = GetCurrentGitHash(),
@@ -85,7 +85,7 @@ namespace ACUCustomizationUtils.Helpers
                 ["BuildMachine"] = Environment.MachineName,
             };
 
-            foreach (var attr in newValues)
+            foreach (KeyValuePair<string, string> attr in newValues)
             {
                 AddOrUpdateAssemblyMetadataAttribute(
                     assemblyInfoPath,
@@ -150,7 +150,7 @@ namespace ACUCustomizationUtils.Helpers
             else
             {
                 // Add a new attribute after the last using/attribute
-                var lines = content.Split([Environment.NewLine], StringSplitOptions.None).ToList();
+                List<string> lines = content.Split([Environment.NewLine], StringSplitOptions.None).ToList();
                 int insertIndex = lines.FindLastIndex(line =>
                     line.TrimStart().StartsWith("[assembly:", StringComparison.OrdinalIgnoreCase)
                     || line.TrimStart().StartsWith("using ", StringComparison.OrdinalIgnoreCase)
@@ -217,12 +217,12 @@ namespace ACUCustomizationUtils.Helpers
 
         public string GetAssemblyVersion()
         {
-            var datePart = GetDateVersion();
-            var isvPart = GetISVVersion();
+            string datePart = GetDateVersion();
+            string isvPart = GetISVVersion();
 
-            var majorPart = $"{_config.Erp.ErpVersion?[..6]}";
-            var makeMode = _config.Src.MakeMode ?? Messages.MakeModeBase;
-            var minorPart = makeMode switch
+            string majorPart = $"{_config.Erp.ErpVersion?[..6]}";
+            string makeMode = _config.Src.MakeMode ?? Messages.MakeModeBase;
+            string minorPart = makeMode switch
             {
                 Messages.MakeModeBase => datePart,
                 Messages.MakeModeQA => datePart,
@@ -230,14 +230,14 @@ namespace ACUCustomizationUtils.Helpers
                 _ => datePart,
             };
 
-            var version = $"{majorPart}.{minorPart}";
+            string version = $"{majorPart}.{minorPart}";
             return version;
         }
 
         private static string GetDateVersion()
         {
-            var firstDate = new DateTime(DateTime.Now.Year, 1, 1);
-            var days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
+            DateTime firstDate = new DateTime(DateTime.Now.Year, 1, 1);
+            string days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
             return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
         }
 

@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace ACUCustomizationUtils.Extensions;
 
@@ -18,9 +18,9 @@ public static class StringExtensions
         const string emptyProgress = "Progress ##";
         if (processMessage == null)
             return emptyProgress;
-        var index = processMessage.IndexOf("Progress", StringComparison.Ordinal);
-        var length = processMessage.Length - index;
-        var prn = processMessage.Substring(index, length).TrimEnd();
+        int index = processMessage.IndexOf("Progress", StringComparison.Ordinal);
+        int length = processMessage.Length - index;
+        string prn = processMessage.Substring(index, length).TrimEnd();
 
         return prn;
     }
@@ -32,12 +32,12 @@ public static class StringExtensions
 
     public static (LogLevel type, string message) GetLoggerString(this string processMessage)
     {
-        var index = processMessage.StartsWith("   at")
+        int index = processMessage.StartsWith("   at")
             ? 0
-            : processMessage.IndexOf("]", StringComparison.Ordinal) + 1;
-        var err = processMessage.IsErrorInfo();
-        var length = processMessage.Length - index;
-        var prn = processMessage.Substring(index, length).TrimStart().TrimEnd();
+            : processMessage.IndexOf(']') + 1;
+        bool err = processMessage.IsErrorInfo();
+        int length = processMessage.Length - index;
+        string prn = processMessage.Substring(index, length).TrimStart().TrimEnd();
 
         return err ? (LogLevel.Error, prn) : (LogLevel.Information, prn);
     }
@@ -68,8 +68,8 @@ public static class StringExtensions
         const string pattern = @"\%+\w+\%";
         if (value != null && Regex.IsMatch(value, pattern))
         {
-            var envName = Regex.Match(value, pattern).Value.Trim('%');
-            var envValue =
+            string envName = Regex.Match(value, pattern).Value.Trim('%');
+            string? envValue =
                 Environment.GetEnvironmentVariable(envName, EnvironmentVariableTarget.User)
                 ?? Environment.GetEnvironmentVariable(envName, EnvironmentVariableTarget.Machine);
             if (envValue != null)

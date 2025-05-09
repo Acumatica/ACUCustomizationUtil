@@ -27,7 +27,7 @@ public static class SerilogBuilder
 
     public static ILogger BuildSilent(Type contextType)
     {
-        var logger = Serilog.Log.Logger = new LoggerConfiguration()
+        ILogger logger = Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
@@ -39,9 +39,9 @@ public static class SerilogBuilder
 
     public static string Format(string message)
     {
-        var timestamp = DateTime.Now.ToString("HH:mm:ss");
-        var error = message.IsErrorInfo();
-        var level = error ? "ERR" : "INF";
+        string timestamp = DateTime.Now.ToString("HH:mm:ss");
+        bool error = message.IsErrorInfo();
+        string level = error ? "ERR" : "INF";
 
         return $"[{timestamp} {level}] {message}";
     }

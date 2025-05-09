@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration.Package;
+﻿using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ACUCustomizationUtils.JSON;
 
@@ -16,19 +16,19 @@ public class PackageConfigurationConverter : JsonConverter<IPackageConfiguration
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
 
-        var package = new PackageConfiguration();
+        PackageConfiguration package = new PackageConfiguration();
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)
                 return package;
             if (reader.TokenType != JsonTokenType.PropertyName)
                 throw new JsonException("Expected PropertyName token");
-            var propName = reader.GetString();
+            string? propName = reader.GetString();
             reader.Read();
             switch (propName?.FirstCharToUpper())
             {
                 case nameof(package.Url):
-                    var rest = reader.GetString();
+                    string? rest = reader.GetString();
                     package.Url = rest != null ? new Uri(rest.EnsureTrailingSlash()) : null;
                     break;
                 case nameof(package.Login):

@@ -1,8 +1,8 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Builders.Commands.Common;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Src;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
@@ -20,17 +20,17 @@ public class CodeCompileConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var msBuildSolutionFilePath = bindingContext.ParseResult.GetValueForOption(
+        string? msBuildSolutionFilePath = bindingContext.ParseResult.GetValueForOption(
             commandOptions[0]!
         );
-        var msBuildTargetDirectoryPath = bindingContext.ParseResult.GetValueForOption(
+        string? msBuildTargetDirectoryPath = bindingContext.ParseResult.GetValueForOption(
             commandOptions[1]!
         );
-        var msBuildAssemblyFileName = bindingContext.ParseResult.GetValueForOption(
+        string? msBuildAssemblyFileName = bindingContext.ParseResult.GetValueForOption(
             commandOptions[2]!
         );
-        var msBuildPath = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
-        var msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? msBuildPath = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? msAssemblyInfoPath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
 
         return new AcuConfiguration
         {

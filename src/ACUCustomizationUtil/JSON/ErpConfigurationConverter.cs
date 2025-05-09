@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration.Erp;
+﻿using ACUCustomizationUtils.Configuration.Erp;
 using ACUCustomizationUtils.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ACUCustomizationUtils.JSON;
 
@@ -16,14 +16,14 @@ public class ErpConfigurationConverter : JsonConverter<IErpConfiguration>
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
 
-        var erp = new ErpConfiguration();
+        ErpConfiguration erp = new ErpConfiguration();
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)
                 return erp;
             if (reader.TokenType != JsonTokenType.PropertyName)
                 throw new JsonException("Expected PropertyName token");
-            var propName = reader.GetString();
+            string? propName = reader.GetString();
             reader.Read();
             switch (propName?.FirstCharToUpper())
             {

@@ -16,7 +16,7 @@ public static class DirectoryFileExtensions
     {
         if (fullFileName == null)
             return;
-        var file = new FileInfo(fullFileName);
+        FileInfo file = new FileInfo(fullFileName);
         file.DirectoryName?.TryCheckCreateDirectory();
     }
 
@@ -31,7 +31,7 @@ public static class DirectoryFileExtensions
 
     private static bool PathIsAbsolute(this string? path)
     {
-        var regex = new Regex("/^(?:[A-Za-z]:)?\\/");
+        Regex regex = new Regex("/^(?:[A-Za-z]:)?\\/");
         return path != null && regex.IsMatch(path);
     }
 }

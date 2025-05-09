@@ -1,6 +1,6 @@
-﻿using System.CommandLine;
-using ACUCustomizationUtils.Builders.Commands.Common;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using Microsoft.Extensions.DependencyInjection;
+using System.CommandLine;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 
@@ -62,7 +62,7 @@ public class RootCommandBuilder
 
     private RootCommandBuilder BuildErpCommand()
     {
-        var erpCommand = _erpCommandBuilder
+        Command erpCommand = _erpCommandBuilder
             .SetGlobalOptions(_configOption, _userConfigOption)
             .BuildCommand();
         _rootCommand?.AddCommand(erpCommand);
@@ -71,7 +71,7 @@ public class RootCommandBuilder
 
     private RootCommandBuilder BuildSiteCommand()
     {
-        var siteCommand = _siteCommandBuilder
+        Command siteCommand = _siteCommandBuilder
             .SetGlobalOptions(_configOption, _userConfigOption)
             .BuildCommand();
         _rootCommand?.AddCommand(siteCommand);
@@ -80,7 +80,7 @@ public class RootCommandBuilder
 
     private RootCommandBuilder BuildProjectCommand()
     {
-        var projectCommand = _codeCommandBuilder
+        Command projectCommand = _codeCommandBuilder
             .SetGlobalOptions(_configOption, _userConfigOption)
             .BuildCommand();
         _rootCommand?.AddCommand(projectCommand);
@@ -89,7 +89,7 @@ public class RootCommandBuilder
 
     private RootCommandBuilder BuildPackageCommand()
     {
-        var pkgCommand = _packageCommandBuilder
+        Command pkgCommand = _packageCommandBuilder
             .SetGlobalOptions(_configOption, _userConfigOption)
             .BuildCommand();
         _rootCommand?.AddCommand(pkgCommand);
@@ -98,7 +98,7 @@ public class RootCommandBuilder
 
     private static Option<FileInfo?> BuildConfigOption()
     {
-        var configOption = new Option<FileInfo?>(
+        Option<FileInfo?> configOption = new Option<FileInfo?>(
             "--config",
             description: "An option of path to configuration file",
             isDefault: true,
@@ -106,7 +106,7 @@ public class RootCommandBuilder
             {
                 if (result.Tokens.Count == 0)
                     return new FileInfo("acu.json");
-                var filePath = result.Tokens.Single().Value;
+                string filePath = result.Tokens.Single().Value;
                 return !File.Exists(filePath) ? null : new FileInfo(filePath);
             }
         );
@@ -116,7 +116,7 @@ public class RootCommandBuilder
 
     private static Option<FileInfo?> BuildUserConfigOption()
     {
-        var userConfigOption = new Option<FileInfo?>(
+        Option<FileInfo?> userConfigOption = new Option<FileInfo?>(
             "--user-config",
             description: "An option of path to user configuration file",
             isDefault: true,
@@ -124,7 +124,7 @@ public class RootCommandBuilder
             {
                 if (result.Tokens.Count == 0)
                     return new FileInfo("acu.json.user");
-                var filePath = result.Tokens.Single().Value;
+                string filePath = result.Tokens.Single().Value;
                 return !File.Exists(filePath) ? null : new FileInfo(filePath);
             }
         );

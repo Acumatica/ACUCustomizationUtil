@@ -131,7 +131,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
                             config.Pkg.PkgName
                         );
                         ctx.Status("Compile in progress, please wait ...");
-                        var msBuildHelper = new MsBuildHelper(config, ctx);
+                        MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx);
                         await msBuildHelper.Execute();
 
                         ctx.Status("Copy external library assembly to package source");
@@ -154,9 +154,9 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
 
     private static async Task GetProjectSourceExAsync(IAcuConfiguration config)
     {
-        var packageName = config.Pkg.PkgName!;
-        var sourceDirectory = config.Src.PkgSourceDirectory!;
-        var connectionString = config.Site.DbConnectionString!;
+        string packageName = config.Pkg.PkgName!;
+        string sourceDirectory = config.Src.PkgSourceDirectory!;
+        string connectionString = config.Site.DbConnectionString!;
 
         sourceDirectory.TryCheckCreateDirectory();
         if (!Directory.Exists(sourceDirectory))
@@ -164,10 +164,10 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
                 $"Directory {sourceDirectory} is not exist or access is not allowed to it"
             );
 
-        var dataHelper = new DatabaseHelper(config);
-        var itemHandler = new CstEntityHelper(config);
+        DatabaseHelper dataHelper = new DatabaseHelper(config);
+        CstEntityHelper itemHandler = new CstEntityHelper(config);
 
-        var projectInfo =
+        Helpers.CommonTypes.CustomizationProject projectInfo =
             await dataHelper.GetCustomizationProjectAsync(packageName)
             ?? throw new Exception(
                 $"Project {packageName} does not found for connection {connectionString}"
@@ -177,9 +177,9 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         itemHandler.ClearProjectDirectory();
 
         //Write Customization entities
-        var result = await dataHelper.GetCustomizationProjectEntitiesAsync(packageName);
+        IEnumerable<Helpers.CommonTypes.CustomizationProjectEntity>? result = await dataHelper.GetCustomizationProjectEntitiesAsync(packageName);
         if (result != null)
-            foreach (var item in result)
+            foreach (Helpers.CommonTypes.CustomizationProjectEntity item in result)
                 itemHandler.HandleCustomizationsEntity(item);
 
         //Write project meta-file
@@ -190,7 +190,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
     {
         await Task.Run(() =>
         {
-            var packageHelper = new PackageHelper(config);
+            PackageHelper packageHelper = new(config);
             packageHelper.MakePackage();
         });
     }

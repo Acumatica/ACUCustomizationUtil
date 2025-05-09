@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration.Src;
+﻿using ACUCustomizationUtils.Configuration.Src;
 using ACUCustomizationUtils.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ACUCustomizationUtils.JSON;
 
@@ -16,14 +16,14 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
 
-        var code = new SrcConfiguration();
+        SrcConfiguration code = new SrcConfiguration();
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)
                 return code;
             if (reader.TokenType != JsonTokenType.PropertyName)
                 throw new JsonException("Expected PropertyName token");
-            var propName = reader.GetString();
+            string? propName = reader.GetString();
             _ = reader.Read();
             switch (propName?.FirstCharToUpper())
             {

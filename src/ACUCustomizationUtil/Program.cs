@@ -1,15 +1,15 @@
-﻿using System.CommandLine.Builder;
-using System.CommandLine.Help;
-using System.CommandLine.Parsing;
-using System.Reflection;
-using ACUCustomizationUtils.Builders.Commands;
+﻿using ACUCustomizationUtils.Builders.Commands;
 using ACUCustomizationUtils.Builders.DI;
 using ACUCustomizationUtils.Builders.Log;
 using ACUCustomizationUtils.Common;
 using Serilog;
 using Spectre.Console;
+using System.CommandLine.Builder;
+using System.CommandLine.Help;
+using System.CommandLine.Parsing;
+using System.Reflection;
 
-[assembly: AssemblyVersion("25.04.28.*")]
+[assembly: AssemblyVersion("25.04.30.08070")]
 
 namespace ACUCustomizationUtils;
 
@@ -28,10 +28,10 @@ public static class Program
         SerilogBuilder.Build();
         try
         {
-            using var host = HostBuilder.Build(args);
-            var rootCommand = new RootCommandBuilder(host.Services).BuildCommand();
+            using Microsoft.Extensions.Hosting.IHost host = HostBuilder.Build(args);
+            System.CommandLine.Command rootCommand = new RootCommandBuilder(host.Services).BuildCommand();
 
-            var parser = new CommandLineBuilder(rootCommand)
+            Parser parser = new CommandLineBuilder(rootCommand)
                 .UseDefaults()
                 .UseHelp(ctx =>
                 {

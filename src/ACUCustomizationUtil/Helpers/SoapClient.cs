@@ -1,7 +1,7 @@
-﻿using System.Security.Authentication;
-using System.ServiceModel;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using AcuSOAP;
+using System.Security.Authentication;
+using System.ServiceModel;
 
 namespace ACUCustomizationUtils.Helpers;
 
@@ -14,10 +14,10 @@ internal class SoapClient : IAcuCustomizationClient
     public SoapClient(IAcuConfiguration configuration)
     {
         configuration.Pkg.SetDefaultValues(configuration);
-        var serviceUrl = configuration.Pkg.Url!;
-        var username = configuration.Pkg.Login!;
-        var password = configuration.Pkg.Password!;
-        var tenant = configuration.Pkg.Tenant;
+        Uri serviceUrl = configuration.Pkg.Url!;
+        string username = configuration.Pkg.Login!;
+        string password = configuration.Pkg.Password!;
+        string? tenant = configuration.Pkg.Tenant;
 
         if (!string.IsNullOrEmpty(tenant) && !string.IsNullOrEmpty(username))
         {
@@ -26,8 +26,8 @@ internal class SoapClient : IAcuCustomizationClient
         _packageName = configuration.Pkg.PkgName;
         _packageDirectory = configuration.Pkg.PkgDirectory;
 
-        var endpointAddress = new EndpointAddress(serviceUrl);
-        var basicHttpBinding = new BasicHttpBinding(
+        EndpointAddress endpointAddress = new EndpointAddress(serviceUrl);
+        BasicHttpBinding basicHttpBinding = new BasicHttpBinding(
             endpointAddress.Uri.Scheme.ToLower() == "http"
                 ? BasicHttpSecurityMode.None
                 : BasicHttpSecurityMode.Transport
@@ -41,7 +41,7 @@ internal class SoapClient : IAcuCustomizationClient
             MaxReceivedMessageSize = 6553600,
         };
         _client = new ServiceGateSoapClient(basicHttpBinding, endpointAddress);
-        var login = _client.LoginAsync(username, password);
+        Task<LoginResult> login = _client.LoginAsync(username, password);
 
         if (login.Result.Code != ErrorCode.OK)
             throw new InvalidCredentialException(
@@ -51,13 +51,13 @@ internal class SoapClient : IAcuCustomizationClient
 
     public async Task GetPackage()
     {
-        var res = await _client.GetPackageAsync(_packageName);
-        var pkg = res.GetPackageResult;
+        GetPackageResponse res = await _client.GetPackageAsync(_packageName);
+        byte[] pkg = res.GetPackageResult;
         if (pkg == null)
             throw new Exception($"Package {_packageName} not found");
-        var directory = _packageDirectory!;
-        var file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
-        var filePath = Path.Combine(directory, file);
+        string directory = _packageDirectory!;
+        string file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
+        string filePath = Path.Combine(directory, file);
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);
 
@@ -66,7 +66,7 @@ internal class SoapClient : IAcuCustomizationClient
 
     public async Task PublishPackages()
     {
-        var packageNames = new[] { _packageName ?? string.Empty };
+        string[] packageNames = new[] { _packageName ?? string.Empty };
         const bool mergeWithExistingPackages = true;
 
         await _client.PublishPackagesAsync(packageNames, mergeWithExistingPackages);
@@ -80,11 +80,11 @@ internal class SoapClient : IAcuCustomizationClient
     public async Task UploadPackage()
     {
         const bool replaceIfPackageExists = true;
-        var packageName = _packageName!;
-        var directory = _packageDirectory!;
-        var file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
-        var filePath = Path.Combine(directory, file);
-        var packageContents = await File.ReadAllBytesAsync(filePath);
+        string packageName = _packageName!;
+        string directory = _packageDirectory!;
+        string file = _packageName!.EndsWith(".zip") ? _packageName : $"{_packageName}.zip";
+        string filePath = Path.Combine(directory, file);
+        byte[] packageContents = await File.ReadAllBytesAsync(filePath);
 
         await _client.UploadPackageAsync(packageName, packageContents, replaceIfPackageExists);
     }

@@ -69,7 +69,7 @@ public class ErpService : IErpService
                             "Downloading installation file {ErpInstallationFilePath}",
                             config.Erp.InstallationFilePath!
                         );
-                        using var client = new WebClient(
+                        using WebClient client = new WebClient(
                             config.Erp.Url!,
                             config.Erp.InstallationFilePath!
                         );
@@ -120,11 +120,11 @@ public class ErpService : IErpService
                             config.Erp.InstallationDirectory
                         );
                         ctx.Status("Installation in progress, please wait ...");
-                        var processArgs = GetErpInstallCmdArgs(
+                        string processArgs = GetErpInstallCmdArgs(
                             config.Erp.InstallationFilePath!,
                             config.Erp.InstallationDirectory!
                         );
-                        var processHelper = new ProcessHelper(Messages.Msiexec, processArgs, ctx);
+                        ProcessHelper processHelper = new ProcessHelper(Messages.Msiexec, processArgs, ctx);
                         await processHelper.Execute();
                         await Task.Run(() =>
                         {

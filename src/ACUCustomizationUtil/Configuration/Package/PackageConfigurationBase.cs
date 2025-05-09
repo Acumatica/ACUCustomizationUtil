@@ -29,7 +29,7 @@ public abstract class PackageConfigurationBase : IPackageConfiguration
         PkgDirectory = PkgDirectory.TryGetFullDirectoryPath();
         if (PkgName != null && PkgDirectory != null)
         {
-            var file = PkgName!.EndsWith(".zip") ? PkgName : $"{PkgName}.zip";
+            string file = PkgName!.EndsWith(".zip") ? PkgName : $"{PkgName}.zip";
             PackageFilePath = Path.Combine(PkgDirectory, file);
         }
 

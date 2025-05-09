@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration.Site;
+﻿using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ACUCustomizationUtils.JSON;
 
@@ -16,14 +16,14 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
 
-        var site = new SiteConfiguration();
+        SiteConfiguration site = new SiteConfiguration();
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)
                 return site;
             if (reader.TokenType != JsonTokenType.PropertyName)
                 throw new JsonException("Expected PropertyName token");
-            var propName = reader.GetString();
+            string? propName = reader.GetString();
             reader.Read();
             switch (propName?.FirstCharToUpper())
             {

@@ -26,8 +26,8 @@ public class WebClient : IDisposable
 
     public async Task DownloadFileAsync()
     {
-        var token = new CancellationToken();
-        var response = await _httpClient!.GetAsync(
+        CancellationToken token = new CancellationToken();
+        HttpResponseMessage response = await _httpClient!.GetAsync(
             _downloadUrl,
             HttpCompletionOption.ResponseHeadersRead,
             token
@@ -39,15 +39,15 @@ public class WebClient : IDisposable
             );
         }
 
-        var total = response.Content.Headers.ContentLength ?? -1L;
-        var fileInfo = new FileInfo(_destinationFilePath);
+        long total = response.Content.Headers.ContentLength ?? -1L;
+        FileInfo fileInfo = new FileInfo(_destinationFilePath);
         if (fileInfo.Directory is { Exists: false })
         {
             fileInfo.Directory.Create();
         }
 
-        await using var destination = File.OpenWrite(_destinationFilePath);
-        await using var source = await response.Content.ReadAsStreamAsync(token);
+        await using FileStream destination = File.OpenWrite(_destinationFilePath);
+        await using Stream source = await response.Content.ReadAsStreamAsync(token);
         await CopyStreamWithProgressAsync(source, destination, total, token);
     }
 
@@ -63,10 +63,10 @@ public class WebClient : IDisposable
         // Expected size of input stream may be known from an HTTP header when reading from HTTP. Other streams may have their
         // own protocol for pre-reporting expected size.
 
-        var totalRead = 0L;
-        var buffer = new byte[ioBufferSize];
+        long totalRead = 0L;
+        byte[] buffer = new byte[ioBufferSize];
         int read;
-        var canReportProgress =
+        bool canReportProgress =
             total
             != -1 /*&& progress != null*/
         ;
@@ -102,9 +102,9 @@ public class WebClient : IDisposable
 
         private int CalculatePercent()
         {
-            var totalFileSize = Convert.ToDouble(TotalFileSize);
-            var totalBytesDownloaded = Convert.ToDouble(TotalBytesDownloaded);
-            var percent = Convert.ToInt16(
+            double totalFileSize = Convert.ToDouble(TotalFileSize);
+            double totalBytesDownloaded = Convert.ToDouble(TotalBytesDownloaded);
+            short percent = Convert.ToInt16(
                 Math.Round(totalBytesDownloaded / totalFileSize * 100, 0)
             );
 

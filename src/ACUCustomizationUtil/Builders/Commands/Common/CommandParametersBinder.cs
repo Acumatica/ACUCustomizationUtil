@@ -1,9 +1,7 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Helpers;
-using ACUCustomizationUtils.Services;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands.Common;
 
@@ -26,11 +24,11 @@ public abstract class CommandParametersBinder : BinderBase<IAcuConfiguration>
 
     protected override IAcuConfiguration GetBoundValue(BindingContext bindingContext)
     {
-        var configFile = bindingContext.ParseResult.GetValueForOption(_configFile);
-        var userConfigFile = bindingContext.ParseResult.GetValueForOption(_userConfigFile);
-        var userInput = GetUserConfiguration(bindingContext, _commandOptions);
+        FileInfo? configFile = bindingContext.ParseResult.GetValueForOption(_configFile);
+        FileInfo? userConfigFile = bindingContext.ParseResult.GetValueForOption(_userConfigFile);
+        IAcuConfiguration userInput = GetUserConfiguration(bindingContext, _commandOptions);
         userInput.OnDeserialized();
-        var acuConfiguration = ConfigurationHelper.GetConfiguration(
+        IAcuConfiguration acuConfiguration = ConfigurationHelper.GetConfiguration(
             configFile,
             userConfigFile,
             userInput

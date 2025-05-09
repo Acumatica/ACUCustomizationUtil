@@ -1,8 +1,8 @@
-﻿using System.Data.Common;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Helpers.CommonTypes;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using System.Data.Common;
 
 namespace ACUCustomizationUtils.Helpers;
 
@@ -19,8 +19,8 @@ public class DatabaseHelper
 
     public async Task UpdateAdminPasswordDefault()
     {
-        var username = _config.Site.AcumaticaAdminName;
-        var password = _config.Site.AcumaticaAdminPassword;
+        string? username = _config.Site.AcumaticaAdminName;
+        string? password = _config.Site.AcumaticaAdminPassword;
         const int companyId = 2;
         const string nullValue = null!;
         const int zeroValue = 0;
@@ -45,7 +45,7 @@ public class DatabaseHelper
                 CompanyId = companyId,
             },
         };
-        await using var connection = _connectionFactory();
+        await using DbConnection connection = _connectionFactory();
         await connection.ExecuteAsync(sql, parameters);
     }
 
@@ -79,9 +79,9 @@ public class DatabaseHelper
                                 EXEC sp_addrolemember 'db_owner', @DatabaseUser
                               END";
 
-        await using var connection = _connectionFactory();
+        await using DbConnection connection = _connectionFactory();
         await connection.OpenAsync();
-        var tr = await connection.BeginTransactionAsync();
+        DbTransaction tr = await connection.BeginTransactionAsync();
         try
         {
             //Create login
@@ -121,7 +121,7 @@ public class DatabaseHelper
                                  ORDER by Type";
 
         object param = new { ProjectName = projectName };
-        await using var connection = _connectionFactory();
+        await using DbConnection connection = _connectionFactory();
         return await connection.QueryAsync<CustomizationProjectEntity>(sql, param);
     }
 
@@ -129,7 +129,7 @@ public class DatabaseHelper
     {
         const string sql = @"SELECT * FROM CustProject WHERE Name = @ProjectName";
         object param = new { ProjectName = projectName };
-        await using var connection = _connectionFactory();
+        await using DbConnection connection = _connectionFactory();
         return await connection.QuerySingleAsync<CustomizationProject>(sql, param);
     }
 }

@@ -1,11 +1,9 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Builders.Commands.Common;
-using ACUCustomizationUtils.Configuration;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Site;
-using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.Site;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 
@@ -31,11 +29,11 @@ public class SiteCommandBuilder : CommandBuilderBase
     {
         _acuToolPathOption = GetAcuToolPathOption();
 
-        var installCommand = BuildInstallCommand();
-        var deleteCommand = BuildDeleteCommand();
-        var updateCommand = BuildUpdateCommand();
+        Command installCommand = BuildInstallCommand();
+        Command deleteCommand = BuildDeleteCommand();
+        Command updateCommand = BuildUpdateCommand();
 
-        var siteCommand = new Command("site", "Work with a Acumatica instance.")
+        Command siteCommand = new Command("site", "Work with a Acumatica instance.")
         {
             installCommand,
             updateCommand,
@@ -49,14 +47,14 @@ public class SiteCommandBuilder : CommandBuilderBase
 
     private Command BuildInstallCommand()
     {
-        var serverNameOption = GetServerNameOption();
-        var databaseNameOption = GetDatabaseNameOption();
-        var instanceNameOption = GetInstanceOption();
-        var instancePathOption = GetInstancePathOption();
-        var acuAdminName = GetAcumaticaAdminNameOption();
-        var acuAdminPassword = GetAcumaticaAdminPasswordOption();
+        Option<string> serverNameOption = GetServerNameOption();
+        Option<string> databaseNameOption = GetDatabaseNameOption();
+        Option<string> instanceNameOption = GetInstanceOption();
+        Option<string> instancePathOption = GetInstancePathOption();
+        Option<string> acuAdminName = GetAcumaticaAdminNameOption();
+        Option<string> acuAdminPassword = GetAcumaticaAdminPasswordOption();
 
-        var command = new Command("install", "Install Acumatica instance.")
+        Command command = new Command("install", "Install Acumatica instance.")
         {
             serverNameOption,
             databaseNameOption,
@@ -88,8 +86,8 @@ public class SiteCommandBuilder : CommandBuilderBase
 
     private Command BuildDeleteCommand()
     {
-        var instanceNameOption = GetInstanceOption();
-        var command = new Command("delete", "Delete Acumatica instance.") { instanceNameOption };
+        Option<string> instanceNameOption = GetInstanceOption();
+        Command command = new Command("delete", "Delete Acumatica instance.") { instanceNameOption };
         command.SetHandler(
             async config =>
             {
@@ -108,9 +106,9 @@ public class SiteCommandBuilder : CommandBuilderBase
 
     private Command BuildUpdateCommand()
     {
-        var updateInstanceCommand = BuildUpdateInstanceCommand();
-        var updateDatabaseCommand = BuildUpdateDatabaseCommand();
-        var command = new Command("update", "Update Acumatica instance.")
+        Command updateInstanceCommand = BuildUpdateInstanceCommand();
+        Command updateDatabaseCommand = BuildUpdateDatabaseCommand();
+        Command command = new Command("update", "Update Acumatica instance.")
         {
             updateInstanceCommand,
             updateDatabaseCommand,
@@ -121,9 +119,9 @@ public class SiteCommandBuilder : CommandBuilderBase
 
     private Command BuildUpdateDatabaseCommand()
     {
-        var serverNameOption = GetServerNameOption();
-        var databaseNameOption = GetDatabaseNameOption();
-        var command = new Command("database", "Update Acumatica database.")
+        Option<string> serverNameOption = GetServerNameOption();
+        Option<string> databaseNameOption = GetDatabaseNameOption();
+        Command command = new Command("database", "Update Acumatica database.")
         {
             serverNameOption,
             databaseNameOption,
@@ -147,9 +145,9 @@ public class SiteCommandBuilder : CommandBuilderBase
 
     private Command BuildUpdateInstanceCommand()
     {
-        var instanceNameOption = GetInstanceOption();
+        Option<string> instanceNameOption = GetInstanceOption();
 
-        var command = new Command("instance", "Update Acumatica instance.") { instanceNameOption };
+        Command command = new Command("instance", "Update Acumatica instance.") { instanceNameOption };
 
         command.SetHandler(
             async config =>
@@ -220,13 +218,13 @@ public class SiteInstallConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var acuToolPath = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var serverName = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var databaseName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var instanceName = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
-        var instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
-        var acuAdminName = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
-        var acuAdminPassword = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        string? acuToolPath = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? serverName = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? databaseName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? instanceName = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? acuAdminName = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
+        string? acuAdminPassword = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
         return new AcuConfiguration
         {
@@ -258,10 +256,10 @@ public class SiteDeleteConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var acuToolPath = bindingContext.ParseResult.GetValueForOption(
+        string? acuToolPath = bindingContext.ParseResult.GetValueForOption(
             commandOptions[0] ?? throw new InvalidOperationException()
         );
-        var instanceName = bindingContext.ParseResult.GetValueForOption(
+        string? instanceName = bindingContext.ParseResult.GetValueForOption(
             commandOptions[1] ?? throw new InvalidOperationException()
         );
         return new AcuConfiguration
@@ -289,13 +287,13 @@ public class SiteUpdateDatabaseConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var acuToolPath = bindingContext.ParseResult.GetValueForOption(
+        string? acuToolPath = bindingContext.ParseResult.GetValueForOption(
             commandOptions[0] ?? throw new InvalidOperationException()
         );
-        var sqlServerName = bindingContext.ParseResult.GetValueForOption(
+        string? sqlServerName = bindingContext.ParseResult.GetValueForOption(
             commandOptions[1] ?? throw new InvalidOperationException()
         );
-        var dbName = bindingContext.ParseResult.GetValueForOption(
+        string? dbName = bindingContext.ParseResult.GetValueForOption(
             commandOptions[2] ?? throw new InvalidOperationException()
         );
         return new AcuConfiguration
@@ -324,10 +322,10 @@ public class SiteUpdateInstanceConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var acuToolPath = bindingContext.ParseResult.GetValueForOption(
+        string? acuToolPath = bindingContext.ParseResult.GetValueForOption(
             commandOptions[0] ?? throw new InvalidOperationException()
         );
-        var instanceName = bindingContext.ParseResult.GetValueForOption(
+        string? instanceName = bindingContext.ParseResult.GetValueForOption(
             commandOptions[1] ?? throw new InvalidOperationException()
         );
         return new AcuConfiguration

@@ -1,12 +1,10 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Builders.Commands.Common;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Erp;
-using ACUCustomizationUtils.Services;
 using ACUCustomizationUtils.Services.ERP;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 
@@ -29,10 +27,10 @@ public class ErpCommandBuilder : CommandBuilderBase
 
     public override Command BuildCommand()
     {
-        var downloadCommand = BuildDownloadCommand();
-        var installCommand = BuildInstallCommand();
-        var deleteCommand = BuildDeleteCommand();
-        var erpCommand = new Command("erp", "Work with a Acumatica ERP.")
+        Command downloadCommand = BuildDownloadCommand();
+        Command installCommand = BuildInstallCommand();
+        Command deleteCommand = BuildDeleteCommand();
+        Command erpCommand = new Command("erp", "Work with a Acumatica ERP.")
         {
             downloadCommand,
             installCommand,
@@ -44,10 +42,10 @@ public class ErpCommandBuilder : CommandBuilderBase
 
     private Command BuildInstallCommand()
     {
-        var version = GetVersionOption();
-        var directory = GetDestinationDirectoryOption();
-        var file = GetFileNameOption();
-        var command = new Command("install", "Install ERP.") { version, directory, file };
+        Option<string> version = GetVersionOption();
+        Option<string> directory = GetDestinationDirectoryOption();
+        Option<string> file = GetFileNameOption();
+        Command command = new Command("install", "Install ERP.") { version, directory, file };
 
         command.SetHandler(
             async config =>
@@ -68,10 +66,10 @@ public class ErpCommandBuilder : CommandBuilderBase
 
     private Command BuildDeleteCommand()
     {
-        var version = GetVersionOption();
-        var directory = GetDestinationDirectoryOption();
-        var file = GetFileNameOption();
-        var command = new Command("delete", "Delete ERP.") { version, directory, file };
+        Option<string> version = GetVersionOption();
+        Option<string> directory = GetDestinationDirectoryOption();
+        Option<string> file = GetFileNameOption();
+        Command command = new Command("delete", "Delete ERP.") { version, directory, file };
 
         command.SetHandler(
             async config =>
@@ -92,11 +90,11 @@ public class ErpCommandBuilder : CommandBuilderBase
 
     private Command BuildDownloadCommand()
     {
-        var version = GetVersionOption();
-        var url = GetUrlOption();
-        var directory = GetDestinationDirectoryOption();
-        var file = GetFileNameOption();
-        var command = new Command("download", "Download ERP installation.")
+        Option<string> version = GetVersionOption();
+        Option<string> url = GetUrlOption();
+        Option<string> directory = GetDestinationDirectoryOption();
+        Option<string> file = GetFileNameOption();
+        Command command = new Command("download", "Download ERP installation.")
         {
             version,
             directory,
@@ -164,9 +162,9 @@ public class ErpInstallConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
 
         return new AcuConfiguration
         {
@@ -194,10 +192,10 @@ public class ErpDownloadConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var url = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? url = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
 
         return new AcuConfiguration()
         {
@@ -226,9 +224,9 @@ public class ErpDeleteConfigurationBinder : CommandParametersBinder
         Option<string>?[] commandOptions
     )
     {
-        var erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? erpVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? destinationDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? installationFileName = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
 
         return new AcuConfiguration
         {

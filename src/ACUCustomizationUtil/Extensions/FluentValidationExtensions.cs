@@ -9,11 +9,11 @@ public static class FluentValidationExtensions
         T instance
     )
     {
-        var res = validator.Validate(instance);
+        FluentValidation.Results.ValidationResult res = validator.Validate(instance);
 
         if (res.IsValid)
             return;
-        var ex = new ValidationException(res.Errors);
+        ValidationException ex = new ValidationException(res.Errors);
         throw new ArgumentException(ex.Message, ex);
     }
 }

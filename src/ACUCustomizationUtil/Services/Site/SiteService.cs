@@ -60,8 +60,8 @@ public class SiteService : ISiteService
                             config.Site.InstanceName
                         );
                         ctx.Status("Installation in progress, please wait ...");
-                        var processArgs = GetSiteInstallCmdArgs(config.Site);
-                        var processHelper = new ProcessHelper(
+                        string processArgs = GetSiteInstallCmdArgs(config.Site);
+                        ProcessHelper processHelper = new ProcessHelper(
                             config.Site.AcumaticaToolPath!,
                             processArgs,
                             ctx
@@ -70,7 +70,7 @@ public class SiteService : ISiteService
 
                         //Fix DB
                         ctx.Status("Update some database values, please wait ...");
-                        var dbHelper = new DatabaseHelper(config);
+                        DatabaseHelper dbHelper = new DatabaseHelper(config);
                         _logger.LogInformation(
                             "Reset admin passwords to default for new Acumatica instance"
                         );
@@ -118,8 +118,8 @@ public class SiteService : ISiteService
                             config.Site.InstanceName
                         );
                         ctx.Status("Updating in progress, please wait ...");
-                        var processArgs = GetSiteUpdateCmdArgs(config.Site);
-                        var processHelper = new ProcessHelper(
+                        string processArgs = GetSiteUpdateCmdArgs(config.Site);
+                        ProcessHelper processHelper = new ProcessHelper(
                             config.Site.AcumaticaToolPath!,
                             processArgs,
                             ctx
@@ -164,8 +164,8 @@ public class SiteService : ISiteService
                             config.Site.DbName
                         );
                         ctx.Status("Update in progress, please wait ...");
-                        var processArgs = GetDatabaseUpdateCmdArgs(config.Site);
-                        var processHelper = new ProcessHelper(
+                        string processArgs = GetDatabaseUpdateCmdArgs(config.Site);
+                        ProcessHelper processHelper = new ProcessHelper(
                             config.Site.AcumaticaToolPath!,
                             processArgs,
                             ctx
@@ -206,8 +206,8 @@ public class SiteService : ISiteService
 
                         _logger.LogInformation("Deleting Acumatica instance");
                         ctx.Status("Deletion in progress, please wait ...");
-                        var processArgs = GetSiteDeleteCmdArgs(config.Site);
-                        var processHelper = new ProcessHelper(
+                        string processArgs = GetSiteDeleteCmdArgs(config.Site);
+                        ProcessHelper processHelper = new ProcessHelper(
                             config.Site.AcumaticaToolPath!,
                             processArgs,
                             ctx
@@ -229,26 +229,26 @@ public class SiteService : ISiteService
 
     private static string GetSiteInstallCmdArgs(ISiteConfiguration siteConfig)
     {
-        var args =
+        string args =
             $"-cm:\"NewInstance\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -c:\"ci=1;ct=;cn=;\" -c:\"ci=2;ct=SalesDemo;cp=1;cv=Yes;cn=Company;\" -i:\"{siteConfig.InstanceName}\" -h:\"{siteConfig.InstancePath}\" -w:\"{siteConfig.IisWebSite}\" -v:\"{siteConfig.InstanceName}\" -po:\"{siteConfig.IisAppPool}\" -op:\"Forced\"";
         return args;
     }
 
     private static string GetSiteDeleteCmdArgs(ISiteConfiguration siteConfig)
     {
-        var args = $"-cm:\"DeleteSite\" -i:\"{siteConfig.InstanceName}\" -op:\"Forced\"";
+        string args = $"-cm:\"DeleteSite\" -i:\"{siteConfig.InstanceName}\" -op:\"Forced\"";
         return args;
     }
 
     private static string GetSiteUpdateCmdArgs(ISiteConfiguration siteConfig)
     {
-        var args = $"-cm:\"UpgradeSite\" -i:\"{siteConfig.InstanceName}\" -op:\"Forced\"";
+        string args = $"-cm:\"UpgradeSite\" -i:\"{siteConfig.InstanceName}\" -op:\"Forced\"";
         return args;
     }
 
     private static string GetDatabaseUpdateCmdArgs(ISiteConfiguration siteConfig)
     {
-        var args =
+        string args =
             $"-cm:\"DBMaint\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -n:\"False\" -b:\"True\" -op:\"Forced\"";
         return args;
     }

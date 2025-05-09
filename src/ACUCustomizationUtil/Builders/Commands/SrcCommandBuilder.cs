@@ -1,8 +1,8 @@
-﻿using System.CommandLine;
-using ACUCustomizationUtils.Builders.Commands.Binders;
+﻿using ACUCustomizationUtils.Builders.Commands.Binders;
 using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Services.Src;
+using System.CommandLine;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 
@@ -20,11 +20,11 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 
     public override Command BuildCommand()
     {
-        var srcCommand = BuildSrcCommand();
-        var makeCommand = BuildMakeCommand();
-        var compileCommand = BuildCompileCommand();
+        Command srcCommand = BuildSrcCommand();
+        Command makeCommand = BuildMakeCommand();
+        Command compileCommand = BuildCompileCommand();
 
-        var pkgCommand = new Command("src", "Work with a source code of customization.")
+        Command pkgCommand = new Command("src", "Work with a source code of customization.")
         {
             srcCommand,
             makeCommand,
@@ -36,15 +36,15 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 
     private Command BuildMakeCommand()
     {
-        var projectDescription = GetProjectDescriptionOption();
-        var projectLevel = GetProjectLevelOption();
-        var sourceDirectory = GetSourceDirectoryOption();
-        var packageName = GetPackageNameOption();
-        var packageDirectory = GetPackageDirectoryOption();
-        var packageSuffix = GetPackageSuffixOption();
-        var makeMode = BuildMakeModeOption();
+        Option<string> projectDescription = GetProjectDescriptionOption();
+        Option<string> projectLevel = GetProjectLevelOption();
+        Option<string> sourceDirectory = GetSourceDirectoryOption();
+        Option<string> packageName = GetPackageNameOption();
+        Option<string> packageDirectory = GetPackageDirectoryOption();
+        Option<string> packageSuffix = GetPackageSuffixOption();
+        Option<string> makeMode = BuildMakeModeOption();
 
-        var command = new Command("make", "Create customization package from source code")
+        Command command = new Command("make", "Create customization package from source code")
         {
             sourceDirectory,
             packageName,
@@ -73,12 +73,12 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 
     private Command BuildSrcCommand()
     {
-        var packageName = GetPackageNameOption();
-        var dbConnection = GetDBConnectionStringOption();
-        var instancePath = GetInstancePathOption();
-        var sourceDirectory = GetSourceDirectoryOption();
+        Option<string> packageName = GetPackageNameOption();
+        Option<string> dbConnection = GetDBConnectionStringOption();
+        Option<string> instancePath = GetInstancePathOption();
+        Option<string> sourceDirectory = GetSourceDirectoryOption();
 
-        var command = new Command("get", "Get customization project source")
+        Command command = new Command("get", "Get customization project source")
         {
             packageName,
             dbConnection,
@@ -102,13 +102,13 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
 
     private Command BuildCompileCommand()
     {
-        var msBuildSolutionFilePath = GetMsBuildSolutionFileNameOption();
-        var msBuildTargetDirectory = GetMsBuildTargetDirectoryOption();
-        var msBuildAssemblyFile = GetMsBuildAssemblyFileNameOption();
-        var msBuildPath = GetMsBuildPathOption();
-        var msAssemblyInfoPath = GetMsBuildAssemblyInfoPathOption();
+        Option<string> msBuildSolutionFilePath = GetMsBuildSolutionFileNameOption();
+        Option<string> msBuildTargetDirectory = GetMsBuildTargetDirectoryOption();
+        Option<string> msBuildAssemblyFile = GetMsBuildAssemblyFileNameOption();
+        Option<string> msBuildPath = GetMsBuildPathOption();
+        Option<string> msAssemblyInfoPath = GetMsBuildAssemblyInfoPathOption();
 
-        var command = new Command("build", "Build dll from extension library source code")
+        Command command = new Command("build", "Build dll from extension library source code")
         {
             msBuildSolutionFilePath,
             msBuildTargetDirectory,
@@ -210,7 +210,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
             {
                 if (result.Tokens.Count == 0)
                     return Messages.MakeModeBase;
-                var optionValue = result.Tokens.Single().Value;
+                string optionValue = result.Tokens.Single().Value;
                 if (
                     optionValue != Messages.MakeModeBase
                     && optionValue != Messages.MakeModeQA

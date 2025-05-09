@@ -1,10 +1,9 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Builders.Commands.Common;
-using ACUCustomizationUtils.Configuration;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Src;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands.Binders;
 
@@ -19,13 +18,13 @@ public class CodeMakeConfigurationBinder(
         Option<string>?[] commandOptions
     )
     {
-        var packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var packageDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var projectDescription = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
-        var projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
-        var makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
-        var packageSuffix = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        string? packageName = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? packageDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? projectDescription = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
+        string? packageSuffix = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
         return new AcuConfiguration
         {

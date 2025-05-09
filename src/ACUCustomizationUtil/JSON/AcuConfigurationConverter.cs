@@ -1,9 +1,8 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using ACUCustomizationUtils.Configuration;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Erp;
 using ACUCustomizationUtils.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ACUCustomizationUtils.JSON;
 
@@ -18,7 +17,7 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected StartObject token");
 
-        var configuration = new AcuConfiguration();
+        AcuConfiguration configuration = new AcuConfiguration();
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)
@@ -30,26 +29,26 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
             if (reader.TokenType != JsonTokenType.PropertyName)
                 throw new JsonException("Expected PropertyName token");
 
-            var propertyName = reader.GetString()?.FirstCharToUpper();
+            string? propertyName = reader.GetString()?.FirstCharToUpper();
             reader.Read();
 
             switch (propertyName)
             {
                 case nameof(configuration.Erp):
-                    var converter = new ErpConfigurationConverter();
-                    var erp = converter.Read(ref reader, typeof(IErpConfiguration), options);
+                    ErpConfigurationConverter converter = new ErpConfigurationConverter();
+                    IErpConfiguration erp = converter.Read(ref reader, typeof(IErpConfiguration), options);
                     configuration.Erp.CopyValues(erp);
                     break;
 
                 case nameof(configuration.Site):
-                    var siteConverter = new SiteConfigurationConverter();
-                    var site = siteConverter.Read(ref reader, typeof(IErpConfiguration), options);
+                    SiteConfigurationConverter siteConverter = new SiteConfigurationConverter();
+                    Configuration.Site.ISiteConfiguration site = siteConverter.Read(ref reader, typeof(IErpConfiguration), options);
                     configuration.Site.CopyValues(site);
                     break;
 
                 case nameof(configuration.Pkg):
-                    var packageConverter = new PackageConfigurationConverter();
-                    var package = packageConverter.Read(
+                    PackageConfigurationConverter packageConverter = new PackageConfigurationConverter();
+                    Configuration.Package.IPackageConfiguration package = packageConverter.Read(
                         ref reader,
                         typeof(IErpConfiguration),
                         options
@@ -58,8 +57,8 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
                     break;
 
                 case nameof(configuration.Src):
-                    var projectConverter = new SrcConfigurationConverter();
-                    var project = projectConverter.Read(
+                    SrcConfigurationConverter projectConverter = new SrcConfigurationConverter();
+                    Configuration.Src.ISrcConfiguration project = projectConverter.Read(
                         ref reader,
                         typeof(IErpConfiguration),
                         options

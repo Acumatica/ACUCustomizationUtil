@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using ACUCustomizationUtils.Builders.Log;
+﻿using ACUCustomizationUtils.Builders.Log;
 using ACUCustomizationUtils.Extensions;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
+using System.Diagnostics;
 using ILogger = Serilog.ILogger;
 
 namespace ACUCustomizationUtils.Helpers;
@@ -26,7 +26,7 @@ public class ProcessHelper
 
     public Task Execute()
     {
-        var processInfo = new ProcessStartInfo
+        ProcessStartInfo processInfo = new ProcessStartInfo
         {
             FileName = _file,
             Arguments = _arguments,
@@ -35,7 +35,7 @@ public class ProcessHelper
             CreateNoWindow = true,
         };
 
-        using var process = new Process { StartInfo = processInfo };
+        using Process process = new Process { StartInfo = processInfo };
         process.EnableRaisingEvents = true;
         process.OutputDataReceived += (_, args) =>
         {
@@ -51,7 +51,7 @@ public class ProcessHelper
 
         process.Exited += (sender, _) =>
         {
-            var proc = sender as Process;
+            Process? proc = sender as Process;
             if (proc?.ExitCode != 0)
             {
                 _tcs.SetException(new Exception($"Process executed with code {proc?.ExitCode}"));
@@ -81,26 +81,26 @@ public class ProcessHelper
     {
         if (args.Data == null)
             return;
-        var processMessage = args.Data;
+        string processMessage = args.Data;
 
         if (processMessage.IsProgressString())
         {
-            var prn = processMessage.GetProgressString();
+            string prn = processMessage.GetProgressString();
             ctx.Status(prn);
         }
         else if (processMessage.IsLoggerString())
         {
             AnsiConsole.WriteLine(processMessage);
-            var (type, message) = processMessage.GetLoggerString();
+            (LogLevel type, string message) = processMessage.GetLoggerString();
             LogMessage(type, message);
         }
         else
         {
             if (string.IsNullOrWhiteSpace(processMessage))
                 return;
-            var message = SerilogBuilder.Format(processMessage);
+            string message = SerilogBuilder.Format(processMessage);
             AnsiConsole.WriteLine(message);
-            var type = processMessage.IsErrorInfo() ? LogLevel.Error : LogLevel.Information;
+            LogLevel type = processMessage.IsErrorInfo() ? LogLevel.Error : LogLevel.Information;
             LogMessage(type, processMessage);
         }
     }

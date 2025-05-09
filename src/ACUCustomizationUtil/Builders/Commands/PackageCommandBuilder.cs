@@ -1,9 +1,9 @@
-﻿using System.CommandLine;
-using System.CommandLine.Binding;
-using ACUCustomizationUtils.Builders.Commands.Common;
+﻿using ACUCustomizationUtils.Builders.Commands.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Services.Package;
+using System.CommandLine;
+using System.CommandLine.Binding;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 
@@ -25,12 +25,12 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
 
     public override Command BuildCommand()
     {
-        var getCommand = BuildGetCommand();
-        var publishCommand = BuildPublishCommand();
-        var unpublishAllCommand = BuildUnpublishAllCommand();
-        var uploadCommand = BuildUploadCommand();
+        Command getCommand = BuildGetCommand();
+        Command publishCommand = BuildPublishCommand();
+        Command unpublishAllCommand = BuildUnpublishAllCommand();
+        Command uploadCommand = BuildUploadCommand();
 
-        var packageCommand = new Command("pkg", "Work with a customization package.")
+        Command packageCommand = new Command("pkg", "Work with a customization package.")
         {
             getCommand,
             publishCommand,
@@ -49,15 +49,13 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
 
     private Command BuildUploadCommand()
     {
-        var packageNameOption = GetPackageNameOption();
-        var packageDirOption = GetPackageDirectoryOption();
-        var tenantOption = GetTenantOption();
+        Option<string> packageNameOption = GetPackageNameOption();
+        Option<string> packageDirOption = GetPackageDirectoryOption();
 
-        var command = new Command("upload", "Upload package.")
+        Command command = new Command("upload", "Upload package.")
         {
             packageNameOption,
-            packageDirOption,
-            tenantOption,
+            packageDirOption
         };
 
         command.SetHandler(
@@ -68,7 +66,8 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
                 _urlOption,
                 _loginOption,
                 _passwordOption,
-                tenantOption,
+                _tenantOption,
+                _branchOption,
                 packageNameOption,
                 packageDirOption
             )
@@ -79,7 +78,7 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
 
     private Command BuildUnpublishAllCommand()
     {
-        var command = new Command("unpublish", "Unpublish all packages.") { };
+        Command command = new Command("unpublish", "Unpublish all packages.") { };
 
         command.SetHandler(
             async config => await packageService.UnpublishAllPackages(config),
@@ -99,9 +98,9 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
 
     private Command BuildPublishCommand()
     {
-        var packageNameOption = GetPackageNameOption();
+        Option<string> packageNameOption = GetPackageNameOption();
 
-        var command = new Command("publish", "Publish package(s).") { packageNameOption };
+        Command command = new Command("publish", "Publish package(s).") { packageNameOption };
 
         command.SetHandler(
             async config => await packageService.PublishPackages(config),
@@ -122,10 +121,10 @@ public class PackageCommandBuilder(IPackageService packageService) : CommandBuil
 
     private Command BuildGetCommand()
     {
-        var packageNameOption = GetPackageNameOption();
-        var packageDirOption = GetPackageDirectoryOption();
+        Option<string> packageNameOption = GetPackageNameOption();
+        Option<string> packageDirOption = GetPackageDirectoryOption();
 
-        var command = new Command("get", "Get package content.")
+        Command command = new Command("get", "Get package content.")
         {
             packageNameOption,
             packageDirOption,
@@ -196,13 +195,13 @@ public class PackageUploadConfigurationBinder(
         Option<string>?[] commandOptions
     )
     {
-        var url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var password = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var tenant = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
-        var branch = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
-        var pkgName = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
-        var pkgDir = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        string? url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? password = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? tenant = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? branch = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? pkgName = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
+        string? pkgDir = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
         return new AcuConfiguration
         {
@@ -231,11 +230,12 @@ public class PackagePublishConfigurationBinder(
         Option<string>?[] commandOptions
     )
     {
-        var url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var password = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var tenant = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
-        var pkgName = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? password = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? tenant = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? branch = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? pkgName = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
 
         return new AcuConfiguration
         {
@@ -245,6 +245,7 @@ public class PackagePublishConfigurationBinder(
                 Login = login,
                 Password = password,
                 Tenant = tenant,
+                Branch = branch,
                 PkgName = pkgName,
             },
         };
@@ -262,10 +263,11 @@ public class PackageUnpublishAllConfigurationBinder(
         Option<string>?[] commandOptions
     )
     {
-        var url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
-        var login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
-        var password = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
-        var tenant = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? url = bindingContext.ParseResult.GetValueForOption(commandOptions[0]!);
+        string? login = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
+        string? password = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
+        string? tenant = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? branch = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
 
         return new AcuConfiguration
         {
@@ -275,6 +277,7 @@ public class PackageUnpublishAllConfigurationBinder(
                 Login = login,
                 Password = password,
                 Tenant = tenant,
+                Branch = branch
             },
         };
     }

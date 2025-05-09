@@ -1,10 +1,9 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers.CommonTypes;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ACUCustomizationUtils.Helpers;
 
@@ -45,16 +44,16 @@ public class CstEntityHelper
 
     public void ClearProjectDirectory()
     {
-        var directoryInfo = new DirectoryInfo(_packageSourceDir);
-        var childDirs = directoryInfo.GetDirectories();
-        var childFiles = directoryInfo.GetFiles();
+        DirectoryInfo directoryInfo = new DirectoryInfo(_packageSourceDir);
+        DirectoryInfo[] childDirs = directoryInfo.GetDirectories();
+        FileInfo[] childFiles = directoryInfo.GetFiles();
 
-        foreach (var file in childFiles)
+        foreach (FileInfo file in childFiles)
         {
             file.Delete();
         }
 
-        foreach (var dir in childDirs)
+        foreach (DirectoryInfo dir in childDirs)
         {
             dir.Delete(true);
         }
@@ -62,8 +61,8 @@ public class CstEntityHelper
 
     public void SaveProjectMetadata(CustomizationProject projectEntity)
     {
-        var fileName = Path.Combine(_packageSourceProjectDir, "ProjectMetadata.xml");
-        var xDoc = new XDocument(
+        string fileName = Path.Combine(_packageSourceProjectDir, "ProjectMetadata.xml");
+        XDocument xDoc = new XDocument(
             new XElement(
                 "project",
                 new XAttribute("name", projectEntity.Name!),
@@ -79,11 +78,11 @@ public class CstEntityHelper
     {
         if (File.Exists(_versionFilePath))
         {
-            var versionContent = File.ReadAllText(_versionFilePath);
-            var version =
+            string versionContent = File.ReadAllText(_versionFilePath);
+            string version =
                 ExtractVersion(versionContent)
                 ?? throw new Exception($"Version.cs file does not contain a valid version");
-            var versionParts = version.Split('.');
+            string[] versionParts = version.Split('.');
             if (versionParts.Length != 4)
                 throw new Exception(
                     $"Version.cs file does not contain a correct version format: {version}"
@@ -92,24 +91,24 @@ public class CstEntityHelper
             return $"{versionParts[2]}.{versionParts[3]}";
         }
 
-        var dllPkgFiles = Directory.GetFiles(
+        string[] dllPkgFiles = Directory.GetFiles(
             _packageSourceBinDir,
             _dllName
                 ?? throw new InvalidOperationException("Customization dll name MUST be configured")
         );
-        var dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
-        var dllFile =
+        string[] dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
+        string? dllFile =
             dllPkgFiles.Length > 0 ? dllPkgFiles.First()
             : dllAnyFiles.Length > 0 ? dllAnyFiles.First()
             : null;
         if (dllFile == null)
             throw new Exception($"Assembly (dll) file for customization not found");
-        var fv = FileVersionInfo.GetVersionInfo(dllFile).FileVersion;
+        string? fv = FileVersionInfo.GetVersionInfo(dllFile).FileVersion;
         if (fv == null || fv.Split('.').Length != 4)
             throw new Exception(
                 $"Assembly (dll) file for customization does not contain correct version: {fv ?? "version is null"}"
             );
-        var fvArr = fv.Split('.');
+        string[] fvArr = fv.Split('.');
         return $"{fvArr[2]}.{fvArr[3]}";
     }
 
@@ -123,8 +122,8 @@ public class CstEntityHelper
     {
         try
         {
-            var entityName = Regex.Replace(entity.Name!, "\\W", "_").Trim('_') + ".xml";
-            var entityPath = Path.Combine(_packageSourceProjectDir, entityName);
+            string entityName = Regex.Replace(entity.Name!, "\\W", "_").Trim('_') + ".xml";
+            string entityPath = Path.Combine(_packageSourceProjectDir, entityName);
             entityPath.TryCheckFileDirectory();
             File.WriteAllText(entityPath, entity.Content);
         }
@@ -136,13 +135,13 @@ public class CstEntityHelper
 
     private void HandleFileEntity(CustomizationProjectEntity entity)
     {
-        var fileFullName = entity.Name!.Replace("File#", "");
-        var sourcePagePath = Path.Combine(_siteRootDir, fileFullName);
-        var destinationPath = Path.Combine(_packageSourceDir, fileFullName);
+        string fileFullName = entity.Name!.Replace("File#", "");
+        string sourcePagePath = Path.Combine(_siteRootDir, fileFullName);
+        string destinationPath = Path.Combine(_packageSourceDir, fileFullName);
         try
         {
             destinationPath.TryCheckFileDirectory();
-            var fi = new FileInfo(sourcePagePath);
+            FileInfo fi = new FileInfo(sourcePagePath);
             if (fi.Exists)
             {
                 File.Copy(sourcePagePath, destinationPath, true);
@@ -163,7 +162,7 @@ public class CstEntityHelper
 
     private static string? ExtractVersion(string content)
     {
-        var match = Regex.Match(content, @"\[assembly:\s*AssemblyVersion\(""([^""]+)""\)\]");
+        Match match = Regex.Match(content, @"\[assembly:\s*AssemblyVersion\(""([^""]+)""\)\]");
         if (match is { Success: true, Groups.Count: > 1 })
         {
             return match.Groups[1].Value;

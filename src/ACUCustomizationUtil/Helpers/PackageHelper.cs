@@ -1,10 +1,9 @@
-﻿using System.IO.Compression;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-using ACUCustomizationUtils.Common;
+﻿using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
+using System.IO.Compression;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace ACUCustomizationUtils.Helpers;
 
@@ -24,9 +23,9 @@ public class PackageHelper
     {
         _packageSourceDir = configuration.Src.PkgSourceDirectory!;
         _erpVersion = configuration.Erp.ErpVersion!;
-        _level = int.TryParse(configuration.Src.PkgLevel, out var l) ? l : 0;
-        var packageDestinationDir = configuration.Pkg.PkgDirectory!;
-        var packageName = GetPackageName(configuration);
+        _level = int.TryParse(configuration.Src.PkgLevel, out int l) ? l : 0;
+        string packageDestinationDir = configuration.Pkg.PkgDirectory!;
+        string packageName = GetPackageName(configuration);
         _packageFileName = Path.Combine(packageDestinationDir, packageName);
         _description = configuration.Src.PkgDescription ?? GetPackageDescription(configuration);
         _metaDataHelper = new MetaDataHelper(configuration, packageName);
@@ -39,23 +38,23 @@ public class PackageHelper
         ValidatePackagePath(_packageFileName);
 
         //Create project.xml file
-        var projectXml = new XmlDocument();
-        var customizationNode = projectXml.CreateElement("Customization");
+        XmlDocument projectXml = new XmlDocument();
+        XmlElement customizationNode = projectXml.CreateElement("Customization");
 
         customizationNode.SetAttribute("level", _level.ToString());
         customizationNode.SetAttribute("description", _description);
         customizationNode.SetAttribute("product-version", _erpVersion);
 
         // Append all .xml files to project.xml
-        var projectDir = Path.Combine(_packageSourceDir, "_project");
+        string projectDir = Path.Combine(_packageSourceDir, "_project");
         if (Directory.Exists(projectDir))
         {
-            foreach (var file in Directory.GetFiles(projectDir, "*.xml"))
+            foreach (string file in Directory.GetFiles(projectDir, "*.xml"))
             {
                 if (file.EndsWith("ProjectMetadata.xml"))
                     continue;
 
-                var currentFileXml = new XmlDocument();
+                XmlDocument currentFileXml = new XmlDocument();
                 currentFileXml.Load(file);
                 if (currentFileXml.DocumentElement == null)
                     throw new Exception("project.xml empty");
@@ -69,8 +68,8 @@ public class PackageHelper
         projectXml.Save(ProjectXMLFilename);
 
         //Create the zip file for package
-        using (var fileStream = new FileStream(_packageFileName, FileMode.Create))
-        using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create))
+        using (FileStream fileStream = new FileStream(_packageFileName, FileMode.Create))
+        using (ZipArchive archive = new ZipArchive(fileStream, ZipArchiveMode.Create))
         {
             //Add all files from package source directory to the archive
             AddFilesToZipArchive(_packageSourceDir, archive, customizationNode);
@@ -103,15 +102,15 @@ public class PackageHelper
 
     private void ValidateCustomizationPath(string customizationPath)
     {
-        var res = new DirectoryInfo(customizationPath).Exists;
+        bool res = new DirectoryInfo(customizationPath).Exists;
         if (!res)
             throw new ArgumentException($"{customizationPath} do not found");
     }
 
     private void ValidateProjectVersion(string erpVersion)
     {
-        var regex = new Regex("^\\d{2}\\.\\d{3}.\\d{4}$");
-        var match = regex.IsMatch(erpVersion);
+        Regex regex = new Regex("^\\d{2}\\.\\d{3}.\\d{4}$");
+        bool match = regex.IsMatch(erpVersion);
         if (!match)
             throw new ArgumentException("ERP Version should be in the form: 00.000.0000");
     }
@@ -152,12 +151,12 @@ public class PackageHelper
             )
                 return;
 
-            foreach (var fileName in Directory.GetFiles(targetDirectory))
+            foreach (string fileName in Directory.GetFiles(targetDirectory))
             {
                 ProcessFile(fileName);
             }
 
-            foreach (var subdirectory in Directory.GetDirectories(targetDirectory))
+            foreach (string subdirectory in Directory.GetDirectories(targetDirectory))
             {
                 ProcessDirectory(subdirectory);
             }
@@ -169,7 +168,7 @@ public class PackageHelper
             if (file.EndsWith("bin.config", StringComparison.OrdinalIgnoreCase))
                 return;
 
-            var fileInfo = new FileInfo(file);
+            FileInfo fileInfo = new FileInfo(file);
 
             // Get the relative path inside the archive
             string arcDir = string.Empty;
@@ -183,13 +182,13 @@ public class PackageHelper
                     .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             }
 
-            var arcFileName = Path.Combine(arcDir, fileInfo.Name).Replace('\\', '/');
+            string arcFileName = Path.Combine(arcDir, fileInfo.Name).Replace('\\', '/');
 
             // Add the file to the archive
             archive.CreateEntryFromFile(file, arcFileName);
 
             // Add a reference to the XML
-            var fileElement = customizationNode.OwnerDocument!.CreateElement("File");
+            XmlElement fileElement = customizationNode.OwnerDocument!.CreateElement("File");
             fileElement.SetAttribute("AppRelativePath", arcFileName);
             customizationNode.AppendChild(fileElement);
         }
@@ -197,18 +196,18 @@ public class PackageHelper
 
     private static string GetPackageName(IAcuConfiguration config)
     {
-        var cstHelper = new CstEntityHelper(config);
-        var fileVersion = cstHelper.GetPackageAssemblyVersion();
-        var dateVersion = cstHelper.GetPackageDateVersion();
-        var makeMode = config.Src.MakeMode ?? Messages.MakeModeBase;
-        var pkgSuffix = config.Pkg.PkgSuffix ?? string.Empty;
-        var pkgName = config.Pkg.PkgName!;
+        CstEntityHelper cstHelper = new CstEntityHelper(config);
+        string? fileVersion = cstHelper.GetPackageAssemblyVersion();
+        string dateVersion = cstHelper.GetPackageDateVersion();
+        string makeMode = config.Src.MakeMode ?? Messages.MakeModeBase;
+        string pkgSuffix = config.Pkg.PkgSuffix ?? string.Empty;
+        string pkgName = config.Pkg.PkgName!;
         if (!string.IsNullOrEmpty(pkgSuffix))
         {
             pkgName = $"{pkgName}_{pkgSuffix}_";
         }
 
-        var packageName = makeMode switch
+        string packageName = makeMode switch
         {
             Messages.MakeModeBase => $"{pkgName}.zip",
             Messages.MakeModeQA => $"{pkgName}[{config.Erp.ErpVersion}][{fileVersion}].zip",

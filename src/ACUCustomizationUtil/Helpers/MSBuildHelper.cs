@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
-using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration.ACU;
+﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using Spectre.Console;
+using System.Diagnostics;
 
 namespace ACUCustomizationUtils.Helpers;
 
@@ -34,7 +33,7 @@ public class MsBuildHelper
         //Build solution
         _msbuildPath = GetMsbuildPath();
         _msbuildArgs = GetMsBuildArgs();
-        var process = new ProcessHelper(_msbuildPath, _msbuildArgs, _ctx);
+        ProcessHelper process = new ProcessHelper(_msbuildPath, _msbuildArgs, _ctx);
         await process.Execute();
     }
 
@@ -42,10 +41,10 @@ public class MsBuildHelper
     {
         await Task.Run(() =>
         {
-            var assemblyDllFile = Path.Combine(_msBuildTargetDirectory!, _msBuildAssemblyFileName!);
+            string assemblyDllFile = Path.Combine(_msBuildTargetDirectory!, _msBuildAssemblyFileName!);
             if (File.Exists(assemblyDllFile))
             {
-                var packageDllFile = Path.Combine(_packageSourceBin!, _msBuildAssemblyFileName!);
+                string packageDllFile = Path.Combine(_packageSourceBin!, _msBuildAssemblyFileName!);
                 packageDllFile.TryCheckFileDirectory();
                 File.Copy(assemblyDllFile, packageDllFile, true);
                 if (!File.Exists(packageDllFile))
@@ -64,7 +63,7 @@ public class MsBuildHelper
     {
         const string buildConfiguration = "/property:Configuration=Release";
         const string buildTarget = "/target:Rebuild";
-        var solutionFilePath = _config.Src.MsBuildSolutionFile;
+        string? solutionFilePath = _config.Src.MsBuildSolutionFile;
 
         return $"{buildConfiguration} {buildTarget} {solutionFilePath}";
     }
@@ -74,7 +73,7 @@ public class MsBuildHelper
         if (_config.Src.MsBuildPath != null && File.Exists(_config.Src.MsBuildPath))
             return _config.Src.MsBuildPath;
 
-        var proc = new Process
+        Process proc = new Process
         {
             StartInfo = new ProcessStartInfo
             {
@@ -89,7 +88,7 @@ public class MsBuildHelper
         proc.Start();
         while (!proc.StandardOutput.EndOfStream)
         {
-            var line = proc.StandardOutput.ReadLine();
+            string? line = proc.StandardOutput.ReadLine();
             if (line is null || !File.Exists(line))
                 continue;
             return line;
