@@ -74,6 +74,8 @@ public class PackageHelper
         {
             //Add all files from package source directory to the archive
             AddFilesToZipArchive(_packageSourceDir, archive, customizationNode);
+            projectXml.AppendChild(customizationNode);
+            projectXml.Save(ProjectXMLFilename);
 
             //Add project.xml to the archive
             archive.CreateEntryFromFile(ProjectXMLFilename, Path.GetFileName(ProjectXMLFilename));
