@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## User Guide (version 25.4.28.27610)
+## User Guide (version 25.04.30.08070)
 
 ### General information
 
@@ -17,9 +17,9 @@ ACU allows to perform the following actions (by groups of commands):
 
 ### Installation
 
-The customization package can be obtained from:
+The ACU customization util can be obtained from:
 
-[Sprinterra Google Drive](https://drive.google.com/drive/folders/1K9JcIMjdnBsRxzI_VMFoBacPAH_vbU5t?usp=sharing)
+[Acumatica github repository](https://github.com/Acumatica/ACUCustomizationUtil/releases)
 
 The ACUCustomizationUtil folder contains versions of the utility in folders with name corresponding to the version.
 

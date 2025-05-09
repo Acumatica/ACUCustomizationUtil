@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Project Configuration Guide (version 25.4.28.27610)
+## Project Configuration Guide (version 25.04.30.08070)
 
 ### Introduction
 
@@ -85,23 +85,7 @@ ProjectName
         </Reference>
       </ItemGroup>
     ```
-6. Add a BeforeBuild rule to set the build version when using MSBuild:  
-    _{ProjectName}.csproj_  
-    ```xml
-    <Target Name="BeforeBuild">
-      <ItemGroup>
-        <AssemblyAttributes Include="AssemblyVersion">
-          <_Parameter1>$(Version)</_Parameter1>
-        </AssemblyAttributes>
-      </ItemGroup>
-      <MakeDir Directories="$(IntermediateOutputPath)" />
-      <WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs"  AssemblyAttributes="@(AssemblyAttributes)" />
-      <ItemGroup>
-        <Compile Include="$(IntermediateOutputPath)Version.cs" />
-      </ItemGroup>
-    </Target>
-    ```
-7. Add a PostBuildEvent section to copy the project assembly to the instance directory after each successful project build:  
+6. Add a PostBuildEvent section to copy the project assembly to the instance directory after each successful project build:  
     _{ProjectName}.csproj_  
     ```xml
     <PropertyGroup>
@@ -111,7 +95,7 @@ ProjectName
       </PostBuildEvent>
     </PropertyGroup>
     ```
-8. Add NuGet package `Acuminator.Analyzers to the project:  
+7. Add NuGet package `Acuminator.Analyzers to the project:  
     _{ProjectName}.csproj_  
     ```xml
     <ItemGroup>
@@ -120,10 +104,8 @@ ProjectName
     </ItemGroup>
     ```
     > You can add `Acuminator.Analyzers` using NuGet Package Manager UI in Visual Studio
-9. Open `AssemblyInfo.cs` info (located at the `src\{ProjectName}\Properties`).
-10. Remove `[assembly: AssemblyVersion("1.0.0.0")]` attribute.
-11. Move the Solution file (`{ProjectName}.sln`) to the root project folder
-12. Edit the path to the Extension Library project in the solution file.
+8. Move the Solution file (`{ProjectName}.sln`) to the root project folder
+9. Edit the path to the Extension Library project in the solution file.
 
 ### Transforming a classic project to using ACUCustomizationUtil
 1. Identify the version of Acumatica ERP in use
