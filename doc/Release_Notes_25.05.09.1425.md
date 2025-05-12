@@ -1,6 +1,6 @@
 
 # Acumatica Customization Utility — New Release  
-**Version**: 25.04.30.0807
+**Version**: 25.05.09.1425
 
 ---
 
