@@ -1,11 +1,14 @@
-﻿using ACUCustomizationUtils.Common;
-using ACUCustomizationUtils.Configuration.ACU;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
+
+using ACUCustomizationUtils.Common;
+using ACUCustomizationUtils.Configuration.ACU;
+
 using static ACUCustomizationUtils.Common.Messages;
+
 using Request = ACUCustomizationUtils.Helpers.RestModel.Request;
 using Response = ACUCustomizationUtils.Helpers.RestModel.Response;
 

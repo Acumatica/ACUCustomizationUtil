@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+
+using Microsoft.Extensions.Logging;
 
 namespace ACUCustomizationUtils.Extensions;
 

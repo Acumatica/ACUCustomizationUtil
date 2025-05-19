@@ -1,7 +1,9 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
-using AcuSOAP;
-using System.Security.Authentication;
+﻿using System.Security.Authentication;
 using System.ServiceModel;
+
+using ACUCustomizationUtils.Configuration.ACU;
+
+using AcuSOAP;
 
 namespace ACUCustomizationUtils.Helpers;
 

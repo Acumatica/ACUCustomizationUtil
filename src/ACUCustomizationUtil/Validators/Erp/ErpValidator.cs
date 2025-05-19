@@ -1,5 +1,6 @@
 ﻿using ACUCustomizationUtils.Configuration.Erp;
 using ACUCustomizationUtils.Extensions;
+
 using FluentValidation;
 
 namespace ACUCustomizationUtils.Validators.Erp;

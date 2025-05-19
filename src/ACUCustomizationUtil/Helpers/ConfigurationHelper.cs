@@ -1,7 +1,9 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
+﻿using System.Text.Json;
+
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
+
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace ACUCustomizationUtils.Helpers;
 

@@ -1,8 +1,12 @@
-﻿using ACUCustomizationUtils.Builders.Log;
+﻿using System.Diagnostics;
+
+using ACUCustomizationUtils.Builders.Log;
 using ACUCustomizationUtils.Extensions;
+
 using Microsoft.Extensions.Logging;
+
 using Spectre.Console;
-using System.Diagnostics;
+
 using ILogger = Serilog.ILogger;
 
 namespace ACUCustomizationUtils.Helpers;

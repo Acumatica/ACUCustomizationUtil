@@ -1,7 +1,9 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
+﻿using System.Diagnostics;
+
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
+
 using Spectre.Console;
-using System.Diagnostics;
 
 namespace ACUCustomizationUtils.Helpers;
 

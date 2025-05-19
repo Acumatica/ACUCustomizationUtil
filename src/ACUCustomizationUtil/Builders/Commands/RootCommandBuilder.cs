@@ -1,6 +1,8 @@
-﻿using ACUCustomizationUtils.Builders.Commands.Common;
+﻿using System.CommandLine;
+
+using ACUCustomizationUtils.Builders.Commands.Common;
+
 using Microsoft.Extensions.DependencyInjection;
-using System.CommandLine;
 
 namespace ACUCustomizationUtils.Builders.Commands;
 

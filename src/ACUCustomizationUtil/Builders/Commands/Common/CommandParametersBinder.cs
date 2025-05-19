@@ -1,7 +1,8 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
-using ACUCustomizationUtils.Helpers;
-using System.CommandLine;
+﻿using System.CommandLine;
 using System.CommandLine.Binding;
+
+using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Helpers;
 
 namespace ACUCustomizationUtils.Builders.Commands.Common;
 

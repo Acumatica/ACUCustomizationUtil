@@ -1,9 +1,10 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
-using ACUCustomizationUtils.Extensions;
-using ACUCustomizationUtils.Helpers.CommonTypes;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+
+using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Extensions;
+using ACUCustomizationUtils.Helpers.CommonTypes;
 
 namespace ACUCustomizationUtils.Helpers;
 

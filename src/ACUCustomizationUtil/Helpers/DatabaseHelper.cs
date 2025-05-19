@@ -1,8 +1,11 @@
-﻿using ACUCustomizationUtils.Configuration.ACU;
+﻿using System.Data.Common;
+
+using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Helpers.CommonTypes;
+
 using Dapper;
+
 using Microsoft.Data.SqlClient;
-using System.Data.Common;
 
 namespace ACUCustomizationUtils.Helpers;
 

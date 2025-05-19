@@ -1,7 +1,8 @@
-﻿using ACUCustomizationUtils.Configuration.Package;
-using ACUCustomizationUtils.Extensions;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using ACUCustomizationUtils.Configuration.Package;
+using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.JSON;
 
