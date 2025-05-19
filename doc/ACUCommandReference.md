@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Command Reference (version 25.05.09.1425))
+## Command Reference (version 25.05.19.0920))
 
 | **Command** | **Commands** | **Global Options**      | **Description**                                                       
 |-------------|--------------|-------------------------|-----------------------------------------------------------------------
@@ -82,6 +82,8 @@
 |             |              | --packageName           | Package name                                                          
 |             |              | --packageDir            | Package directory                                                     
 |             | unpublish    |                         | Unpublish all packages                                                
+
+
 
 
 

@@ -1,15 +1,18 @@
-﻿using ACUCustomizationUtils.Builders.Commands;
-using ACUCustomizationUtils.Builders.DI;
-using ACUCustomizationUtils.Builders.Log;
-using ACUCustomizationUtils.Common;
-using Serilog;
-using Spectre.Console;
-using System.CommandLine.Builder;
+﻿using System.CommandLine.Builder;
 using System.CommandLine.Help;
 using System.CommandLine.Parsing;
 using System.Reflection;
 
-[assembly: AssemblyVersion("25.05.09.1425")]
+using ACUCustomizationUtils.Builders.Commands;
+using ACUCustomizationUtils.Builders.DI;
+using ACUCustomizationUtils.Builders.Log;
+using ACUCustomizationUtils.Common;
+
+using Serilog;
+
+using Spectre.Console;
+
+[assembly: AssemblyVersion("25.05.19.0920")]
 
 namespace ACUCustomizationUtils;
 

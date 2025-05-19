@@ -18,7 +18,7 @@
     "iisWebSite": null
   },
   "pkg": {
-    "url": "http://localhost/25.100.0054",
+    "url": "http://localhost/25.100.0054/",
     "login": "admin",
     "password": "123",
     "pkgName": "ACUCustomization",
