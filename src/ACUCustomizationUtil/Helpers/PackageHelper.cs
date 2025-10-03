@@ -173,14 +173,13 @@ public class PackageHelper
 
             // Get the relative path inside the archive
             string arcDir = string.Empty;
-            if (
-                fileInfo.Directory != null
-                && fileInfo.Directory.FullName.StartsWith(_packageSourceDir)
-            )
+            bool isPerTenantFile = false;
+            if (fileInfo.Directory != null && fileInfo.Directory.FullName.StartsWith(_packageSourceDir))
             {
                 arcDir = fileInfo
                     .Directory.FullName.Substring(_packageSourceDir.Length)
                     .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                isPerTenantFile = arcDir.StartsWith("screens", StringComparison.OrdinalIgnoreCase);
             }
 
             string arcFileName = Path.Combine(arcDir, fileInfo.Name)
@@ -191,7 +190,7 @@ public class PackageHelper
             archive.CreateEntryFromFile(file, arcFileName);
 
             // Add a reference to the XML
-            XmlElement fileElement = customizationNode.OwnerDocument!.CreateElement("File");
+            XmlElement fileElement = customizationNode.OwnerDocument!.CreateElement(isPerTenantFile ? "PerTenantFile" : "File");
             fileElement.SetAttribute("AppRelativePath", arcFileName);
             customizationNode.AppendChild(fileElement);
         }
