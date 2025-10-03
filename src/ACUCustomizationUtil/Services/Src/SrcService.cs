@@ -183,7 +183,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         IEnumerable<Helpers.CommonTypes.CustomizationProjectEntity>? result = await dataHelper.GetCustomizationProjectEntitiesAsync(packageName);
         if (result != null)
             foreach (Helpers.CommonTypes.CustomizationProjectEntity item in result)
-                itemHandler.HandleCustomizationsEntity(item);
+                itemHandler.HandleCustomizationsEntity(item, dataHelper);
 
         //Write project meta-file
         itemHandler.SaveProjectMetadata(projectInfo);

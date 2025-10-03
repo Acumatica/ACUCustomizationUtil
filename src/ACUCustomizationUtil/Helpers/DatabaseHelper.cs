@@ -111,9 +111,7 @@ public class DatabaseHelper
         }
     }
 
-    public async Task<IEnumerable<CustomizationProjectEntity>?> GetCustomizationProjectEntitiesAsync(
-        string projectName
-    )
+    public async Task<IEnumerable<CustomizationProjectEntity>?> GetCustomizationProjectEntitiesAsync(string projectName)
     {
         const string sql =
             @"SELECT * FROM CustObject 
@@ -134,5 +132,29 @@ public class DatabaseHelper
         object param = new { ProjectName = projectName };
         await using DbConnection connection = _connectionFactory();
         return await connection.QuerySingleAsync<CustomizationProject>(sql, param);
+    }
+
+    public async Task<UploadFileRevision> GetUploadFileRevision(string fileID, int? revisionID)
+    {
+        const string sql =
+            @"SELECT * 
+                FROM UploadFileRevision 
+            WHERE FileID = @FileID 
+            AND FileRevisionID = @FileRevisionID";
+
+        object param = new { FileID = fileID, FileRevisionID = revisionID };
+        await using DbConnection connection = _connectionFactory();
+        return await connection.QuerySingleAsync<UploadFileRevision>(sql, param);
+    }
+    public async Task<UploadFile> GetUploadFile(string fileID)
+    {
+        const string sql =
+            @"SELECT * 
+                FROM UploadFile 
+            WHERE FileID = @FileID";
+
+        object param = new { FileID = fileID };
+        await using DbConnection connection = _connectionFactory();
+        return await connection.QuerySingleAsync<UploadFile>(sql, param);
     }
 }

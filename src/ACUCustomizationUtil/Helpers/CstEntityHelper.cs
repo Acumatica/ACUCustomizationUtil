@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Linq;
 
 using ACUCustomizationUtils.Configuration.ACU;
@@ -31,12 +32,14 @@ public class CstEntityHelper
 
     #region Public methods
 
-    public void HandleCustomizationsEntity(CustomizationProjectEntity entity)
+    public void HandleCustomizationsEntity(CustomizationProjectEntity entity, DatabaseHelper dataHelper)
     {
         if (entity.Type == "File")
         {
             HandleFileEntity(entity);
         }
+        else if (entity.Type == "PerTenantFile")
+            HandlePerTenantFileEntity(entity, dataHelper);
         else
         {
             HandleContentEntity(entity);
@@ -133,7 +136,7 @@ public class CstEntityHelper
             throw new Exception($"Error write package entity source {entity.Name}", e);
         }
     }
-
+ 
     private void HandleFileEntity(CustomizationProjectEntity entity)
     {
         string fileFullName = entity.Name!.Replace("File#", "");
@@ -159,6 +162,39 @@ public class CstEntityHelper
                 e
             );
         }
+    }
+    private void HandlePerTenantFileEntity(CustomizationProjectEntity entity, DatabaseHelper dataHelper)
+    {
+        var fileData = GetPerTenantFileAsync(entity, dataHelper).GetAwaiter().GetResult();
+
+        string fileFullName = entity.Name!.Replace("PerTenantFile#", "");
+        string destinationPath = Path.Combine(_packageSourceDir, fileFullName);
+        try
+        {
+            destinationPath.TryCheckFileDirectory();
+            File.WriteAllBytes(destinationPath, fileData);
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error copy entity {entity.Name} to {destinationPath}", e);
+        }
+    }
+
+    private async Task<byte[]> GetPerTenantFileAsync(CustomizationProjectEntity entity, DatabaseHelper dataHelper)
+    {
+        var xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(entity.Content);
+        var fileID = xmlDoc.DocumentElement?.GetAttribute("FileID");
+
+        var uploadFile = await dataHelper.GetUploadFile(fileID);
+        if (uploadFile == null)
+            throw new Exception($"File with ID={fileID} not found in UploadFile table");
+
+        var getFile = await dataHelper.GetUploadFileRevision(fileID, uploadFile.LastRevisionID);
+        if (getFile == null)
+            throw new Exception($"File with ID={fileID} not found in UploadFileRevision table");
+
+        return getFile.Data;
     }
 
     private static string? ExtractVersion(string content)
