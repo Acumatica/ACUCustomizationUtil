@@ -34,15 +34,17 @@ public class CstEntityHelper
 
     public void HandleCustomizationsEntity(CustomizationProjectEntity entity, DatabaseHelper dataHelper)
     {
-        if (entity.Type == "File")
+        switch (entity.Type)
         {
-            HandleFileEntity(entity);
-        }
-        else if (entity.Type == "PerTenantFile")
-            HandlePerTenantFileEntity(entity, dataHelper);
-        else
-        {
-            HandleContentEntity(entity);
+            case "File":
+                HandleFileEntity(entity);
+                break;
+            case "PerTenantFile":
+                HandlePerTenantFileEntity(entity, dataHelper);
+                break;
+            default:
+                HandleContentEntity(entity);
+                break;
         }
     }
 
