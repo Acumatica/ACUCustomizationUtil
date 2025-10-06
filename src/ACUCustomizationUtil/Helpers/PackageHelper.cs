@@ -179,20 +179,40 @@ public class PackageHelper
                 arcDir = fileInfo
                     .Directory.FullName.Substring(_packageSourceDir.Length)
                     .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                isPerTenantFile = arcDir.StartsWith("screens", StringComparison.OrdinalIgnoreCase);
+                isPerTenantFile = arcDir.StartsWith(CstEntityHelper.FrontEndSourceRelativePath, StringComparison.OrdinalIgnoreCase);
             }
 
-            string arcFileName = Path.Combine(arcDir, fileInfo.Name)
-                                     .Replace('\\', Path.DirectorySeparatorChar)
-                                     .Replace('/', Path.DirectorySeparatorChar);
-
+            string arcFileName = GetFileName(fileInfo, arcDir, isPerTenantFile);
             // Add the file to the archive
             archive.CreateEntryFromFile(file, arcFileName);
 
             // Add a reference to the XML
             XmlElement fileElement = customizationNode.OwnerDocument!.CreateElement(isPerTenantFile ? "PerTenantFile" : "File");
             fileElement.SetAttribute("AppRelativePath", arcFileName);
+            if(isPerTenantFile)
+            {
+                //Take the third element from the file name which is screen id
+                var screenId = arcFileName.Split(Path.DirectorySeparatorChar)[2];
+                fileElement.SetAttribute("ScreenId", screenId);
+            }
             customizationNode.AppendChild(fileElement);
+        }
+    }
+
+    private static string GetFileName(FileInfo fileInfo, string arcDir, bool isPerTenantFile)
+    {
+        if (isPerTenantFile)
+        {
+            return Path.Combine(arcDir, fileInfo.Name)
+                       .Remove(0, CstEntityHelper.FrontEndSourceRelativePath.Length)
+                       .Replace('\\', Path.DirectorySeparatorChar)
+                       .Replace('/', Path.DirectorySeparatorChar);
+        }
+        else
+        {
+            return Path.Combine(arcDir, fileInfo.Name)
+                       .Replace('\\', Path.DirectorySeparatorChar)
+                       .Replace('/', Path.DirectorySeparatorChar);
         }
     }
 

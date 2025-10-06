@@ -14,16 +14,19 @@ public class CstEntityHelper
     private readonly string _packageSourceDir;
     private readonly string _packageSourceProjectDir;
     private readonly string _packageSourceBinDir;
+    private readonly string _packageFrontEndSourceDir;
     private readonly string _siteRootDir;
     private readonly string? _erpVersion;
     private readonly string? _dllName;
     private readonly string? _versionFilePath;
+    public static string FrontEndSourceRelativePath { get; } = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
     {
         _packageSourceDir = config.Src.PkgSourceDirectory!;
         _packageSourceBinDir = Path.Combine(_packageSourceDir, "Bin");
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
+        _packageFrontEndSourceDir = Path.Combine(_packageSourceDir, FrontEndSourceRelativePath);
         _siteRootDir = config.Site.InstancePath!;
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
@@ -170,7 +173,7 @@ public class CstEntityHelper
         var fileData = GetPerTenantFileAsync(entity, dataHelper).GetAwaiter().GetResult();
 
         string fileFullName = entity.Name!.Replace("PerTenantFile#", "");
-        string destinationPath = Path.Combine(_packageSourceDir, fileFullName);
+        string destinationPath = Path.Combine(_packageFrontEndSourceDir, fileFullName);
         try
         {
             destinationPath.TryCheckFileDirectory();
