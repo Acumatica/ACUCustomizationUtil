@@ -19,7 +19,7 @@ public class CstEntityHelper
     private readonly string? _erpVersion;
     private readonly string? _dllName;
     private readonly string? _versionFilePath;
-    public static string FrontEndSourceRelativePath { get; } = "FrontendSources\\screen\\src\\development\\";
+    public static readonly string FrontEndSourceRelativePath = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
     {
