@@ -79,20 +79,9 @@ public class PackageHelper
 
             //Add project.xml to the archive
             archive.CreateEntryFromFile(ProjectXMLFilename, Path.GetFileName(ProjectXMLFilename));
-
-            // Add metadata file to the archive
-            File.WriteAllText(
-                MetaDataHelper.MetadataFileName,
-                _metaDataHelper.CreateMetadataJson()
-            );
-            archive.CreateEntryFromFile(
-                MetaDataHelper.MetadataFileName,
-                Path.GetFileName(MetaDataHelper.MetadataFileName)
-            );
         }
 
         File.Delete(ProjectXMLFilename);
-        File.Delete(MetaDataHelper.MetadataFileName);
     }
 
     #endregion Public members
