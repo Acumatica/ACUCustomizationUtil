@@ -13,13 +13,20 @@
   "site": {                                                                                                                   Parameters for site command
     "instanceName": "AcuTestUtil",                                                                                            Instance name
     "instancePath": "C:\\Acumatica\\instance\\23.105.0016\\Site",                                                             Full physical path of instance
-    "sqlServerName": "localhost",                                                                                             Name of SQL server with ACU instance databace
+    "dbProvider": null,                                                                                                       Database provider: "mssql" (default) or "mysql"
+    "sqlServerName": "localhost",                                                                                             Name of database server with ACU instance database
+    "dbPort": null,                                                                                                           Database server port (mysql only, default 3306)
     "dbName": "23.105.0016DB",                                                                                                Instance database name
+    "dbUser": null,                                                                                                           Database user name (required for mysql;
+                                                                                                                              for mssql enables SQL auth instead of Windows auth)
+    "dbPassword": null,                                                                                                       Database user password
     "acumaticaAdminName": "admin",                                                                                            Name of admin user
     "acumaticaAdminPassword": "123",                                                                                          Password which will be set for the  admin user
                                                                                                                               after instance was installed
     "acumaticaToolPath": null,                                                                                                Path to acumatica tool "ac.exe"
-    "dbConnectionString": null,                                                                                               Database connection string
+    "dbConnectionString": null,                                                                                               Database connection string; when null it is derived
+                                                                                                                              from dbProvider/sqlServerName/dbPort/dbName/dbUser/
+                                                                                                                              dbPassword; an explicit value always wins
     "iisAppPool": null,                                                                                                       IIS app pool name
     "iisWebSite": null                                                                                                        IIS web site name
   },

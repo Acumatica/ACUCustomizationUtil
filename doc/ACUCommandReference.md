@@ -33,8 +33,11 @@
 | **Command** | **Commands** | **Options**             | **Description**                                                           
 | site        |              |                         |                                                                       
 |             | install      |                         | Install Acumatica instance                                            
-|             |              | --sqlServerName         | SQL Server instance for Acumatica database [default: localhost]       
+|             |              | --sqlServerName         | Database server for Acumatica database [default: localhost]           
 |             |              | --dbName                | Acumatica database name                                               
+|             |              | --dbProvider            | Database provider: mssql or mysql [default: mssql]                    
+|             |              | --dbUser                | Database user name (required for mysql)                               
+|             |              | --dbPassword            | Database user password (required for mysql)                           
 |             |              | --instanceName          | Acumatica instance name                                               
 |             |              | --instansePath          | Acumatica instanse physical path                                      
 |             |              | --acuAdminName          | Acumatica instance admin name                                         
@@ -43,6 +46,9 @@
 |             | update       |                         | Update Acumatica instance                                             
 |             |              | instance                | Update site                                                           
 |             |              | database                | Update database                                                       
+|             |              | --dbProvider            | Database provider: mssql or mysql [default: mssql] (database)         
+|             |              | --dbUser                | Database user name (required for mysql) (database)                    
+|             |              | --dbPassword            | Database user password (required for mysql) (database)                
 |             |              | --acuToolPath           | Acumatica ac.exe tool path: version for update                        
 |             | delete       |                         | Delete Acumatica instance                                             
 |             |              | --instanceName          | Acumatica instance name                                               
@@ -52,6 +58,9 @@
 |             | get          |                         | Get customization project source                                      
 |             |              | --packageName           | Package name                                                          
 |             |              | --dbConnectionString    | Database connection string                                            
+|             |              | --dbProvider            | Database provider: mssql or mysql [default: mssql]                    
+|             |              | --dbUser                | Database user name (required for mysql)                               
+|             |              | --dbPassword            | Database user password (required for mysql)                           
 |             |              | --sitePath              | Acumatica instance physical path                                      
 |             |              | --sourceDirectory       | Customization source items directory                                  
 |             | make         |                         | Create customization package from source code                         

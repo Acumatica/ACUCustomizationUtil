@@ -54,6 +54,9 @@ public class SiteCommandBuilder : CommandBuilderBase
         Option<string> instancePathOption = GetInstancePathOption();
         Option<string> acuAdminName = GetAcumaticaAdminNameOption();
         Option<string> acuAdminPassword = GetAcumaticaAdminPasswordOption();
+        Option<string> dbProviderOption = GetDbProviderOption();
+        Option<string> dbUserOption = GetDbUserOption();
+        Option<string> dbPasswordOption = GetDbPasswordOption();
 
         Command command = new Command("install", "Install Acumatica instance.")
         {
@@ -63,6 +66,9 @@ public class SiteCommandBuilder : CommandBuilderBase
             instancePathOption,
             acuAdminName,
             acuAdminPassword,
+            dbProviderOption,
+            dbUserOption,
+            dbPasswordOption,
         };
         command.SetHandler(
             async config =>
@@ -78,7 +84,10 @@ public class SiteCommandBuilder : CommandBuilderBase
                 instanceNameOption,
                 instancePathOption,
                 acuAdminName,
-                acuAdminPassword
+                acuAdminPassword,
+                dbProviderOption,
+                dbUserOption,
+                dbPasswordOption
             )
         );
 
@@ -122,10 +131,16 @@ public class SiteCommandBuilder : CommandBuilderBase
     {
         Option<string> serverNameOption = GetServerNameOption();
         Option<string> databaseNameOption = GetDatabaseNameOption();
+        Option<string> dbProviderOption = GetDbProviderOption();
+        Option<string> dbUserOption = GetDbUserOption();
+        Option<string> dbPasswordOption = GetDbPasswordOption();
         Command command = new Command("database", "Update Acumatica database.")
         {
             serverNameOption,
             databaseNameOption,
+            dbProviderOption,
+            dbUserOption,
+            dbPasswordOption,
         };
         command.SetHandler(
             async config =>
@@ -137,7 +152,10 @@ public class SiteCommandBuilder : CommandBuilderBase
                 UserConfigOption!,
                 _acuToolPathOption,
                 serverNameOption,
-                databaseNameOption
+                databaseNameOption,
+                dbProviderOption,
+                dbUserOption,
+                dbPasswordOption
             )
         );
 
@@ -190,8 +208,23 @@ public class SiteCommandBuilder : CommandBuilderBase
     {
         return new Option<string>(
             "--sqlServerName",
-            description: "SQL Server instance for Acumatica database"
+            description: "Database server for Acumatica database"
         );
+    }
+
+    private static Option<string> GetDbProviderOption()
+    {
+        return new Option<string>("--dbProvider", "Database provider: mssql|mysql");
+    }
+
+    private static Option<string> GetDbUserOption()
+    {
+        return new Option<string>("--dbUser", "Database user name");
+    }
+
+    private static Option<string> GetDbPasswordOption()
+    {
+        return new Option<string>("--dbPassword", "Database user password");
     }
 
     private static Option<string> GetInstanceOption()
@@ -226,6 +259,9 @@ public class SiteInstallConfigurationBinder : CommandParametersBinder
         string? instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
         string? acuAdminName = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
         string? acuAdminPassword = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
+        string? dbProvider = bindingContext.ParseResult.GetValueForOption(commandOptions[7]!);
+        string? dbUser = bindingContext.ParseResult.GetValueForOption(commandOptions[8]!);
+        string? dbPassword = bindingContext.ParseResult.GetValueForOption(commandOptions[9]!);
 
         return new AcuConfiguration
         {
@@ -238,6 +274,9 @@ public class SiteInstallConfigurationBinder : CommandParametersBinder
                 InstancePath = instancePath,
                 AcumaticaAdminName = acuAdminName,
                 AcumaticaAdminPassword = acuAdminPassword,
+                DbProvider = dbProvider,
+                DbUser = dbUser,
+                DbPassword = dbPassword,
             },
         };
     }
@@ -297,6 +336,15 @@ public class SiteUpdateDatabaseConfigurationBinder : CommandParametersBinder
         string? dbName = bindingContext.ParseResult.GetValueForOption(
             commandOptions[2] ?? throw new InvalidOperationException()
         );
+        string? dbProvider = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[3] ?? throw new InvalidOperationException()
+        );
+        string? dbUser = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[4] ?? throw new InvalidOperationException()
+        );
+        string? dbPassword = bindingContext.ParseResult.GetValueForOption(
+            commandOptions[5] ?? throw new InvalidOperationException()
+        );
         return new AcuConfiguration
         {
             Site = new SiteConfiguration
@@ -304,6 +352,9 @@ public class SiteUpdateDatabaseConfigurationBinder : CommandParametersBinder
                 AcumaticaToolPath = acuToolPath,
                 SqlServerName = sqlServerName,
                 DbName = dbName,
+                DbProvider = dbProvider,
+                DbUser = dbUser,
+                DbPassword = dbPassword,
             },
         };
     }

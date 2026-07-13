@@ -8,8 +8,12 @@
   "site": {
     "instanceName": "25.100.0054",
     "instancePath": "%ACUBASEDIR%\\instance\\25.100.0054\\Site",
+    "dbProvider": null,
     "sqlServerName": "localhost",
+    "dbPort": null,
     "dbName": "25.100.0054",
+    "dbUser": null,
+    "dbPassword": null,
     "acumaticaAdminName": "admin",
     "acumaticaAdminPassword": "123",
     "dbConnectionString": null,

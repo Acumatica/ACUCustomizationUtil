@@ -331,8 +331,12 @@ Copy example asu.json file from ACU installation folder into Base project folder
   "site": {
     "instanceName": "23.105.0016",
     "instancePath": "%ACUBASEDIR%\\instance\\23.105.0016\\Site",
+    "dbProvider": null,
     "sqlServerName": "localhost",
+    "dbPort": null,
     "dbName": "23.105.0016DB", 
+    "dbUser": null,
+    "dbPassword": null,
     "acumaticaAdminName": "admin",
     "acumaticaAdminPassword": "123",
     "dbConnectionString": null,
@@ -359,6 +363,29 @@ Copy example asu.json file from ACU installation folder into Base project folder
   }
 }
 ```
+
+##### Using a MySQL database
+
+By default ACU works with Microsoft SQL Server (`"dbProvider": null` or `"mssql"`) using Windows
+integrated security. To work with an Acumatica instance hosted on MySQL, set the database provider
+and credentials in the site section (MySQL has no Windows integrated security, so a database user
+and password are required):
+
+```json
+  "site": {
+    "dbProvider": "mysql",
+    "sqlServerName": "localhost",
+    "dbPort": null,
+    "dbName": "23.105.0016DB",
+    "dbUser": "acumatica",
+    "dbPassword": "secret"
+  }
+```
+
+When `dbConnectionString` is null it is derived from these fields after all configuration sources
+(acu.json, acu.json.user, command line options) are merged. An explicitly set `dbConnectionString`
+always takes precedence. The same values can be passed on the command line with `--dbProvider`,
+`--dbUser` and `--dbPassword` for `src get`, `site install` and `site update database`.
 
 ##### Download and install ERP
 

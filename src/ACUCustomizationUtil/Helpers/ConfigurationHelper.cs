@@ -32,24 +32,31 @@ public static class ConfigurationHelper
         IAcuConfiguration userConfig = ReadConfig(userConfigFile?.FullName);
 
         //Merge configurations
+        IAcuConfiguration result;
         if (config.IsNotNull)
         {
             config.CopyValues(userConfig).CopyValues(userInput);
-            return config;
+            result = config;
         }
         else if (userConfig.IsNotNull)
         {
             userConfig.CopyValues(userInput);
-            return userConfig;
+            result = userConfig;
         }
         else if (userInput != null)
         {
-            return userInput;
+            result = userInput;
         }
         else
         {
             throw new Exception($"ACU configuration is null or empty");
         }
+
+        //Derive the DB connection string after the merge so that discrete DB fields
+        //(dbProvider, sqlServerName, dbName, dbUser, dbPassword) from any source are respected
+        result.Site.DeriveDbConnectionString();
+
+        return result;
     }
 
     public static void PrintConfiguration<T>(

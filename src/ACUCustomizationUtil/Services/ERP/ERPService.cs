@@ -127,7 +127,7 @@ public class ErpService : IErpService
                             config.Erp.InstallationDirectory!
                         );
                         ProcessHelper processHelper = new ProcessHelper(Messages.Msiexec, processArgs, ctx);
-                        await processHelper.Execute();
+                        processHelper.Execute();
                         await Task.Run(() =>
                         {
                             File.Delete(config.Erp.InstallationFilePath!);

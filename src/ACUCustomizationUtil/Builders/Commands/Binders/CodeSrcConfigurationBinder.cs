@@ -27,6 +27,9 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
         string? dbConnection = bindingContext.ParseResult.GetValueForOption(commandOptions[1]!);
         string? instancePath = bindingContext.ParseResult.GetValueForOption(commandOptions[2]!);
         string? sourceDirectory = bindingContext.ParseResult.GetValueForOption(commandOptions[3]!);
+        string? dbProvider = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
+        string? dbUser = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
+        string? dbPassword = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
 
         return new AcuConfiguration
         {
@@ -34,6 +37,9 @@ public class CodeSrcConfigurationBinder : CommandParametersBinder
             {
                 DbConnectionString = dbConnection,
                 InstancePath = instancePath,
+                DbProvider = dbProvider,
+                DbUser = dbUser,
+                DbPassword = dbPassword,
             },
 
             Pkg = new PackageConfiguration { PkgName = packageName },

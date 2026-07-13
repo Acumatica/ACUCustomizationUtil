@@ -11,8 +11,12 @@ public interface ISiteConfiguration
     string? AcumaticaToolPath { get; }
     string? InstanceName { get; }
     string? InstancePath { get; }
+    string? DbProvider { get; }
     string? SqlServerName { get; }
+    string? DbPort { get; }
     string? DbName { get; }
+    string? DbUser { get; }
+    string? DbPassword { get; }
     string? DbConnectionString { get; }
     string? AcumaticaAdminName { get; }
     string? AcumaticaAdminPassword { get; }
@@ -22,4 +26,5 @@ public interface ISiteConfiguration
     [JsonIgnore]
     bool IsNotNull { get; }
     ISiteConfiguration SetDefaultValues(IAcuConfiguration configuration);
+    void DeriveDbConnectionString();
 }

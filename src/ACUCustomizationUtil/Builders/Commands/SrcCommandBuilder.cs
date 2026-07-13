@@ -78,6 +78,9 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
         Option<string> dbConnection = GetDBConnectionStringOption();
         Option<string> instancePath = GetInstancePathOption();
         Option<string> sourceDirectory = GetSourceDirectoryOption();
+        Option<string> dbProvider = GetDbProviderOption();
+        Option<string> dbUser = GetDbUserOption();
+        Option<string> dbPassword = GetDbPasswordOption();
 
         Command command = new Command("get", "Get customization project source")
         {
@@ -85,6 +88,9 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
             dbConnection,
             instancePath,
             sourceDirectory,
+            dbProvider,
+            dbUser,
+            dbPassword,
         };
 
         command.SetHandler(
@@ -95,7 +101,10 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
                 packageName,
                 dbConnection,
                 instancePath,
-                sourceDirectory
+                sourceDirectory,
+                dbProvider,
+                dbUser,
+                dbPassword
             )
         );
         return command;
@@ -142,6 +151,21 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
     private static Option<string> GetDBConnectionStringOption()
     {
         return new Option<string>("--dbConnectionString", "Database connection string");
+    }
+
+    private static Option<string> GetDbProviderOption()
+    {
+        return new Option<string>("--dbProvider", "Database provider: mssql|mysql");
+    }
+
+    private static Option<string> GetDbUserOption()
+    {
+        return new Option<string>("--dbUser", "Database user name");
+    }
+
+    private static Option<string> GetDbPasswordOption()
+    {
+        return new Option<string>("--dbPassword", "Database user password");
     }
 
     private static Option<string> GetProjectDescriptionOption()

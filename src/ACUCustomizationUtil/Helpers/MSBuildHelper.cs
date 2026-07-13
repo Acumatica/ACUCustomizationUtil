@@ -28,7 +28,7 @@ public class MsBuildHelper
         _metaDataHelper = new MetaDataHelper(_config);
     }
 
-    public async Task Execute()
+    public void Execute()
     {
         _metaDataHelper.SetBuildVersion();
         _metaDataHelper.SetBuildMetadata();
@@ -36,7 +36,7 @@ public class MsBuildHelper
         _msbuildPath = GetMsbuildPath();
         _msbuildArgs = GetMsBuildArgs();
         ProcessHelper process = new ProcessHelper(_msbuildPath, _msbuildArgs, _ctx);
-        await process.Execute();
+        process.Execute();
     }
 
     public async Task CopyAssemblyToPackageBinAsync()

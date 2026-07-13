@@ -1,6 +1,7 @@
 ﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Site;
 using ACUCustomizationUtils.Helpers;
+using ACUCustomizationUtils.Helpers.Db;
 using ACUCustomizationUtils.Validators.Site;
 
 using Microsoft.Extensions.Logging;
@@ -231,8 +232,9 @@ public class SiteService : ISiteService
 
     private static string GetSiteInstallCmdArgs(ISiteConfiguration siteConfig)
     {
+        string dbArgs = DbProviderResolver.Resolve(siteConfig).BuildAcExeDbArgs(siteConfig);
         string args =
-            $"-cm:\"NewInstance\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -c:\"ci=1;ct=;cn=;\" -c:\"ci=2;ct=SalesDemo;cp=1;cv=Yes;cn=Company;\" -i:\"{siteConfig.InstanceName}\" -h:\"{siteConfig.InstancePath}\" -w:\"{siteConfig.IisWebSite}\" -v:\"{siteConfig.InstanceName}\" -po:\"{siteConfig.IisAppPool}\" -op:\"Forced\"";
+            $"-cm:\"NewInstance\" {dbArgs} -c:\"ci=1;ct=;cn=;\" -c:\"ci=2;ct=SalesDemo;cp=1;cv=Yes;cn=Company;\" -i:\"{siteConfig.InstanceName}\" -h:\"{siteConfig.InstancePath}\" -w:\"{siteConfig.IisWebSite}\" -v:\"{siteConfig.InstanceName}\" -po:\"{siteConfig.IisAppPool}\" -op:\"Forced\"";
         return args;
     }
 
@@ -250,8 +252,8 @@ public class SiteService : ISiteService
 
     private static string GetDatabaseUpdateCmdArgs(ISiteConfiguration siteConfig)
     {
-        string args =
-            $"-cm:\"DBMaint\" -s:\"{siteConfig.SqlServerName}\" -d:\"{siteConfig.DbName}\" -n:\"False\" -b:\"True\" -op:\"Forced\"";
+        string dbArgs = DbProviderResolver.Resolve(siteConfig).BuildAcExeDbArgs(siteConfig);
+        string args = $"-cm:\"DBMaint\" {dbArgs} -n:\"False\" -b:\"True\" -op:\"Forced\"";
         return args;
     }
 

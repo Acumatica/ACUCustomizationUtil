@@ -14,6 +14,10 @@ internal static class Messages
     public const string MakeModeISV = "ISV";
     public const string MakeModeQA = "QA";
 
+    public const string DbProviderMsSql = "mssql";
+    public const string DbProviderMySql = "mysql";
+    public const string MySqlDefaultPort = "3306";
+
     public const string DeserializeError = "Deserialization failed";
     public const string ErrorLogType = "error";
 

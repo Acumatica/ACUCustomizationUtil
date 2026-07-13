@@ -40,12 +40,28 @@ public class SiteConfigurationConverter : JsonConverter<ISiteConfiguration>
                     site.InstancePath = reader.GetString().NormalizeEnvVariables();
                     break;
 
+                case nameof(site.DbProvider):
+                    site.DbProvider = reader.GetString();
+                    break;
+
                 case nameof(site.SqlServerName):
                     site.SqlServerName = reader.GetString();
                     break;
 
+                case nameof(site.DbPort):
+                    site.DbPort = reader.GetString();
+                    break;
+
                 case nameof(site.DbName):
                     site.DbName = reader.GetString();
+                    break;
+
+                case nameof(site.DbUser):
+                    site.DbUser = reader.GetString();
+                    break;
+
+                case nameof(site.DbPassword):
+                    site.DbPassword = reader.GetString();
                     break;
 
                 case nameof(site.DbConnectionString):
