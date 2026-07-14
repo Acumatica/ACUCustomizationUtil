@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Project Configuration Guide (version 25.11.10.1042)
+## Project Configuration Guide (version 26.07.14.1557)
 
 ### Introduction
 

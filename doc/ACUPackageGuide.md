@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Package Guide (version 25.11.10.1042)
+## Package Guide (version 26.07.14.1557)
 
 To create a package using the development environment, you need to set up the corresponding configuration. 
 Let's consider setting up the corresponding configurations for JetBrains Rider and Visual Studio step by step.
