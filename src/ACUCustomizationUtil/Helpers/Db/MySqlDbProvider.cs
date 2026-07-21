@@ -32,17 +32,7 @@ public class MySqlDbProvider : IDbProvider
         return $"Server={site.SqlServerName};Port={port};Database={site.DbName};User ID={site.DbUser};Password={site.DbPassword};AllowUserVariables=True;";
     }
 
-    // MySQL does not allow LIMIT directly inside an IN subquery,
-    // so the limited subquery is wrapped in a derived table.
-    public string CustObjectByProjectNameSql =>
-        @"SELECT * FROM CustObject
-                                 WHERE ProjectID IN
-                                      (SELECT ProjID FROM
-                                          (SELECT ProjID
-                                           FROM CustProject
-                                           WHERE Name = @ProjectName
-                                           LIMIT 1) AS proj)
-                                 ORDER BY Type";
+    public string CustObjectByProjectNameSql => SqlQueries.MySql.CustObjectByProjectName;
 
     public Task EnsureAppLoginAsync(Func<DbConnection> connectionFactory, ISiteConfiguration site)
     {

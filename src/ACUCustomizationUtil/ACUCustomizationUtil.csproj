@@ -45,7 +45,6 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\Proxy\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
