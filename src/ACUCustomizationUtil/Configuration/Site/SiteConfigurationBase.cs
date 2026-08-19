@@ -21,12 +21,18 @@ public abstract class SiteConfigurationBase : ISiteConfiguration
     public string? SqlServerName { get; set; }
     public string? DbPort { get; set; }
     public string? DbName { get; set; }
+    [Secret] 
     public string? DbUser { get; set; }
+    [Secret] 
     public string? DbPassword { get; set; }
+    [Secret] 
     public string? DbConnectionString { get; set; }
+    [Secret] 
     public string? AcumaticaAdminName { get; set; }
+    [Secret] 
     public string? AcumaticaAdminPassword { get; set; }
     public string? IisAppPool { get; set; }
+    [Secret] 
     public string? IisDbUsername { get; set; }
     public string? IisWebSite { get; set; }
     public abstract bool IsNotNull { get; }

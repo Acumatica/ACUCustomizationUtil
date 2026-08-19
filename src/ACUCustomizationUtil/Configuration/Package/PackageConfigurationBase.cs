@@ -14,7 +14,9 @@ namespace ACUCustomizationUtils.Configuration.Package;
 public abstract class PackageConfigurationBase : IPackageConfiguration
 {
     public Uri? Url { get; set; }
+    [Secret] 
     public string? Login { get; set; }
+    [Secret] 
     public string? Password { get; set; }
     public string? Tenant { get; set; }
     public string? Branch { get; set; }

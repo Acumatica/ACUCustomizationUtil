@@ -1,5 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 
+using ACUCustomizationUtils.Configuration;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 
@@ -9,6 +11,9 @@ namespace ACUCustomizationUtils.Helpers;
 
 public static class ConfigurationHelper
 {
+    // Placeholder rendered in the console/log in place of any config property marked [Secret].
+    private const string MaskText = "***";
+
     public static void WriteConfig(IAcuConfiguration config)
     {
         JsonSerializerOptions options = new JsonSerializerOptions
@@ -96,8 +101,8 @@ public static class ConfigurationHelper
     )
     {
         Type t = config.GetType();
-        IEnumerable<System.Reflection.PropertyInfo> properties = t.GetProperties().Where(prop => prop is { CanRead: true, CanWrite: true });
-        foreach (System.Reflection.PropertyInfo? prop in properties)
+        IEnumerable<PropertyInfo> properties = t.GetProperties().Where(prop => prop is { CanRead: true, CanWrite: true });
+        foreach (PropertyInfo? prop in properties)
             if (prop.PropertyType.Assembly == t.Assembly)
             {
                 object? sConfig = prop.GetValue(config);
@@ -108,7 +113,8 @@ public static class ConfigurationHelper
             {
                 object? value = prop.GetValue(config, null);
                 if (value != null)
-                    res.Add((currentConfigType, prop.Name, value));
+                    res.Add((currentConfigType, prop.Name,
+                        prop.GetCustomAttribute<SecretAttribute>() is not null ? MaskText : value));
             }
     }
 }

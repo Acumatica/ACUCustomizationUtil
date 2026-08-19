@@ -159,7 +159,6 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
     {
         string packageName = config.Pkg.PkgName!;
         string sourceDirectory = config.Src.PkgSourceDirectory!;
-        string connectionString = config.Site.DbConnectionString!;
 
         sourceDirectory.TryCheckCreateDirectory();
         if (!Directory.Exists(sourceDirectory))
@@ -173,7 +172,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         Helpers.CommonTypes.CustomizationProject projectInfo =
             await dataHelper.GetCustomizationProjectAsync()
             ?? throw new Exception(
-                $"Project {packageName} does not found for connection {connectionString}"
+                $"Project {packageName} not found in the target database"
             );
 
         //Clear directory
