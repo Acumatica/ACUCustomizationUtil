@@ -135,7 +135,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
                         );
                         ctx.Status("Compile in progress, please wait ...");
                         MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx);
-                         msBuildHelper.Execute();
+                        await msBuildHelper.Execute();
 
                         ctx.Status("Copy external library assembly to package source");
                         _logger.LogInformation("Copy external library assembly to package source");
