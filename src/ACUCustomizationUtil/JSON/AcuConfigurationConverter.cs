@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Configuration.Erp;
+using ACUCustomizationUtils.Configuration.Package;
+using ACUCustomizationUtils.Configuration.Site;
+using ACUCustomizationUtils.Configuration.Src;
 using ACUCustomizationUtils.Extensions;
 
 namespace ACUCustomizationUtils.JSON;
@@ -37,21 +40,27 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
             {
                 case nameof(configuration.Erp):
                     ErpConfigurationConverter converter = new ErpConfigurationConverter();
-                    IErpConfiguration erp = converter.Read(ref reader, typeof(IErpConfiguration), options);
+                    IErpConfiguration erp = converter.Read(
+                        ref reader, 
+                        typeof(IErpConfiguration), 
+                        options);
                     configuration.Erp.CopyValues(erp);
                     break;
 
                 case nameof(configuration.Site):
                     SiteConfigurationConverter siteConverter = new SiteConfigurationConverter();
-                    Configuration.Site.ISiteConfiguration site = siteConverter.Read(ref reader, typeof(IErpConfiguration), options);
+                    ISiteConfiguration site = siteConverter.Read(
+                        ref reader, 
+                        typeof(ISiteConfiguration), 
+                        options);
                     configuration.Site.CopyValues(site);
                     break;
 
                 case nameof(configuration.Pkg):
                     PackageConfigurationConverter packageConverter = new PackageConfigurationConverter();
-                    Configuration.Package.IPackageConfiguration package = packageConverter.Read(
+                    IPackageConfiguration package = packageConverter.Read(
                         ref reader,
-                        typeof(IErpConfiguration),
+                        typeof(IPackageConfiguration),
                         options
                     );
                     configuration.Pkg.CopyValues(package);
@@ -59,9 +68,9 @@ public class AcuConfigurationConverter : JsonConverter<IAcuConfiguration>
 
                 case nameof(configuration.Src):
                     SrcConfigurationConverter projectConverter = new SrcConfigurationConverter();
-                    Configuration.Src.ISrcConfiguration project = projectConverter.Read(
+                    ISrcConfiguration project = projectConverter.Read(
                         ref reader,
-                        typeof(IErpConfiguration),
+                        typeof(ISrcConfiguration),
                         options
                     );
                     configuration.Src.CopyValues(project);
