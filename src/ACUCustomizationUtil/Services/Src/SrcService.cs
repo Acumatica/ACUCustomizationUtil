@@ -171,7 +171,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         CstEntityHelper itemHandler = new CstEntityHelper(config);
 
         Helpers.CommonTypes.CustomizationProject projectInfo =
-            await dataHelper.GetCustomizationProjectAsync(packageName)
+            await dataHelper.GetCustomizationProjectAsync()
             ?? throw new Exception(
                 $"Project {packageName} does not found for connection {connectionString}"
             );
@@ -180,7 +180,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         itemHandler.ClearProjectDirectory();
 
         //Write Customization entities
-        IEnumerable<Helpers.CommonTypes.CustomizationProjectEntity>? result = await dataHelper.GetCustomizationProjectEntitiesAsync(packageName);
+        IEnumerable<Helpers.CommonTypes.CustomizationProjectEntity>? result = await dataHelper.GetCustomizationProjectEntitiesAsync();
         if (result != null)
             foreach (Helpers.CommonTypes.CustomizationProjectEntity item in result)
                 itemHandler.HandleCustomizationsEntity(item, dataHelper);

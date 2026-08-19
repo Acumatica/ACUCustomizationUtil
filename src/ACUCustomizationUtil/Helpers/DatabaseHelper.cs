@@ -49,18 +49,18 @@ public class DatabaseHelper
         await _provider.EnsureAppLoginAsync(_connectionFactory, _config.Site);
     }
 
-    public async Task<IEnumerable<CustomizationProjectEntity>?> GetCustomizationProjectEntitiesAsync(string projectName)
+    public async Task<IEnumerable<CustomizationProjectEntity>?> GetCustomizationProjectEntitiesAsync()
     {
         string sql = _provider.CustObjectByProjectNameSql;
 
-        object param = new { ProjectName = projectName };
+        object param = new { ProjectName = _config.Pkg.PkgName };
         await using DbConnection connection = _connectionFactory();
         return await connection.QueryAsync<CustomizationProjectEntity>(sql, param);
     }
 
-    public async Task<CustomizationProject?> GetCustomizationProjectAsync(string projectName)
+    public async Task<CustomizationProject?> GetCustomizationProjectAsync()
     {
-        object param = new { ProjectName = projectName };
+        object param = new { ProjectName = _config.Pkg.PkgName };
         await using DbConnection connection = _connectionFactory();
         return await connection.QuerySingleAsync<CustomizationProject>(SqlQueries.Common.GetCustomizationProject, param);
     }
