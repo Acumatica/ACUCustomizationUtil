@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Globalization;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -209,8 +210,6 @@ public class PackageHelper
     {
         CstEntityHelper cstHelper = new CstEntityHelper(config);
         string? fileVersion = cstHelper.GetPackageAssemblyVersion();
-        string dateVersion = cstHelper.GetPackageDateVersion();
-        string makeMode = config.Src.MakeMode ?? Messages.MakeModeBase;
         string pkgSuffix = config.Pkg.PkgSuffix ?? string.Empty;
         string pkgName = config.Pkg.PkgName!;
         if (!string.IsNullOrEmpty(pkgSuffix))
@@ -218,15 +217,50 @@ public class PackageHelper
             pkgName = $"{pkgName}_{pkgSuffix}_";
         }
 
-        string packageName = makeMode switch
+        string packageName = config.Src.MakeMode switch
         {
-            Messages.MakeModeBase => $"{pkgName}.zip",
             Messages.MakeModeQA => $"{pkgName}[{config.Erp.ErpVersion}][{fileVersion}].zip",
-            Messages.MakeModeISV => $"{pkgName}[{config.Erp.ErpVersion}][{dateVersion}].zip",
+            Messages.MakeModeISV => $"{pkgName}[{config.Erp.ErpVersion}][{ExpandToFourSegments(fileVersion)}].zip",
             _ => $"{pkgName}.zip",
         };
 
         return packageName;
+    }
+
+    /// <summary>
+    /// Expands shortened 2-segment version of the assembly into full 4-segment format
+    /// </summary>
+    /// <param name="assemblyMinorPart">
+    /// 2 last segments of assembly version that represent package's version component
+    /// </param>
+    /// <returns>
+    /// Version string in "yyyy.MM.dd.HHmm" fornat
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="assemblyMinorPart"/> is null or empty
+    /// </exception>
+    private static string ExpandToFourSegments(string? assemblyMinorPart)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyMinorPart))
+            throw new ArgumentNullException(nameof(assemblyMinorPart));
+
+        // reconstruct January 1st of the year when assembly was built as an initial template
+        var startingDateTemplate = $"{assemblyMinorPart[..2]}0101";
+        var date = DateTime.ParseExact(startingDateTemplate, "yyMMdd", CultureInfo.InvariantCulture);
+
+        // move date to the day and time from the version
+        var daysToAdd = Convert.ToDouble(assemblyMinorPart[2..5]);
+        date = date.AddDays(daysToAdd);
+
+        var hour = Convert.ToDouble(assemblyMinorPart[6..8]);
+        date = date.AddHours(hour);
+
+        var minute = Convert.ToDouble(assemblyMinorPart[8..10]);
+        date = date.AddMinutes(minute);
+
+        // in package, we can take all 4 segments, so we expand the version number
+        const string _packageVersionFormat = "yyyy.MM.dd.HHmm";
+        return date.ToString(_packageVersionFormat, CultureInfo.InvariantCulture);
     }
 
     private static string GetPackageDescription(IAcuConfiguration config)

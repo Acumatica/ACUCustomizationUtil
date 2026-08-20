@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Package Guide (version 26.07.14.1557)
+## Package Guide (version 26.08.20.1929)
 
 To create a package using the development environment, you need to set up the corresponding configuration. 
 Let's consider setting up the corresponding configurations for JetBrains Rider and Visual Studio step by step.
@@ -51,12 +51,3 @@ Mode                 LastWriteTime         Length Name
 -a---           9/14/2023  1:23 PM           1064 acu.json                 sample configuration file
 -a---           9/15/2023  6:09 PM          64072 acu.pdb                  PDB (program database file), contains information for the debugger to work with
 ```
-
-
-
-
-
-
-
-
-

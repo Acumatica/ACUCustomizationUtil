@@ -120,9 +120,6 @@ public class CstEntityHelper
         string[] fvArr = fv.Split('.');
         return $"{fvArr[2]}.{fvArr[3]}";
     }
-
-    public string GetPackageDateVersion() => DateTime.Now.ToString("yyyy.MM.dd");
-
     #endregion Public methods
 
     #region Private methods

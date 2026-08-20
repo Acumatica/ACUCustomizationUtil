@@ -218,21 +218,10 @@ namespace ACUCustomizationUtils.Helpers
 
         public string GetAssemblyVersion()
         {
-            string datePart = GetDateVersion();
-            string isvPart = GetISVVersion();
-
             string majorPart = $"{_config.Erp.ErpVersion?[..6]}";
-            string makeMode = _config.Src.MakeMode ?? Messages.MakeModeBase;
-            string minorPart = makeMode switch
-            {
-                Messages.MakeModeBase => datePart,
-                Messages.MakeModeQA => datePart,
-                Messages.MakeModeISV => isvPart,
-                _ => datePart,
-            };
+            string minorPart = GetDateVersion();
 
-            string version = $"{majorPart}.{minorPart}";
-            return version;
+            return $"{majorPart}.{minorPart}";
         }
 
         private static string GetDateVersion()
@@ -241,8 +230,6 @@ namespace ACUCustomizationUtils.Helpers
             string days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
             return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
         }
-
-        private static string GetISVVersion() => DateTime.Now.ToString("yyyy.MM.dd");
 
         public string? GetAssemblyInfoAttributeValue(
             string filePath,

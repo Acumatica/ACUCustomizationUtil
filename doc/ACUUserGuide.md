@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## User Guide (version 26.07.14.1557)
+## User Guide (version 26.08.20.1929)
 
 ### General information
 
@@ -632,12 +632,3 @@ Before each synchronisation of the local code with the repository code, in case 
 ```powershell
 PS C:\Acumatica\project\ACUProject> acu src get
 ```
-
-
-
-
-
-
-
-
-
