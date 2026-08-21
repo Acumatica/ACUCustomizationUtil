@@ -50,7 +50,7 @@
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="xcopy /F /Y $(ProjectDir)acu.json $(ProjectDir)..\..\proj\" />
   </Target>
-  <Target Name="UpdateDocsVersion" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-   <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)Update-Version.ps1&quot;" />
+  <Target Name="BumpVersion" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Release'">
+   <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)..\..\Update-Version.ps1&quot;" />
  </Target>
 </Project>

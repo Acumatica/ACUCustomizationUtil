@@ -1,4 +1,4 @@
-﻿using System.CommandLine.Builder;
+using System.CommandLine.Builder;
 using System.CommandLine.Help;
 using System.CommandLine.Parsing;
 using System.Reflection;
@@ -12,7 +12,7 @@ using Serilog;
 
 using Spectre.Console;
 
-[assembly: AssemblyVersion("26.08.21.1343")]
+[assembly: AssemblyVersion("26.08.21.1408")]
 
 namespace ACUCustomizationUtils;
 

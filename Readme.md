@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-**Current version:** 25.11.10.1042
+**Current version:** 26.08.21.1408
 
 **Designed by:** [Sprinterra](https://www.sprinterra.com/acumatica/)
 
@@ -83,5 +83,3 @@ The correct way to get the utility executable is to put the publishing configura
 If you have any issue with the app functionality, feel free to post an issue in this repo - for now, I am intended to maintain this app as long as I don't feel it is stable enough.
 
 If you need to modify the application to your requirements, or you have ideas for improving the functionality or code, feel free to contact the developers by [e-mail](mailto:isvsupport@sprinterra.com).  To make your request faster, please specify "ACUCUstomizatoinUtil" in the subject line.
-
-
