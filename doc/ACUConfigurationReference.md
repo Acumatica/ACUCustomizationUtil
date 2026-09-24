@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Configuration Reference (version 26.08.21.1408)
+## Configuration Reference (version 26.09.24.2016)
 ```
 {
   "erp": {                                                                                                                    Parameters for erp command
@@ -54,6 +54,9 @@
                                                                                                                                - QA - package will be named for QA testing,
                                                                                                                                - ISV - for ISV
     "pkgDescription": null,                                                                                                   Package description
+    "pkgVersion": null,                                                                                                       Package version for QA/ISV mode (yyDDD.HHmm or 0.0.yyDDD.HHmm).
+                                                                                                                              If not set, taken from assemblyInfoPath, then from dll in <pkgSourceDirectory>\Bin,
+                                                                                                                              otherwise generated from the current date (no solution/dll required)
   }
 }
 ```

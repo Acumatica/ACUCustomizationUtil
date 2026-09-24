@@ -1,3 +1,4 @@
+using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.Package;
 using ACUCustomizationUtils.Configuration.Src;
 
@@ -30,6 +31,9 @@ internal class SrcMakeValidator : AbstractValidator<ISrcConfiguration>
     {
         RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
         RuleFor(c => c.PkgSourceDirectory).NotNull().Must(Directory.Exists);
-        RuleFor(c => c.AssemblyInfoPath).NotNull().Must(File.Exists);
+        RuleFor(c => c.PkgVersion)
+            .Matches(Messages.PackageVersionPattern)
+            .When(c => c.PkgVersion != null)
+            .WithMessage("Package version should be in the form: yyDDD.HHmm or 0.0.yyDDD.HHmm");
     }
 }

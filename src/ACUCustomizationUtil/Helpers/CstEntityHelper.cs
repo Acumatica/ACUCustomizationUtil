@@ -19,6 +19,7 @@ public class CstEntityHelper
     private readonly string? _erpVersion;
     private readonly string? _dllName;
     private readonly string? _versionFilePath;
+    private readonly string? _pkgVersion;
     public static readonly string FrontEndSourceRelativePath = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
@@ -31,6 +32,7 @@ public class CstEntityHelper
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
         _versionFilePath = config.Src.AssemblyInfoPath;
+        _pkgVersion = config.Src.PkgVersion;
     }
 
     #region Public methods
@@ -83,42 +85,25 @@ public class CstEntityHelper
         xDoc.Save(fileName);
     }
 
-    public string? GetPackageAssemblyVersion()
+    /// <summary>
+    /// Resolve package version component ("yyDDD.HHmm") in order:
+    /// configuration (pkgVersion), AssemblyInfo file, customization assembly (dll) in package Bin directory.
+    /// If none of them is available (customization without external library), the version is generated
+    /// from the current date in the same format as for the external library build.
+    /// </summary>
+    public PackageVersion GetPackageVersion()
     {
+        if (!string.IsNullOrWhiteSpace(_pkgVersion))
+            return new PackageVersion(GetLastTwoSegments(_pkgVersion), PackageVersionSource.Configuration);
+
         if (File.Exists(_versionFilePath))
-        {
-            string versionContent = File.ReadAllText(_versionFilePath);
-            string version =
-                ExtractVersion(versionContent)
-                ?? throw new Exception($"Version.cs file does not contain a valid version");
-            string[] versionParts = version.Split('.');
-            if (versionParts.Length != 4)
-                throw new Exception(
-                    $"Version.cs file does not contain a correct version format: {version}"
-                );
+            return new PackageVersion(GetAssemblyInfoVersion(_versionFilePath), PackageVersionSource.AssemblyInfo);
 
-            return $"{versionParts[2]}.{versionParts[3]}";
-        }
+        string? dllFile = FindPackageAssemblyFile();
+        if (dllFile != null)
+            return new PackageVersion(GetAssemblyFileVersion(dllFile), PackageVersionSource.Assembly);
 
-        string[] dllPkgFiles = Directory.GetFiles(
-            _packageSourceBinDir,
-            _dllName
-                ?? throw new InvalidOperationException("Customization dll name MUST be configured")
-        );
-        string[] dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, $"*.dll");
-        string? dllFile =
-            dllPkgFiles.Length > 0 ? dllPkgFiles.First()
-            : dllAnyFiles.Length > 0 ? dllAnyFiles.First()
-            : null;
-        if (dllFile == null)
-            throw new Exception($"Assembly (dll) file for customization not found");
-        string? fv = FileVersionInfo.GetVersionInfo(dllFile).FileVersion;
-        if (fv == null || fv.Split('.').Length != 4)
-            throw new Exception(
-                $"Assembly (dll) file for customization does not contain correct version: {fv ?? "version is null"}"
-            );
-        string[] fvArr = fv.Split('.');
-        return $"{fvArr[2]}.{fvArr[3]}";
+        return new PackageVersion(MetaDataHelper.GetDateVersion(), PackageVersionSource.Generated);
     }
     #endregion Public methods
 
@@ -197,6 +182,54 @@ public class CstEntityHelper
             throw new Exception($"File with ID={fileID} not found in UploadFileRevision table");
 
         return getFile.Data;
+    }
+
+    private static string GetAssemblyInfoVersion(string versionFilePath)
+    {
+        string versionContent = File.ReadAllText(versionFilePath);
+        string version =
+            ExtractVersion(versionContent)
+            ?? throw new Exception($"Version.cs file does not contain a valid version");
+        if (version.Split('.').Length != 4)
+            throw new Exception(
+                $"Version.cs file does not contain a correct version format: {version}"
+            );
+
+        return GetLastTwoSegments(version);
+    }
+
+    private string? FindPackageAssemblyFile()
+    {
+        if (!Directory.Exists(_packageSourceBinDir))
+            return null;
+
+        string[] dllPkgFiles = string.IsNullOrEmpty(_dllName)
+            ? []
+            : Directory.GetFiles(_packageSourceBinDir, _dllName);
+        string[] dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, "*.dll");
+
+        return dllPkgFiles.Length > 0 ? dllPkgFiles.First()
+            : dllAnyFiles.Length > 0 ? dllAnyFiles.First()
+            : null;
+    }
+
+    private static string GetAssemblyFileVersion(string dllFile)
+    {
+        string? fv = FileVersionInfo.GetVersionInfo(dllFile).FileVersion;
+        if (fv == null || fv.Split('.').Length != 4)
+            throw new Exception(
+                $"Assembly (dll) file for customization does not contain correct version: {fv ?? "version is null"}"
+            );
+
+        return GetLastTwoSegments(fv);
+    }
+
+    private static string GetLastTwoSegments(string version)
+    {
+        string[] versionParts = version.Split('.');
+        return versionParts.Length > 2
+            ? $"{versionParts[^2]}.{versionParts[^1]}"
+            : version;
     }
 
     private static string? ExtractVersion(string content)

@@ -44,6 +44,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
         Option<string> packageDirectory = GetPackageDirectoryOption();
         Option<string> packageSuffix = GetPackageSuffixOption();
         Option<string> makeMode = BuildMakeModeOption();
+        Option<string> packageVersion = GetPackageVersionOption();
 
         Command command = new Command("make", "Create customization package from source code")
         {
@@ -52,6 +53,7 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
             packageDirectory,
             packageSuffix,
             makeMode,
+            packageVersion,
         };
 
         command.SetHandler(
@@ -65,7 +67,8 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
                 projectDescription,
                 projectLevel,
                 makeMode,
-                packageSuffix
+                packageSuffix,
+                packageVersion
             )
         );
 
@@ -191,6 +194,14 @@ public class SrcCommandBuilder(ISrcService projectService) : CommandBuilderBase
     private static Option<string> GetPackageSuffixOption()
     {
         return new Option<string>("--pkgSuffix", "Package suffix");
+    }
+
+    private static Option<string> GetPackageVersionOption()
+    {
+        return new Option<string>(
+            "--pkgVersion",
+            "Package version for QA|ISV mode: yyDDD.HHmm or 4-segment version (last 2 segments are used)"
+        );
     }
 
     private static Option<string> GetPackageDirectoryOption()

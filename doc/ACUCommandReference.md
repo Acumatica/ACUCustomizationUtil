@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Command Reference (version 26.08.21.1408))
+## Command Reference (version 26.09.24.2016))
 
 | **Command** | **Commands** | **Global Options**      | **Description**                                                       
 |-------------|--------------|-------------------------|-----------------------------------------------------------------------
@@ -69,6 +69,7 @@
 |             |              | --pkgSuffix             | Package name suffix (to add the task number to the package name)                
 |             |              | --packageDirectory      | Package destination directory                                         
 |             |              | --makeMode              | Mode for create package QA or ISV                                     
+|             |              | --pkgVersion            | Package version for QA or ISV mode: yyDDD.HHmm or 0.0.yyDDD.HHmm (optional)
 |             | build        |                         | Compile external library source code                                  
 |             |              | --solutionFile          | External code solution file full name                                 
 |             |              | --targetDirectory       | External code build target directory

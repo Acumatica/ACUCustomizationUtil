@@ -14,6 +14,9 @@ internal static class Messages
     public const string MakeModeISV = "ISV";
     public const string MakeModeQA = "QA";
 
+    // Package version: yyDDD.HHmm, optionally prefixed with 2 segments (e.g. 26.101.26267.1402)
+    public const string PackageVersionPattern = @"^(\d+\.\d+\.)?\d{5}\.\d{4}$";
+
     public const string DbProviderMsSql = "mssql";
     public const string DbProviderMySql = "mysql";
     public const string MySqlDefaultPort = "3306";

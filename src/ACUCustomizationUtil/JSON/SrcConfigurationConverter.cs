@@ -55,6 +55,9 @@ public class SrcConfigurationConverter : JsonConverter<ISrcConfiguration>
                 case nameof(code.MakeMode):
                     code.MakeMode = reader.GetString();
                     break;
+                case nameof(code.PkgVersion):
+                    code.PkgVersion = reader.GetString();
+                    break;
             }
         }
 

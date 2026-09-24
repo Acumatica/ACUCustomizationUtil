@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## User Guide (version 26.08.21.1408)
+## User Guide (version 26.09.24.2016)
 
 ### General information
 
@@ -476,6 +476,13 @@ If the commands run successfully, you will see a file like this ACUProject\[23.1
 The numbers in brackets mean the following 
 - \[23.105.0016\] - Full version of ERP, 
 - \[23.105.23911.1401\] - Major version of ERP, year, month, day, hour, minute of the build 
+
+The build number is taken from the AssemblyInfo file (`assemblyInfoPath`) or from the dll in the `cst\Bin` folder.
+If the customization has no external library (no solution and no dll), the build number is generated from the current date in the same format.
+To set the build number explicitly, use the `--pkgVersion` option (or `pkgVersion` in the `src` section of acu.json):
+```powershell
+PS C:\Acumatica\project\ACUProject> acu src make --mode QA --pkgVersion 23911.1401
+```
 This file can be deleted
 
 Check the ability to publish customizations using the ACU CLI. Run the commands:
