@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## User Guide (version 26.09.28.1041)
+## User Guide (version 26.09.28.1215)
 
 ### General information
 
