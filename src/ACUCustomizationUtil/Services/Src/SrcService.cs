@@ -70,11 +70,12 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         _logger.LogInformation("Execute MakeProjectFromSource action");
         try
         {
-            await AnsiConsole
+            bool hasSolution = false;
+            AnsiConsole
                 .Status()
-                .StartAsync(
+                .Start(
                     "Making project from source",
-                    async ctx =>
+                    ctx =>
                     {
                         _logger.LogInformation("Reading configuration");
                         ctx.Status("Reading configuration ...");
@@ -89,6 +90,37 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
                         ctx.Status("Validate configuration ...");
                         SrcValidator.ValidateForMake(config);
 
+                        hasSolution = HasSolution(config);
+                        if (hasSolution)
+                        {
+                            _logger.LogInformation("Validate build configuration");
+                            ctx.Status("Validate build configuration ...");
+                            SrcValidator.ValidateForBuild(config);
+                        }
+                    }
+                );
+
+            if (hasSolution)
+            {
+                await AnsiConsole
+                    .Status()
+                    .StartAsync(
+                        "Compile external library code",
+                        async ctx => await CompileSolutionExAsync(config, ctx)
+                    );
+                _logger.LogInformation("CompileSolution action success");
+            }
+            else
+            {
+                _logger.LogInformation("External library solution is not found, build is skipped");
+            }
+
+            await AnsiConsole
+                .Status()
+                .StartAsync(
+                    "Making package",
+                    async ctx =>
+                    {
                         _logger.LogInformation(
                             "Making package for project {Package}",
                             config.Pkg.PkgName
@@ -102,52 +134,6 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         catch (Exception e)
         {
             _logger.LogError(e, "MakeProjectFromSource: action error!");
-        }
-    }
-
-    public async Task CompileSolution(IAcuConfiguration config)
-    {
-        _logger.LogInformation("Execute CompileSolution action");
-        try
-        {
-            await AnsiConsole
-                .Status()
-                .StartAsync(
-                    "Compile external library code",
-                    async ctx =>
-                    {
-                        _logger.LogInformation("Reading configuration");
-                        ctx.Status("Reading configuration ...");
-                        ConfigurationHelper.PrintConfiguration(
-                            config,
-                            _logger,
-                            nameof(IAcuConfiguration.Pkg),
-                            nameof(IAcuConfiguration.Src)
-                        );
-
-                        _logger.LogInformation("Validate configuration");
-                        ctx.Status("Validate configuration ...");
-                        SrcValidator.ValidateForBuild(config);
-
-                        _logger.LogInformation(
-                            "Compile external library code for project {Package}",
-                            config.Pkg.PkgName
-                        );
-                        ctx.Status("Compile in progress, please wait ...");
-                        MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx);
-                        await msBuildHelper.Execute();
-
-                        ctx.Status("Copy external library assembly to package source");
-                        _logger.LogInformation("Copy external library assembly to package source");
-                        await msBuildHelper.CopyAssemblyToPackageBinAsync();
-                    }
-                );
-
-            _logger.LogInformation("CompileSolution action success");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "CompileSolution action NOT success");
         }
     }
 
@@ -186,6 +172,26 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
 
         //Write project meta-file
         itemHandler.SaveProjectMetadata(projectInfo);
+    }
+
+    private static bool HasSolution(IAcuConfiguration config)
+    {
+        return File.Exists(config.Src.MsBuildSolutionFile);
+    }
+
+    private async Task CompileSolutionExAsync(IAcuConfiguration config, StatusContext ctx)
+    {
+        _logger.LogInformation(
+            "Compile external library code for project {Package}",
+            config.Pkg.PkgName
+        );
+        ctx.Status("Compile in progress, please wait ...");
+        MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx);
+        await msBuildHelper.Execute();
+
+        ctx.Status("Copy external library assembly to package source");
+        _logger.LogInformation("Copy external library assembly to package source");
+        await msBuildHelper.CopyAssemblyToPackageBinAsync();
     }
 
     private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)

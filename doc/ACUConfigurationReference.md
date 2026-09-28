@@ -41,18 +41,23 @@
     "branch": null											                      Branch to login	
   },
 
-  "src": {                                                                                                                    Parameters for code command
+  "src": {                                                                                                                    Parameters for src commands
     "pkgSourceDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\cst",                                                   Directory with package source code
     "pkgLevel": "0",                                                                                                          Package level
-    "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path
+    "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path (optional, searched on disk if not set)
     "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",						      External code assembly info file full name
-    "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path
+    "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path.
+                                                                                                                              If the file exists, src make builds it before making the package,
+                                                                                                                              otherwise the build is skipped
     "msBuildTargetDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\src\\ACUCustomization\\bin\\Release",               External library solution build
                                                                                                                               targetdirectory
     "msBuildAssemblyName": "ACUCustomization.dll",                                                                            Name of accembly (dll file)
-    "makeMode": null,                                                                                                         Option "makeMode" (QA/IVS/):
+    "makeMode": null,                                                                                                         Option "makeMode" (Base/QA/ISV):
+                                                                                                                               - Base (default) - package name without version,
                                                                                                                                - QA - package will be named for QA testing,
-                                                                                                                               - ISV - for ISV
+                                                                                                                               - ISV - for ISV.
+                                                                                                                               Version for QA/ISV is taken from the dll in <pkgSourceDirectory>\Bin,
+                                                                                                                               otherwise generated from the current date
     "pkgDescription": null,                                                                                                   Package description
   }
 }

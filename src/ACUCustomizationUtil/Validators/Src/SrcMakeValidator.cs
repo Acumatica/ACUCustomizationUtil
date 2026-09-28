@@ -15,15 +15,6 @@ internal class PackageMakeValidator : AbstractValidator<IPackageConfiguration>
     }
 }
 
-internal class PackageBuildValidator : AbstractValidator<IPackageConfiguration>
-{
-    public PackageBuildValidator()
-    {
-        RuleFor(c => c).NotNull().WithMessage("Configuration should not be null-configuration!");
-        RuleFor(c => c.PkgName).NotNull();
-    }
-}
-
 internal class SrcMakeValidator : AbstractValidator<ISrcConfiguration>
 {
     public SrcMakeValidator()

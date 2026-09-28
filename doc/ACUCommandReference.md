@@ -56,24 +56,19 @@
 | **Command** | **Commands** | **Options**             | **Description**                                                           
 | src         |              |                         |                                                                       
 |             | get          |                         | Get customization project source                                      
-|             |              | --packageName           | Package name                                                          
+|             |              | --pkgName               | Package name
 |             |              | --dbConnectionString    | Database connection string                                            
 |             |              | --dbProvider            | Database provider: mssql or mysql [default: mssql]                    
 |             |              | --dbUser                | Database user name (required for mysql)                               
 |             |              | --dbPassword            | Database user password (required for mysql)                           
-|             |              | --sitePath              | Acumatica instance physical path                                      
+|             |              | --instancePath          | Acumatica instance physical path
 |             |              | --sourceDirectory       | Customization source items directory                                  
-|             | make         |                         | Create customization package from source code                         
+|             | make         |                         | Create customization package from source code. If the external library solution (src.msBuildSolutionFile) exists, it is built first and the dll is copied to <sourceDirectory>\Bin
 |             |              | --sourceDirectory       | Customization source items directory                                  
-|             |              | --packageName           | Package name
+|             |              | --pkgName               | Package name
 |             |              | --pkgSuffix             | Package name suffix (to add the task number to the package name)                
-|             |              | --packageDirectory      | Package destination directory                                         
-|             |              | --makeMode              | Mode for create package QA or ISV                                     
-|             | build        |                         | Compile external library source code                                  
-|             |              | --solutionFile          | External code solution file full name                                 
-|             |              | --targetDirectory       | External code build target directory
-|             |              | --msBuildPath           | MSBuild full path
-|             |              | --assemblyInfoPath      | External code assembly info file full name
+|             |              | --pkgDirectory          | Package destination directory
+|             |              | --mode                  | Mode for create package: Base, QA or ISV [default: Base]
 |             |              |                         | 
 | **Command** | **Commands** | **Options**             | **Description**                                                           
 | pkg         |              |                         |                                                                       

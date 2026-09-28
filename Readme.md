@@ -15,7 +15,7 @@ ACU allows to perform the following actions (by groups of commands):
 
 * Site: install the Acumatica instance, upgrade instance or database, delete the Acumatica instance.
 
-* Src: get the source code of the customization package from the instance, build the extension library code, make the customization package (three modes are supported - normal, build for ISV, build for QA).
+* Src: get the source code of the customization package from the instance, make the customization package with building the extension library code (three modes are supported - normal, build for ISV, build for QA).
 
 * Pkg: upload and publish custom packages to the site, get the package from the site, unpublish all packages.
 

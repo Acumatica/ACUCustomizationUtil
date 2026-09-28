@@ -27,7 +27,6 @@ public abstract class SrcValidator : OptionsValidatorBase
 
     public static void ValidateForBuild(IAcuConfiguration configuration)
     {
-        Validate(configuration.Pkg, new PackageBuildValidator());
         Validate(configuration.Src, new SrcBuildValidator());
     }
 }

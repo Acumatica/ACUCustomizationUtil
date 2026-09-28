@@ -67,7 +67,7 @@ public class MsBuildHelper
         const string buildTarget = "/target:Rebuild";
         string? solutionFilePath = _config.Src.MsBuildSolutionFile;
 
-        return $"{buildConfiguration} {buildTarget} {solutionFilePath}";
+        return $"{buildConfiguration} {buildTarget} \"{solutionFilePath}\"";
     }
 
     private string GetMsbuildPath()

@@ -12,7 +12,7 @@ ACU allows to perform the following actions (by groups of commands):
 
 - **ERP**:	_download_ of installation package of the required version, _install_ of ERP Acumatica (supports installation of multiple versions), _delete_ of ERP Acumatica.
 - **Site**:	_install_ the Acumatica instance, _upgrade_ instance or database, _delete_ the Acumatica instance.
-- **Src:**	_get_ the source code of the customization package from the instance, _build_ the extension library code, _make_ the customization package (three modes are supported - normal, build for ISV, build for QA).
+- **Src:**	_get_ the source code of the customization package from the instance, _make_ the customization package with building the extension library code (three modes are supported - normal, build for ISV, build for QA).
 - **Pkg**:	_upload_ and _publish_ custom packages to the site, _get_ the package from the site, _unpublish_ all packages.
 
 ### Installation
@@ -424,8 +424,9 @@ PS C:\Acumatica\project\ACUProject> acu site install
 Create a project for the Extention Library. How to properly create such a project is described in the [ACU Extension Library Reference](ACUProjectReference.md) document.
 After the project for Extension Library is created, check if it can be built using the CLI. Run the command
 ```powershell
-PS C:\Acumatica\project\ACUProject> acu src build
+PS C:\Acumatica\project\ACUProject> acu src make
 ```
+If the solution (`msBuildSolutionFile`) exists, `acu src make` builds it, copies the dll to the `cst\Bin` folder and then creates the package.
 ##### Create customization package and configure it
 
 Follow the steps below to create a customization project
@@ -477,7 +478,7 @@ The numbers in brackets mean the following
 - \[23.105.0016\] - Full version of ERP, 
 - \[23.105.23911.1401\] - Major version of ERP, year, month, day, hour, minute of the build 
 
-The build number is taken from the dll in the `cst\Bin` folder (run `acu src build` before `acu src make` to get the actual build number).
+The build number is taken from the dll in the `cst\Bin` folder that is built by `acu src make`.
 If the customization has no external library (no solution and no dll), the build number is generated from the current date in the same format.
 This file can be deleted
 
@@ -603,7 +604,6 @@ PS C:\Acumatica\project\ACUProject> acu site install
 ##### Build Extenson Library project & make package
 Build the Extension Library project and create a customisation package
 ```powershell
-PS C:\Acumatica\project\ACUProject> acu src build
 PS C:\Acumatica\project\ACUProject> acu src make
 ```
 ##### Upload & publish package
@@ -619,7 +619,6 @@ Let's consider these cases.
 After each synchronisation of the local code with the repository code, it is necessary to perform builds and updates to the package published on the Acumatica instance
 To do this, run the following commands:
 ```powershell
-PS C:\Acumatica\project\ACUProject> acu src build
 PS C:\Acumatica\project\ACUProject> acu src make
 PS C:\Acumatica\project\ACUProject> acu pkg upload
 PS C:\Acumatica\project\ACUProject> acu pkg publish
