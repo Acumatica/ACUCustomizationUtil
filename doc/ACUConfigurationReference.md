@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Configuration Reference (version 26.09.28.1215)
+## Configuration Reference (version 26.09.28.1506)
 ```
 {
   "erp": {                                                                                                                    Parameters for erp command

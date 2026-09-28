@@ -12,7 +12,7 @@ using Serilog;
 
 using Spectre.Console;
 
-[assembly: AssemblyVersion("26.09.28.1215")]
+[assembly: AssemblyVersion("26.09.28.1506")]
 
 namespace ACUCustomizationUtils;
 
