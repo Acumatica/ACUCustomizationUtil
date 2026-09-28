@@ -26,7 +26,6 @@ public class CodeMakeConfigurationBinder(
         string? projectLevel = bindingContext.ParseResult.GetValueForOption(commandOptions[4]!);
         string? makeMode = bindingContext.ParseResult.GetValueForOption(commandOptions[5]!);
         string? packageSuffix = bindingContext.ParseResult.GetValueForOption(commandOptions[6]!);
-        string? packageVersion = bindingContext.ParseResult.GetValueForOption(commandOptions[7]!);
 
         return new AcuConfiguration
         {
@@ -43,7 +42,6 @@ public class CodeMakeConfigurationBinder(
                 PkgDescription = projectDescription,
                 PkgLevel = projectLevel,
                 MakeMode = makeMode,
-                PkgVersion = packageVersion,
             },
         };
     }

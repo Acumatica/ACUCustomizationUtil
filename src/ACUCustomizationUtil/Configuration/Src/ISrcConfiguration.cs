@@ -17,7 +17,6 @@ public interface ISrcConfiguration
     string? MsBuildTargetDirectory { get; }
     string? MsBuildAssemblyName { get; }
     string? MakeMode { get; }
-    string? PkgVersion { get; }
     bool IsNotNull { get; }
     string? PkgSourceBinDirectory { get; }
 

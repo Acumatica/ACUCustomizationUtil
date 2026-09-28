@@ -54,9 +54,6 @@
                                                                                                                                - QA - package will be named for QA testing,
                                                                                                                                - ISV - for ISV
     "pkgDescription": null,                                                                                                   Package description
-    "pkgVersion": null,                                                                                                       Package version for QA/ISV mode (yyDDD.HHmm or 0.0.yyDDD.HHmm).
-                                                                                                                              If not set, taken from assemblyInfoPath, then from dll in <pkgSourceDirectory>\Bin,
-                                                                                                                              otherwise generated from the current date (no solution/dll required)
   }
 }
 ```

@@ -19,7 +19,6 @@ public class CstEntityHelper
     private readonly string? _erpVersion;
     private readonly string? _dllName;
     private readonly string? _versionFilePath;
-    private readonly string? _pkgVersion;
     public static readonly string FrontEndSourceRelativePath = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
@@ -32,7 +31,6 @@ public class CstEntityHelper
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
         _versionFilePath = config.Src.AssemblyInfoPath;
-        _pkgVersion = config.Src.PkgVersion;
     }
 
     #region Public methods
@@ -87,15 +85,12 @@ public class CstEntityHelper
 
     /// <summary>
     /// Resolve package version component ("yyDDD.HHmm") in order:
-    /// configuration (pkgVersion), AssemblyInfo file, customization assembly (dll) in package Bin directory.
+    /// AssemblyInfo file, customization assembly (dll) in package Bin directory.
     /// If none of them is available (customization without external library), the version is generated
     /// from the current date in the same format as for the external library build.
     /// </summary>
     public PackageVersion GetPackageVersion()
     {
-        if (!string.IsNullOrWhiteSpace(_pkgVersion))
-            return new PackageVersion(GetLastTwoSegments(_pkgVersion), PackageVersionSource.Configuration);
-
         if (File.Exists(_versionFilePath))
             return new PackageVersion(GetAssemblyInfoVersion(_versionFilePath), PackageVersionSource.AssemblyInfo);
 

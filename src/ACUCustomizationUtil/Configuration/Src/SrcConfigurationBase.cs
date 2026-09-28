@@ -22,7 +22,6 @@ public abstract class SrcConfigurationBase : ISrcConfiguration
     public string? MsBuildTargetDirectory { get; set; }
     public string? MsBuildAssemblyName { get; set; }
     public string? MakeMode { get; set; }
-    public string? PkgVersion { get; set; }
     public abstract bool IsNotNull { get; }
     public string? PkgSourceBinDirectory { get; private set; }
 
