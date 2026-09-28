@@ -188,12 +188,19 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         itemHandler.SaveProjectMetadata(projectInfo);
     }
 
-    private static async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
+    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
     {
         await Task.Run(() =>
         {
             PackageHelper packageHelper = new(config);
+            if (packageHelper.PackageVersion != null)
+                _logger.LogInformation(
+                    "Package version {Version} (source: {Source})",
+                    packageHelper.PackageVersion.Value,
+                    packageHelper.PackageVersion.Source
+                );
             packageHelper.MakePackage();
+            _logger.LogInformation("Package {PackageFile} created", packageHelper.PackageFileName);
         });
     }
 

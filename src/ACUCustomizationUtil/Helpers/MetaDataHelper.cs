@@ -224,7 +224,10 @@ namespace ACUCustomizationUtils.Helpers
             return $"{majorPart}.{minorPart}";
         }
 
-        private static string GetDateVersion()
+        /// <summary>
+        /// Date based version component in "yyDDD.HHmm" format (last 2 segments of assembly/package version)
+        /// </summary>
+        public static string GetDateVersion()
         {
             DateTime firstDate = new DateTime(DateTime.Now.Year, 1, 1);
             string days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");

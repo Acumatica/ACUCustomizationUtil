@@ -6,6 +6,7 @@ using System.Xml;
 using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
+using ACUCustomizationUtils.Helpers.CommonTypes;
 
 namespace ACUCustomizationUtils.Helpers;
 
@@ -21,13 +22,23 @@ public class PackageHelper
 
     #region Public members
 
+    /// <summary>
+    /// Package version used in the package name (QA|ISV mode only, otherwise null)
+    /// </summary>
+    public PackageVersion? PackageVersion { get; }
+
+    public string PackageFileName => _packageFileName;
+
     public PackageHelper(IAcuConfiguration configuration)
     {
         _packageSourceDir = configuration.Src.PkgSourceDirectory!;
         _erpVersion = configuration.Erp.ErpVersion!;
         _level = int.TryParse(configuration.Src.PkgLevel, out int l) ? l : 0;
         string packageDestinationDir = configuration.Pkg.PkgDirectory!;
-        string packageName = GetPackageName(configuration);
+        PackageVersion = IsVersionedMakeMode(configuration.Src.MakeMode)
+            ? new CstEntityHelper(configuration).GetPackageVersion()
+            : null;
+        string packageName = GetPackageName(configuration, PackageVersion?.Value);
         _packageFileName = Path.Combine(packageDestinationDir, packageName);
         _description = configuration.Src.PkgDescription ?? GetPackageDescription(configuration);
         _metaDataHelper = new MetaDataHelper(configuration, packageName);
@@ -206,10 +217,13 @@ public class PackageHelper
         }
     }
 
-    private static string GetPackageName(IAcuConfiguration config)
+    private static bool IsVersionedMakeMode(string? makeMode)
     {
-        CstEntityHelper cstHelper = new CstEntityHelper(config);
-        string? fileVersion = cstHelper.GetPackageAssemblyVersion();
+        return makeMode is Messages.MakeModeQA or Messages.MakeModeISV;
+    }
+
+    private static string GetPackageName(IAcuConfiguration config, string? fileVersion)
+    {
         string pkgSuffix = config.Pkg.PkgSuffix ?? string.Empty;
         string pkgName = config.Pkg.PkgName!;
         if (!string.IsNullOrEmpty(pkgSuffix))

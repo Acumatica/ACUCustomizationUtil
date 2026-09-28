@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## User Guide (version 26.08.21.1408)
+## User Guide (version 26.09.28.1041)
 
 ### General information
 
@@ -476,6 +476,9 @@ If the commands run successfully, you will see a file like this ACUProject\[23.1
 The numbers in brackets mean the following 
 - \[23.105.0016\] - Full version of ERP, 
 - \[23.105.23911.1401\] - Major version of ERP, year, month, day, hour, minute of the build 
+
+The build number is taken from the dll in the `cst\Bin` folder (run `acu src build` before `acu src make` to get the actual build number).
+If the customization has no external library (no solution and no dll), the build number is generated from the current date in the same format.
 This file can be deleted
 
 Check the ability to publish customizations using the ACU CLI. Run the commands:
