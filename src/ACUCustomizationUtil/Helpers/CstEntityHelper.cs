@@ -18,7 +18,6 @@ public class CstEntityHelper
     private readonly string _siteRootDir;
     private readonly string? _erpVersion;
     private readonly string? _dllName;
-    private readonly string? _versionFilePath;
     public static readonly string FrontEndSourceRelativePath = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
@@ -30,7 +29,6 @@ public class CstEntityHelper
         _siteRootDir = config.Site.InstancePath!;
         _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
-        _versionFilePath = config.Src.AssemblyInfoPath;
     }
 
     #region Public methods
@@ -84,16 +82,12 @@ public class CstEntityHelper
     }
 
     /// <summary>
-    /// Resolve package version component ("yyDDD.HHmm") in order:
-    /// AssemblyInfo file, customization assembly (dll) in package Bin directory.
-    /// If none of them is available (customization without external library), the version is generated
+    /// Resolve package version component ("yyDDD.HHmm") from customization assembly (dll) in package Bin directory.
+    /// If the assembly is not available (customization without external library), the version is generated
     /// from the current date in the same format as for the external library build.
     /// </summary>
     public PackageVersion GetPackageVersion()
     {
-        if (File.Exists(_versionFilePath))
-            return new PackageVersion(GetAssemblyInfoVersion(_versionFilePath), PackageVersionSource.AssemblyInfo);
-
         string? dllFile = FindPackageAssemblyFile();
         if (dllFile != null)
             return new PackageVersion(GetAssemblyFileVersion(dllFile), PackageVersionSource.Assembly);
@@ -179,20 +173,6 @@ public class CstEntityHelper
         return getFile.Data;
     }
 
-    private static string GetAssemblyInfoVersion(string versionFilePath)
-    {
-        string versionContent = File.ReadAllText(versionFilePath);
-        string version =
-            ExtractVersion(versionContent)
-            ?? throw new Exception($"Version.cs file does not contain a valid version");
-        if (version.Split('.').Length != 4)
-            throw new Exception(
-                $"Version.cs file does not contain a correct version format: {version}"
-            );
-
-        return GetLastTwoSegments(version);
-    }
-
     private string? FindPackageAssemblyFile()
     {
         if (!Directory.Exists(_packageSourceBinDir))
@@ -225,23 +205,6 @@ public class CstEntityHelper
         return versionParts.Length > 2
             ? $"{versionParts[^2]}.{versionParts[^1]}"
             : version;
-    }
-
-    private static string? ExtractVersion(string content)
-    {
-        Match match = Regex.Match(content, @"\[assembly:\s*AssemblyVersion\(""([^""]+)""\)\]");
-        if (match is { Success: true, Groups.Count: > 1 })
-        {
-            return match.Groups[1].Value;
-        }
-
-        match = Regex.Match(content, @"\[assembly:\s*AssemblyFileVersion\(""([^""]+)""\)\]");
-        if (match is { Success: true, Groups.Count: > 1 })
-        {
-            return match.Groups[1].Value;
-        }
-
-        return null;
     }
 
     #endregion Private methods

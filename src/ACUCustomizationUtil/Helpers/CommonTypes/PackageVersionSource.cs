@@ -2,7 +2,6 @@
 
 public enum PackageVersionSource
 {
-    AssemblyInfo,
     Assembly,
     Generated,
 }
