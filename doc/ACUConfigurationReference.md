@@ -12,11 +12,11 @@
 
   "site": {                                                                                                                   Parameters for site command
     "instanceName": "AcuTestUtil",                                                                                            Instance name
-    "instancePath": "C:\\Acumatica\\instance\\23.105.0016\\Site",                                                             Full physical path of instance
+    "instancePath": "C:\\Acumatica\\instance\\26.101.0225\\Site",                                                             Full physical path of instance
     "dbProvider": null,                                                                                                       Database provider: "mssql" (default) or "mysql"
     "sqlServerName": "localhost",                                                                                             Name of database server with ACU instance database
     "dbPort": null,                                                                                                           Database server port (mysql only, default 3306)
-    "dbName": "23.105.0016DB",                                                                                                Instance database name
+    "dbName": "26.101.0225DB",                                                                                                Instance database name
     "dbUser": null,                                                                                                           Database user name (required for mysql;
                                                                                                                               for mssql enables SQL auth instead of Windows auth)
     "dbPassword": null,                                                                                                       Database user password
@@ -32,32 +32,28 @@
   },
 
   "pkg": {                                                                                                                    Parameters for package command
-    "url": "http://localhost/23.105.0016/api/ServiceGate.asmx",                                                               URL of service gate
+    "url": "http://localhost/26.101.0225/",                                                                                   URL of service gate
     "login": "admin",                                                                                                         Service gate login
     "password": "123",                                                                                                        Service gate passworg
     "pkgName": "ACUCustomization",                                                                                            Package name
     "pkgDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\pkg"                                                          Package directory
     "tenant": null,                                                                                                           Tenant to login
-    "branch": null											                      Branch to login	
+    "branch": null											                                                                  Branch to login	
   },
 
   "src": {                                                                                                                    Parameters for src commands
     "pkgSourceDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\cst",                                                   Directory with package source code
     "pkgLevel": "0",                                                                                                          Package level
     "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path (optional, searched on disk if not set)
-    "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",						      External code assembly info file full name
-    "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path.
-                                                                                                                              If the file exists, src make builds it before making the package,
-                                                                                                                              otherwise the build is skipped
+    "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",						                          External code assembly info file full name
+    "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path (optional, skipped if missing)
     "msBuildTargetDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\src\\ACUCustomization\\bin\\Release",               External library solution build
                                                                                                                               targetdirectory
     "msBuildAssemblyName": "ACUCustomization.dll",                                                                            Name of accembly (dll file)
-    "makeMode": null,                                                                                                         Option "makeMode" (Base/QA/ISV):
+    "makeMode": null,                                                                                                         Package naming modes:
                                                                                                                                - Base (default) - package name without version,
                                                                                                                                - QA - package will be named for QA testing,
                                                                                                                                - ISV - for ISV.
-                                                                                                                               Version for QA/ISV is taken from the dll in <pkgSourceDirectory>\Bin,
-                                                                                                                               otherwise generated from the current date
     "pkgDescription": null,                                                                                                   Package description
   }
 }

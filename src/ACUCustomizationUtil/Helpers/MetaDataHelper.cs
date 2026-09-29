@@ -4,12 +4,20 @@ using System.Text.RegularExpressions;
 
 using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
+using ACUCustomizationUtils.Helpers.CommonTypes;
 
 namespace ACUCustomizationUtils.Helpers
 {
     public class MetaDataHelper(IAcuConfiguration config)
     {
-        public const string MetadataFileName = "manifest.json";
+        private static class Keys
+        {
+            public const string AssemblyFileVersion = "AssemblyFileVersion";
+            public const string AssemblyVersion = "AssemblyVersion";
+            public const string AssemblyMetadata = "AssemblyMetadata";
+            public const string PackageVersion = "PackageVersion";
+        }
+
         private static readonly JsonSerializerOptions json_write_options = new()
         {
             WriteIndented = true,
@@ -23,11 +31,16 @@ namespace ACUCustomizationUtils.Helpers
             _packageName = packageName;
         }
 
-        public void SetBuildVersion()
+        /// <summary>
+        /// Writes AssemblyVersion and AssemblyFileVersion to AssemblyInfo.cs. For a QA/ISV make the date
+        /// component is shared with <paramref name="packageVersion"/>, which is also written as
+        /// [assembly: AssemblyMetadata("PackageVersion", "...")]; for other makes that attribute is removed.
+        /// </summary>
+        public void SetBuildVersion(PackageVersion? packageVersion)
         {
             try
             {
-                SetAssemblyVersion();
+                SetAssemblyVersion(packageVersion);
             }
             catch (Exception ex)
             {
@@ -47,29 +60,21 @@ namespace ACUCustomizationUtils.Helpers
             }
         }
 
-        private void SetAssemblyVersion()
+        private void SetAssemblyVersion(PackageVersion? packageVersion)
         {
             string assemblyInfoPath = GetAccemblyInfoFullPath();
-            string version = GetAssemblyVersion();
+            string version = GetAssemblyVersion(packageVersion);
 
-            if (version != null)
+            AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyVersion, null, version);
+            AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyFileVersion, null, version);
+
+            if (packageVersion != null)
             {
-                AddOrUpdateAssemblyMetadataAttribute(
-                    assemblyInfoPath,
-                    "AssemblyVersion",
-                    null,
-                    version
-                );
-                AddOrUpdateAssemblyMetadataAttribute(
-                    assemblyInfoPath,
-                    "AssemblyFileVersion",
-                    null,
-                    version
-                );
+                AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyMetadata, Keys.PackageVersion, packageVersion.Value);
             }
             else
             {
-                throw new ArgumentNullException(nameof(version), "Version is null");
+                RemoveAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyMetadata, Keys.PackageVersion);
             }
         }
 
@@ -88,12 +93,7 @@ namespace ACUCustomizationUtils.Helpers
 
             foreach (KeyValuePair<string, string> attr in newValues)
             {
-                AddOrUpdateAssemblyMetadataAttribute(
-                    assemblyInfoPath,
-                    "AssemblyMetadata",
-                    attr.Key,
-                    attr.Value
-                );
+                AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyMetadata, attr.Key, attr.Value);
             }
         }
 
@@ -167,6 +167,19 @@ namespace ACUCustomizationUtils.Helpers
             File.WriteAllText(filePath, content);
         }
 
+        private static void RemoveAssemblyMetadataAttribute(string filePath, string attributeName, string key)
+        {
+            string content = File.ReadAllText(filePath);
+
+            // Example: [assembly: AssemblyMetadata("PackageVersion", "2026.09.28.1432")]
+            string attributePattern =
+                $@"^[ \t]*\[assembly:\s*{Regex.Escape(attributeName)}\(""{Regex.Escape(key)}"",\s*"".*?""\)\][ \t]*(\r?\n)?";
+            string updated = Regex.Replace(content, attributePattern, string.Empty, RegexOptions.Multiline);
+
+            if (updated != content)
+                File.WriteAllText(filePath, updated);
+        }
+
         private string GetAccemblyInfoFullPath()
         {
             if (_config.Src.AssemblyInfoPath != null && File.Exists(_config.Src.AssemblyInfoPath))
@@ -216,22 +229,12 @@ namespace ACUCustomizationUtils.Helpers
             return output;
         }
 
-        public string GetAssemblyVersion()
+        public string GetAssemblyVersion(PackageVersion? packageVersion)
         {
             string majorPart = $"{_config.Erp.ErpVersion?[..6]}";
-            string minorPart = GetDateVersion();
+            string dateVersion = packageVersion?.DateVersion ?? PackageVersion.GetDateVersion(DateTime.Now);
 
-            return $"{majorPart}.{minorPart}";
-        }
-
-        /// <summary>
-        /// Date based version component in "yyDDD.HHmm" format (last 2 segments of assembly/package version)
-        /// </summary>
-        public static string GetDateVersion()
-        {
-            DateTime firstDate = new DateTime(DateTime.Now.Year, 1, 1);
-            string days = Math.Truncate((DateTime.Now - firstDate).TotalDays).ToString("000");
-            return $"{DateTime.Now:yy}{days}.{DateTime.Now:HHmm}";
+            return $"{majorPart}.{dateVersion}";
         }
 
         public string? GetAssemblyInfoAttributeValue(

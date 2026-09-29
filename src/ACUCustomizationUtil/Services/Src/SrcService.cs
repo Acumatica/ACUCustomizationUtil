@@ -1,6 +1,7 @@
 ﻿using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers;
+using ACUCustomizationUtils.Helpers.CommonTypes;
 using ACUCustomizationUtils.Validators.Src;
 
 using Microsoft.Extensions.Logging;
@@ -91,6 +92,18 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
 
                         bool hasSolution = HasSolution(config);
 
+                        // Resolved before the build, so the version can be stamped into the assembly
+                        ctx.Status("Resolving package version ...");
+                        PackageVersion packageVersion = ResolvePackageVersion(config, hasSolution);
+                        if (packageVersion != null)
+                        {
+                            _logger.LogInformation(
+                                "Package version {Version} (source: {Source})",
+                                packageVersion.Value,
+                                packageVersion.Source
+                            );
+                        }
+
                         if (hasSolution)
                         {
                             _logger.LogInformation("Validate build configuration");
@@ -100,7 +113,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
                             _logger.LogInformation("Compile external library code for project {Package}", config.Pkg.PkgName);
                             ctx.Status("Compiling project ...");
                             MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx);
-                            await msBuildHelper.Execute();
+                            await msBuildHelper.Execute(packageVersion);
 
                             _logger.LogInformation("Copy external library assembly to package source");
                             ctx.Status("Copying external library assembly to package source ...");
@@ -116,7 +129,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
                             "Making package for project {Package}",
                             config.Pkg.PkgName
                         );
-                        await MakeProjectFromSourceExAsync(config);
+                        await MakeProjectFromSourceExAsync(config, packageVersion);
 
                     }
                 );
@@ -170,17 +183,22 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         return File.Exists(config.Src.MsBuildSolutionFile);
     }
 
-    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config)
+    private static PackageVersion? ResolvePackageVersion(IAcuConfiguration config, bool hasSolution)
+    {
+        string? makeMode = config.Src.MakeMode;
+        if (!PackageVersion.IsVersionedMakeMode(makeMode))
+            return null;
+
+        return hasSolution
+            ? PackageVersion.Generate(makeMode)
+            : new CstEntityHelper(config).GetPackageVersion();
+    }
+
+    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config, PackageVersion? packageVersion)
     {
         await Task.Run(() =>
         {
-            PackageHelper packageHelper = new(config);
-            if (packageHelper.PackageVersion != null)
-                _logger.LogInformation(
-                    "Package version {Version} (source: {Source})",
-                    packageHelper.PackageVersion.Value,
-                    packageHelper.PackageVersion.Source
-                );
+            PackageHelper packageHelper = new(config, packageVersion);
             packageHelper.MakePackage();
             _logger.LogInformation("Package {PackageFile} created", packageHelper.PackageFileName);
         });

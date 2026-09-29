@@ -16,8 +16,8 @@ public class CstEntityHelper
     private readonly string _packageSourceBinDir;
     private readonly string _packageFrontEndSourceDir;
     private readonly string _siteRootDir;
-    private readonly string? _erpVersion;
     private readonly string? _dllName;
+    private readonly string? _makeMode;
     public static readonly string FrontEndSourceRelativePath = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
@@ -27,8 +27,8 @@ public class CstEntityHelper
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
         _packageFrontEndSourceDir = Path.Combine(_packageSourceDir, FrontEndSourceRelativePath);
         _siteRootDir = config.Site.InstancePath!;
-        _erpVersion = config.Erp.ErpVersion;
         _dllName = config.Src.MsBuildAssemblyName;
+        _makeMode = config.Src.MakeMode;
     }
 
     #region Public methods
@@ -90,9 +90,9 @@ public class CstEntityHelper
     {
         string? dllFile = FindPackageAssemblyFile();
         if (dllFile != null)
-            return new PackageVersion(GetAssemblyFileVersion(dllFile), PackageVersionSource.Assembly);
+            return PackageVersion.FromAssembly(_makeMode, GetAssemblyFileVersion(dllFile));
 
-        return new PackageVersion(MetaDataHelper.GetDateVersion(), PackageVersionSource.Generated);
+        return PackageVersion.Generate(_makeMode);
     }
     #endregion Public methods
 

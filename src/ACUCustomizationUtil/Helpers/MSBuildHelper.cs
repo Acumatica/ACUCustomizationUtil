@@ -2,6 +2,7 @@
 
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
+using ACUCustomizationUtils.Helpers.CommonTypes;
 
 using Spectre.Console;
 
@@ -28,9 +29,9 @@ public class MsBuildHelper
         _metaDataHelper = new MetaDataHelper(_config);
     }
 
-    public async Task Execute()
+    public async Task Execute(PackageVersion? packageVersion)
     {
-        _metaDataHelper.SetBuildVersion();
+        _metaDataHelper.SetBuildVersion(packageVersion);
         _metaDataHelper.SetBuildMetadata();
         //Build solution
         _msbuildPath = GetMsbuildPath();

@@ -1,9 +1,7 @@
-﻿using System.Globalization;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-using ACUCustomizationUtils.Common;
 using ACUCustomizationUtils.Configuration.ACU;
 using ACUCustomizationUtils.Extensions;
 using ACUCustomizationUtils.Helpers.CommonTypes;
@@ -18,7 +16,6 @@ public class PackageHelper
     private readonly int _level;
     private readonly string _packageFileName;
     private readonly string? _description;
-    private readonly MetaDataHelper _metaDataHelper;
 
     #region Public members
 
@@ -29,19 +26,22 @@ public class PackageHelper
 
     public string PackageFileName => _packageFileName;
 
-    public PackageHelper(IAcuConfiguration configuration)
+    public PackageHelper(IAcuConfiguration configuration, PackageVersion? packageVersion)
     {
         _packageSourceDir = configuration.Src.PkgSourceDirectory!;
         _erpVersion = configuration.Erp.ErpVersion!;
         _level = int.TryParse(configuration.Src.PkgLevel, out int l) ? l : 0;
         string packageDestinationDir = configuration.Pkg.PkgDirectory!;
-        PackageVersion = IsVersionedMakeMode(configuration.Src.MakeMode)
-            ? new CstEntityHelper(configuration).GetPackageVersion()
-            : null;
+
+        if (PackageVersion.IsVersionedMakeMode(configuration.Src.MakeMode) && packageVersion == null)
+        {
+            throw new ArgumentNullException(nameof(packageVersion), $"Package version is required for make mode {configuration.Src.MakeMode}");
+        }
+        PackageVersion = packageVersion;
+
         string packageName = GetPackageName(configuration, PackageVersion?.Value);
         _packageFileName = Path.Combine(packageDestinationDir, packageName);
         _description = configuration.Src.PkgDescription ?? GetPackageDescription(configuration);
-        _metaDataHelper = new MetaDataHelper(configuration, packageName);
     }
 
     public void MakePackage()
@@ -217,12 +217,7 @@ public class PackageHelper
         }
     }
 
-    private static bool IsVersionedMakeMode(string? makeMode)
-    {
-        return makeMode is Messages.MakeModeQA or Messages.MakeModeISV;
-    }
-
-    private static string GetPackageName(IAcuConfiguration config, string? fileVersion)
+    private static string GetPackageName(IAcuConfiguration config, string? version)
     {
         string pkgSuffix = config.Pkg.PkgSuffix ?? string.Empty;
         string pkgName = config.Pkg.PkgName!;
@@ -231,50 +226,10 @@ public class PackageHelper
             pkgName = $"{pkgName}_{pkgSuffix}_";
         }
 
-        string packageName = config.Src.MakeMode switch
-        {
-            Messages.MakeModeQA => $"{pkgName}[{config.Erp.ErpVersion}][{fileVersion}].zip",
-            Messages.MakeModeISV => $"{pkgName}[{config.Erp.ErpVersion}][{ExpandToFourSegments(fileVersion)}].zip",
-            _ => $"{pkgName}.zip",
-        };
+        if (PackageVersion.IsVersionedMakeMode(config.Src.MakeMode))
+            return $"{pkgName}[{config.Erp.ErpVersion}][{version}].zip";
 
-        return packageName;
-    }
-
-    /// <summary>
-    /// Expands shortened 2-segment version of the assembly into full 4-segment format
-    /// </summary>
-    /// <param name="assemblyMinorPart">
-    /// 2 last segments of assembly version that represent package's version component
-    /// </param>
-    /// <returns>
-    /// Version string in "yyyy.MM.dd.HHmm" fornat
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="assemblyMinorPart"/> is null or empty
-    /// </exception>
-    private static string ExpandToFourSegments(string? assemblyMinorPart)
-    {
-        if (string.IsNullOrWhiteSpace(assemblyMinorPart))
-            throw new ArgumentNullException(nameof(assemblyMinorPart));
-
-        // reconstruct January 1st of the year when assembly was built as an initial template
-        var startingDateTemplate = $"{assemblyMinorPart[..2]}0101";
-        var date = DateTime.ParseExact(startingDateTemplate, "yyMMdd", CultureInfo.InvariantCulture);
-
-        // move date to the day and time from the version
-        var daysToAdd = Convert.ToDouble(assemblyMinorPart[2..5]);
-        date = date.AddDays(daysToAdd);
-
-        var hour = Convert.ToDouble(assemblyMinorPart[6..8]);
-        date = date.AddHours(hour);
-
-        var minute = Convert.ToDouble(assemblyMinorPart[8..10]);
-        date = date.AddMinutes(minute);
-
-        // in package, we can take all 4 segments, so we expand the version number
-        const string _packageVersionFormat = "yyyy.MM.dd.HHmm";
-        return date.ToString(_packageVersionFormat, CultureInfo.InvariantCulture);
+        return $"{pkgName}.zip";
     }
 
     private static string GetPackageDescription(IAcuConfiguration config)
