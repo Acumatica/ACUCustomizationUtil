@@ -22,7 +22,7 @@ To make both things work, `acu src build` was incorporated into the `acu src mak
 ## Changed
 - `acu src make` now build assemblies (when applied).
 - Minor rewording of statuses during `acu src make` command, for consistency.  
-- Package versioning for customizations with assemblies. The package version is now tied to the assembly's `AssemblyVersion` metadata property instead of `AssemblyInfo.cs` file in the project. This prevents us from picking a potentially stale version string, in case the file has been updated by 3rd party.  
+- Package versioning for customizations with assemblies. The package version is now generated at the start of each `acu src make` operation, and use to set up assembly version (if applicable) and package name.This prevents us from picking a potentially stale version string, in case the file has been updated by 3rd party.  
 - Docs were updated to better reflect the current product and its configuration.  
 
 # Upgrade Instructions

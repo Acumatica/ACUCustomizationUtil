@@ -1,11 +1,12 @@
 using System.Globalization;
+using System.Reflection;
 
 using ACUCustomizationUtils.Common;
 
 namespace ACUCustomizationUtils.Helpers.CommonTypes;
 
 /// <summary>
-/// Package version component and the source it was resolved from
+/// Represents customization version in two forms - optimized for <see cref="AssemblyVersionAttribute"/> and package
 /// </summary>
 public sealed class PackageVersion
 {
@@ -14,30 +15,32 @@ public sealed class PackageVersion
     /// <summary>
     /// Instantiates new <see cref="PackageVersion"/>
     /// </summary>
-    /// <param name="value">Version formatted for package (archive)</param>
-    /// <param name="dateVersion">Date component of assembly version</param>
-    /// <param name="source">Where the version was resolved from</param>
-    private PackageVersion(string value, string dateVersion, PackageVersionSource source)
+    /// <param name="makeMode">Selected versioning mode</param>
+    public PackageVersion(string? makeMode)
     {
-        Value = value;
-        DateVersion = dateVersion;
-        Source = source;
+        AssemblyComponent = GenerateAssemblyComponent(DateTime.Now);
+        PackageComponent = makeMode switch
+        {
+            Messages.MakeModeQA => AssemblyComponent,
+            Messages.MakeModeISV => ExpandToFourSegments(AssemblyComponent),
+            _ => string.Empty,
+        };
     }
 
     /// <summary>
-    /// Version as used in the package name and in the assembly metadata attribute
+    /// Date component used in package name
     /// </summary>
-    public string Value { get; }
+    public string PackageComponent { get; init; }
 
     /// <summary>
-    /// Date based version component shared with the assembly version
+    /// Assembly component used in <see cref="AssemblyVersionAttribute"/> of the assembly
     /// </summary>
-    public string DateVersion { get; }
+    public string AssemblyComponent { get; init; }
 
     /// <summary>
-    /// Where the version was resolved from.
+    /// True if version component for the package has been generated
     /// </summary>
-    public PackageVersionSource Source { get; }
+    public bool IsVersioned => PackageComponent.Length > 0;
 
     /// <summary>
     /// Whether the make mode produces versioned packages
@@ -49,41 +52,11 @@ public sealed class PackageVersion
     }
 
     /// <summary>
-    /// Generates a new version from the current time for a QA/ISV make mode
-    /// </summary>
-    /// <param name="makeMode">Selected versioning mode</param>
-    public static PackageVersion Generate(string? makeMode)
-    {
-        return Generate(makeMode, DateTime.Now);
-    }
-
-    /// <summary>
-    /// Generates the version of a build started at <paramref name="timestamp"/> for a QA/ISV make mode
-    /// </summary>
-    /// <param name="makeMode">Selected versioning mode</param>
-    /// <param name="timestamp">Date to stamp into version</param>
-    public static PackageVersion Generate(string? makeMode, DateTime timestamp)
-    {
-        string dateVersion = GetDateVersion(timestamp);
-        return new PackageVersion(Format(makeMode, dateVersion), dateVersion, PackageVersionSource.Generated);
-    }
-
-    /// <summary>
-    /// Restores the version from the date component ("yyDDD.HHmm") of an assembly
-    /// </summary>
-    /// <param name="makeMode">Selected versioning mode.</param>
-    /// <param name="dateVersion">Date component from assembly version</param>
-    public static PackageVersion FromAssembly(string? makeMode, string dateVersion)
-    {
-        return new PackageVersion(Format(makeMode, dateVersion), dateVersion, PackageVersionSource.Assembly);
-    }
-
-    /// <summary>
     /// Date based version component of <paramref name="timestamp"/> in "yyDDD.HHmm" format
     /// (last 2 segments of assembly/package version)
     /// </summary>
     /// <param name="timestamp">Date to stamp into version</param>
-    public static string GetDateVersion(DateTime timestamp)
+    public static string GenerateAssemblyComponent(DateTime timestamp)
     {
         DateTime firstDate = new(timestamp.Year, 1, 1);
         string days = Math.Truncate((timestamp - firstDate).TotalDays).ToString("000", CultureInfo.InvariantCulture);
@@ -91,25 +64,6 @@ public sealed class PackageVersion
         string time = timestamp.ToString("HHmm", CultureInfo.InvariantCulture);
 
         return $"{year}{days}.{time}";
-    }
-
-    /// <summary>
-    /// Formats <paramref name="dateVersion"/> into format expected for <paramref name="makeMode"/>
-    /// </summary>
-    /// <param name="makeMode">Selected versioning mode</param>
-    /// <param name="dateVersion">Date component from assembly version</param>
-    /// <returns>Version string in a format fit for <paramref name="makeMode"/></returns>
-    private static string Format(string? makeMode, string dateVersion)
-    {
-        return makeMode switch
-        {
-            Messages.MakeModeQA => dateVersion,
-            Messages.MakeModeISV => ExpandToFourSegments(dateVersion),
-            _ => throw new ArgumentException(
-                $"Make mode {makeMode ?? Messages.MakeModeBase} has no package version",
-                nameof(makeMode)
-            ),
-        };
     }
 
     /// <summary>

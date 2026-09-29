@@ -29,7 +29,7 @@ public class MsBuildHelper
         _metaDataHelper = new MetaDataHelper(_config);
     }
 
-    public async Task Execute(PackageVersion? packageVersion)
+    public async Task Execute(PackageVersion packageVersion)
     {
         _metaDataHelper.SetBuildVersion(packageVersion);
         _metaDataHelper.SetBuildMetadata();

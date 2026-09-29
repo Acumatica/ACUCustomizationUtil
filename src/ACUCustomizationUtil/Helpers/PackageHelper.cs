@@ -18,28 +18,20 @@ public class PackageHelper
     private readonly string? _description;
 
     #region Public members
-
-    /// <summary>
-    /// Package version used in the package name (QA|ISV mode only, otherwise null)
-    /// </summary>
-    public PackageVersion? PackageVersion { get; }
-
     public string PackageFileName => _packageFileName;
 
-    public PackageHelper(IAcuConfiguration configuration, PackageVersion? packageVersion)
+    public PackageHelper(IAcuConfiguration configuration, PackageVersion packageVersion)
     {
         _packageSourceDir = configuration.Src.PkgSourceDirectory!;
         _erpVersion = configuration.Erp.ErpVersion!;
         _level = int.TryParse(configuration.Src.PkgLevel, out int l) ? l : 0;
         string packageDestinationDir = configuration.Pkg.PkgDirectory!;
 
-        if (PackageVersion.IsVersionedMakeMode(configuration.Src.MakeMode) && packageVersion == null)
+        if (PackageVersion.IsVersionedMakeMode(configuration.Src.MakeMode) && !packageVersion.IsVersioned)
         {
             throw new ArgumentNullException(nameof(packageVersion), $"Package version is required for make mode {configuration.Src.MakeMode}");
         }
-        PackageVersion = packageVersion;
-
-        string packageName = GetPackageName(configuration, PackageVersion?.Value);
+        string packageName = GetPackageName(configuration, packageVersion?.PackageComponent);
         _packageFileName = Path.Combine(packageDestinationDir, packageName);
         _description = configuration.Src.PkgDescription ?? GetPackageDescription(configuration);
     }

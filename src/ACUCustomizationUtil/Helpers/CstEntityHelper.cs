@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -13,26 +12,19 @@ public class CstEntityHelper
 {
     private readonly string _packageSourceDir;
     private readonly string _packageSourceProjectDir;
-    private readonly string _packageSourceBinDir;
     private readonly string _packageFrontEndSourceDir;
     private readonly string _siteRootDir;
-    private readonly string? _dllName;
-    private readonly string? _makeMode;
     public static readonly string FrontEndSourceRelativePath = "FrontendSources\\screen\\src\\development\\";
 
     public CstEntityHelper(IAcuConfiguration config)
     {
         _packageSourceDir = config.Src.PkgSourceDirectory!;
-        _packageSourceBinDir = Path.Combine(_packageSourceDir, "Bin");
         _packageSourceProjectDir = Path.Combine(_packageSourceDir, "_project");
         _packageFrontEndSourceDir = Path.Combine(_packageSourceDir, FrontEndSourceRelativePath);
         _siteRootDir = config.Site.InstancePath!;
-        _dllName = config.Src.MsBuildAssemblyName;
-        _makeMode = config.Src.MakeMode;
     }
 
     #region Public methods
-
     public void HandleCustomizationsEntity(CustomizationProjectEntity entity, DatabaseHelper dataHelper)
     {
         switch (entity.Type)
@@ -80,24 +72,9 @@ public class CstEntityHelper
         fileName.TryCheckFileDirectory();
         xDoc.Save(fileName);
     }
-
-    /// <summary>
-    /// Resolve package version component ("yyDDD.HHmm") from customization assembly (dll) in package Bin directory.
-    /// If the assembly is not available (customization without external library), the version is generated
-    /// from the current date in the same format as for the external library build.
-    /// </summary>
-    public PackageVersion GetPackageVersion()
-    {
-        string? dllFile = FindPackageAssemblyFile();
-        if (dllFile != null)
-            return PackageVersion.FromAssembly(_makeMode, GetAssemblyFileVersion(dllFile));
-
-        return PackageVersion.Generate(_makeMode);
-    }
     #endregion Public methods
 
     #region Private methods
-
     private void HandleContentEntity(CustomizationProjectEntity entity)
     {
         try
@@ -172,40 +149,5 @@ public class CstEntityHelper
 
         return getFile.Data;
     }
-
-    private string? FindPackageAssemblyFile()
-    {
-        if (!Directory.Exists(_packageSourceBinDir))
-            return null;
-
-        string[] dllPkgFiles = string.IsNullOrEmpty(_dllName)
-            ? []
-            : Directory.GetFiles(_packageSourceBinDir, _dllName);
-        string[] dllAnyFiles = Directory.GetFiles(_packageSourceBinDir, "*.dll");
-
-        return dllPkgFiles.Length > 0 ? dllPkgFiles.First()
-            : dllAnyFiles.Length > 0 ? dllAnyFiles.First()
-            : null;
-    }
-
-    private static string GetAssemblyFileVersion(string dllFile)
-    {
-        string? fv = FileVersionInfo.GetVersionInfo(dllFile).FileVersion;
-        if (fv == null || fv.Split('.').Length != 4)
-            throw new Exception(
-                $"Assembly (dll) file for customization does not contain correct version: {fv ?? "version is null"}"
-            );
-
-        return GetLastTwoSegments(fv);
-    }
-
-    private static string GetLastTwoSegments(string version)
-    {
-        string[] versionParts = version.Split('.');
-        return versionParts.Length > 2
-            ? $"{versionParts[^2]}.{versionParts[^1]}"
-            : version;
-    }
-
     #endregion Private methods
 }

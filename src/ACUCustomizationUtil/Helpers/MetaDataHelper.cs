@@ -36,7 +36,7 @@ namespace ACUCustomizationUtils.Helpers
         /// component is shared with <paramref name="packageVersion"/>, which is also written as
         /// [assembly: AssemblyMetadata("PackageVersion", "...")]; for other makes that attribute is removed.
         /// </summary>
-        public void SetBuildVersion(PackageVersion? packageVersion)
+        public void SetBuildVersion(PackageVersion packageVersion)
         {
             try
             {
@@ -60,17 +60,19 @@ namespace ACUCustomizationUtils.Helpers
             }
         }
 
-        private void SetAssemblyVersion(PackageVersion? packageVersion)
+        private void SetAssemblyVersion(PackageVersion packageVersion)
         {
             string assemblyInfoPath = GetAccemblyInfoFullPath();
-            string version = GetAssemblyVersion(packageVersion);
 
-            AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyVersion, null, version);
-            AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyFileVersion, null, version);
+            string majorPart = $"{_config.Erp.ErpVersion?[..6]}";
+            string assemblyVersion = $"{majorPart}.{packageVersion.AssemblyComponent}";
 
-            if (packageVersion != null)
+            AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyVersion, null, assemblyVersion);
+            AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyFileVersion, null, assemblyVersion);
+
+            if (packageVersion.IsVersioned)
             {
-                AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyMetadata, Keys.PackageVersion, packageVersion.Value);
+                AddOrUpdateAssemblyMetadataAttribute(assemblyInfoPath, Keys.AssemblyMetadata, Keys.PackageVersion, packageVersion.PackageComponent);
             }
             else
             {
@@ -227,14 +229,6 @@ namespace ACUCustomizationUtils.Helpers
             string output = process.StandardOutput.ReadToEnd().Trim();
             process.WaitForExit();
             return output;
-        }
-
-        public string GetAssemblyVersion(PackageVersion? packageVersion)
-        {
-            string majorPart = $"{_config.Erp.ErpVersion?[..6]}";
-            string dateVersion = packageVersion?.DateVersion ?? PackageVersion.GetDateVersion(DateTime.Now);
-
-            return $"{majorPart}.{dateVersion}";
         }
 
         public string? GetAssemblyInfoAttributeValue(

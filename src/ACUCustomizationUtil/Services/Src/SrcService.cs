@@ -94,15 +94,8 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
 
                         // Resolved before the build, so the version can be stamped into the assembly
                         ctx.Status("Resolving package version ...");
-                        PackageVersion packageVersion = ResolvePackageVersion(config, hasSolution);
-                        if (packageVersion != null)
-                        {
-                            _logger.LogInformation(
-                                "Package version {Version} (source: {Source})",
-                                packageVersion.Value,
-                                packageVersion.Source
-                            );
-                        }
+                        PackageVersion packageVersion = new(config.Src?.MakeMode);
+                        _logger.LogInformation("Package version {Version}", packageVersion.PackageComponent);
 
                         if (hasSolution)
                         {
@@ -183,18 +176,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
         return File.Exists(config.Src.MsBuildSolutionFile);
     }
 
-    private static PackageVersion? ResolvePackageVersion(IAcuConfiguration config, bool hasSolution)
-    {
-        string? makeMode = config.Src.MakeMode;
-        if (!PackageVersion.IsVersionedMakeMode(makeMode))
-            return null;
-
-        return hasSolution
-            ? PackageVersion.Generate(makeMode)
-            : new CstEntityHelper(config).GetPackageVersion();
-    }
-
-    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config, PackageVersion? packageVersion)
+    private async Task MakeProjectFromSourceExAsync(IAcuConfiguration config, PackageVersion packageVersion)
     {
         await Task.Run(() =>
         {
