@@ -21,7 +21,7 @@ public static class SerilogBuilder
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
-            .WriteTo.Console()
+            .WriteTo.AnsiConsole()
             .WriteTo.File("acu-log.txt", rollingInterval: RollingInterval.Day, shared: true)
             .CreateLogger();
     }
