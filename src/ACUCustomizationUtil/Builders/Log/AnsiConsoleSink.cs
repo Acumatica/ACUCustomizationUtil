@@ -1,6 +1,5 @@
 using Serilog.Core;
 using Serilog.Events;
-using Serilog.Formatting;
 
 using Spectre.Console;
 
@@ -20,20 +19,16 @@ public sealed class AnsiConsoleSink : ILogEventSink, IDisposable
     public const string DefaultOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
     public bool IsDetached => _detached;
-    private readonly ITextFormatter _formatter;
-    private readonly Func<LogEventLevel, Style> _levelStyle;
+    private readonly IAnsiConsoleFormatter _formatter;
     private volatile bool _detached;
 
     /// <summary>
     /// Instantiates new <see cref="AnsiConsoleSink"/>
     /// </summary>
     /// <param name="formatter">Formats log events in a textual representation</param>
-    /// <param name="levelStyle">Style to apply. If null, <see cref="DefaultLevelStyle"/> is used</param>
-    public AnsiConsoleSink(ITextFormatter formatter, Func<LogEventLevel, Style>? levelStyle = null
-    )
+    public AnsiConsoleSink(IAnsiConsoleFormatter formatter)
     {
         _formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
-        _levelStyle = levelStyle ?? DefaultLevelStyle;
     }
 
     /// <inheritdoc />
@@ -43,10 +38,10 @@ public sealed class AnsiConsoleSink : ILogEventSink, IDisposable
         if (_detached)
             return;
 
-        using StringWriter writer = new();
-        _formatter.Format(logEvent, writer);
+        Paragraph paragraph = new();
+        _formatter.Format(logEvent, paragraph);
 
-        AnsiConsole.Console.Write(new Text(writer.ToString(), _levelStyle(logEvent.Level)));
+        AnsiConsole.Console.Write(paragraph);
     }
 
     /// <summary>
@@ -55,21 +50,5 @@ public sealed class AnsiConsoleSink : ILogEventSink, IDisposable
     public void Dispose()
     {
         _detached = true;
-    }
-
-    /// <summary>
-    /// Provides default styling per <paramref name="level"/>
-    /// </summary>
-    /// <param name="level">Event level</param>
-    public static Style DefaultLevelStyle(LogEventLevel level)
-    {
-        return level switch
-        {
-            LogEventLevel.Verbose or LogEventLevel.Debug => new Style(Color.Grey),
-            LogEventLevel.Warning => new Style(Color.Yellow),
-            LogEventLevel.Error => new Style(Color.Red),
-            LogEventLevel.Fatal => new Style(Color.Red, decoration: Decoration.Bold),
-            _ => Style.Plain,
-        };
     }
 }
