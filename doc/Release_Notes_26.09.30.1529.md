@@ -1,6 +1,6 @@
 # Acumatica Customization Utility — New Release
-**Version**: 26.09.28.1506
-**Date**: September 28, 2026
+**Version**: 26.09.30.1529
+**Date**: September 30, 2026
 
 ---
 
