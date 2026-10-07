@@ -116,6 +116,7 @@ List of such parameters
 - `pkgSourceDirectory`
 - `msBuildSolutionFile`
 - `msBuildTargetDirectory`
+- `msBuildPath`
 
 ### Built-in help system
 
@@ -427,6 +428,9 @@ After the project for Extension Library is created, check if it can be built usi
 PS C:\Acumatica\project\ACUProject> acu src make
 ```
 If the solution (`msBuildSolutionFile`) exists, `acu src make` builds it, copies the dll to the `cst\Bin` folder and then creates the package.
+
+MSBuild is taken from `src.msBuildPath` if set, otherwise it is detected automatically (Visual Studio via vswhere, then .NET SDK, then PATH). The log shows which MSBuild was used. To pin a specific MSBuild on your machine, set `src.msBuildPath` in `acu.json.user`. The full resolution order is described in the [ACU Configuration Reference](ACUConfigurationReference.md#msbuild-resolution).
+
 ##### Create customization package and configure it
 
 Follow the steps below to create a customization project

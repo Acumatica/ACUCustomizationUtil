@@ -44,7 +44,7 @@
   "src": {                                                                                                                    Parameters for src commands
     "pkgSourceDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\cst",                                                   Directory with package source code
     "pkgLevel": "0",                                                                                                          Package level
-    "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path (optional, searched on disk if not set)
+    "msBuildPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",         MSBuild full path (optional, auto-detected if not set, see "MSBuild resolution" below)
     "assemblyInfoPath": "src\\ACUCustomization\\Properties\\AssemblyInfo.cs",						                          External code assembly info file full name
     "msBuildSolutionFile": "C:\\Acumatica\\projects\\ACUCustomization\\ACUCustomization.sln",                                 External library solution file full path (optional, skipped if missing)
     "msBuildTargetDirectory": "C:\\Acumatica\\projects\\ACUCustomization\\src\\ACUCustomization\\bin\\Release",               External library solution build
@@ -58,3 +58,28 @@
   }
 }
 ```
+
+### MSBuild resolution
+
+`acu src make` builds the external library solution (`src.msBuildSolutionFile`) with MSBuild. MSBuild.exe is resolved in the following order, the first match wins:
+
+| # | Source | Details |
+|---|--------|---------|
+| 1 | `src.msBuildPath` | Value from `acu.json` / `acu.json.user`. If set, auto-detection is skipped; a path to a missing file stops the build with a validation error |
+| 2 | vswhere | Latest stable Visual Studio or Build Tools with MSBuild installed (`vswhere -latest -products * -requires Microsoft.Component.MSBuild`) |
+| 3 | vswhere (prerelease) | Latest Visual Studio Preview, for machines without a stable Visual Studio |
+| 4 | .NET SDK | `MSBuild.exe` of the highest stable SDK listed by `dotnet --list-sdks` |
+| 5 | PATH | `MSBuild.exe` found by `where MSBuild.exe` |
+| 6 | Disk scan | Recursive search on drive `C:` (`where /R C:\ MSBuild.exe`). Slow (minutes), a warning is written to the log |
+
+The resolved path and its source are written to the log, for example:
+
+```
+[INF] MSBuild resolved via vswhere: C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe
+```
+
+Recommendations:
+
+- If several Visual Studio versions are installed, steps 2-3 pick the newest one. To build with a specific version, set `src.msBuildPath`.
+- `src.msBuildPath` is machine specific, so put it into `acu.json.user` (not tracked by git) rather than into `acu.json`.
+- If the log shows `disk scan`, set `src.msBuildPath` to avoid a multi-minute search on every build.

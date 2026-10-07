@@ -105,7 +105,7 @@ public class SrcService(ILogger<SrcService> logger) : ISrcService
 
                             _logger.LogInformation("Compile external library code for project {Package}", config.Pkg.PkgName);
                             ctx.Status("Compiling project ...");
-                            MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx);
+                            MsBuildHelper msBuildHelper = new MsBuildHelper(config, ctx, _logger);
                             await msBuildHelper.Execute(packageVersion);
 
                             _logger.LogInformation("Copy external library assembly to package source");
