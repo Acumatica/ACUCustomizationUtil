@@ -18,6 +18,7 @@ namespace ACUCustomizationUtils.Helpers
     {
         private readonly string? _packageName;
         private readonly string? _packageDirectory;
+        private readonly string? _configPackageLevel;
         private readonly HttpClient _client;
 
         public RestClient(IAcuConfiguration configuration)
@@ -29,6 +30,7 @@ namespace ACUCustomizationUtils.Helpers
             string? branch = configuration.Pkg.Branch;
             _packageName = configuration.Pkg.PkgName;
             _packageDirectory = configuration.Pkg.PkgDirectory;
+            _configPackageLevel = configuration.Src?.PkgLevel;
             HttpClientHandler options = new()
             {
                 UseCookies = true,
@@ -84,8 +86,9 @@ namespace ACUCustomizationUtils.Helpers
             string filePath = Path.Combine(directory, file);
             byte[] packageContents = await File.ReadAllBytesAsync(filePath);
             string projectContentBase64 = Convert.ToBase64String(packageContents);
+            int projectLevel = int.TryParse(_configPackageLevel, out int level) ? level : 0;
 
-            await ImportAsync(packageName, projectContentBase64);
+            await ImportAsync(packageName, projectContentBase64, projectLevel);
         }
 
         public async Task PublishPackages()

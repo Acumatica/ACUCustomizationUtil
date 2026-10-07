@@ -82,7 +82,7 @@
 |             |              | --packageDir            | Package directory                                                     
 |             | publish      |                         | Publish package(s)                                                    
 |             |              | --packageName           | Package name                                                          
-|             | upload       |                         | Upload package                                                        
+|             | upload       |                         | Upload package. The project level is taken from src.pkgLevel
 |             |              | --packageName           | Package name                                                          
 |             |              | --packageDir            | Package directory                                                     
 |             | unpublish    |                         | Unpublish all packages
