@@ -1,6 +1,6 @@
 # Acumatica Customization Util (ACU)
 
-## Command Reference (version 26.09.30.1529))
+## Command Reference (version 26.10.28.1316))
 
 | **Command** | **Commands** | **Global Options**      | **Description**                                                       
 |-------------|--------------|-------------------------|-----------------------------------------------------------------------
