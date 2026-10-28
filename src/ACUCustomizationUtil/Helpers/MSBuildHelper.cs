@@ -80,8 +80,7 @@ public class MsBuildHelper
     /// <list type="number">
     /// <item>src.msBuildPath from acu.json / acu.json.user;</item>
     /// <item>vswhere: latest stable Visual Studio / Build Tools;</item>
-    /// <item>vswhere: latest prerelease Visual Studio (machines with Preview only);</item>
-    /// <item>.NET SDK MSBuild (what the former full-disk search picked on most machines);</item>
+    /// <item>.NET SDK MSBuild, highest stable SDK (what the former full-disk search picked on most machines);</item>
     /// <item>MSBuild.exe from PATH;</item>
     /// <item>full scan of drive C: (former behavior, slow) with a warning.</item>
     /// </list>
@@ -105,11 +104,6 @@ public class MsBuildHelper
             string? vsMsBuild = RunAndReadLines(vswhere, vswhereArgs).FirstOrDefault(File.Exists);
             if (vsMsBuild != null)
                 return LogResolved("vswhere", vsMsBuild);
-
-            string? vsPreviewMsBuild = RunAndReadLines(vswhere, vswhereArgs + " -prerelease")
-                .FirstOrDefault(File.Exists);
-            if (vsPreviewMsBuild != null)
-                return LogResolved("vswhere (prerelease)", vsPreviewMsBuild);
         }
 
         string? sdkMsBuild = GetDotNetSdkMsBuildPath();
@@ -148,19 +142,16 @@ public class MsBuildHelper
 
                 string versionText = line[..bracket];
                 string sdkRoot = line[(bracket + 2)..^1];
-                string numericPart = versionText.Split('-')[0];
-                return Version.TryParse(numericPart, out Version? version)
+                return !versionText.Contains('-') && Version.TryParse(versionText, out Version? version)
                     ? new
                     {
                         Version = version,
-                        IsPreview = versionText.Contains('-'),
                         Path = Path.Combine(sdkRoot, versionText, "MSBuild.exe"),
                     }
                     : null;
             })
             .Where(sdk => sdk != null && File.Exists(sdk.Path))
-            .OrderBy(sdk => sdk!.IsPreview)
-            .ThenByDescending(sdk => sdk!.Version)
+            .OrderByDescending(sdk => sdk!.Version)
             .Select(sdk => sdk!.Path)
             .FirstOrDefault();
     }

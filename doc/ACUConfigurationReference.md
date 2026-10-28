@@ -67,10 +67,9 @@
 |---|--------|---------|
 | 1 | `src.msBuildPath` | Value from `acu.json` / `acu.json.user`. If set, auto-detection is skipped; a path to a missing file stops the build with a validation error |
 | 2 | vswhere | Latest stable Visual Studio or Build Tools with MSBuild installed (`vswhere -latest -products * -requires Microsoft.Component.MSBuild`) |
-| 3 | vswhere (prerelease) | Latest Visual Studio Preview, for machines without a stable Visual Studio |
-| 4 | .NET SDK | `MSBuild.exe` of the highest stable SDK listed by `dotnet --list-sdks` |
-| 5 | PATH | `MSBuild.exe` found by `where MSBuild.exe` |
-| 6 | Disk scan | Recursive search on drive `C:` (`where /R C:\ MSBuild.exe`). Slow (minutes), a warning is written to the log |
+| 3 | .NET SDK | `MSBuild.exe` of the highest stable SDK listed by `dotnet --list-sdks` |
+| 4 | PATH | `MSBuild.exe` found by `where MSBuild.exe` |
+| 5 | Disk scan | Recursive search on drive `C:` (`where /R C:\ MSBuild.exe`). Slow (minutes), a warning is written to the log |
 
 The resolved path and its source are written to the log, for example:
 
@@ -80,6 +79,6 @@ The resolved path and its source are written to the log, for example:
 
 Recommendations:
 
-- If several Visual Studio versions are installed, steps 2-3 pick the newest one. To build with a specific version, set `src.msBuildPath`.
+- If several Visual Studio versions are installed, step 2 picks the newest one. To build with a specific version, set `src.msBuildPath`.
 - `src.msBuildPath` is machine specific, so put it into `acu.json.user` (not tracked by git) rather than into `acu.json`.
 - If the log shows `disk scan`, set `src.msBuildPath` to avoid a multi-minute search on every build.
